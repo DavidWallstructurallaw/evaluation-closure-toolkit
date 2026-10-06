@@ -172,12 +172,12 @@ def analyze_bytes(data: bytes, *, request_ids: tuple[str, ...] | None = None) ->
                     result, findings = lint_claim(dossier, request, budget=budget)
                 except WorkLimit as exc:
                     run_exhausted = exc.run_exhausted
-                    result = _placeholder(request, selected=True, reason="resource_limit")
+                    result = budget.partial_result or _placeholder(request, selected=True, reason="resource_limit")
                     result["execution"] = "partial"
                     result["limitations"].append(
                         f"Lint stopped at the deterministic graph-work limit after {budget.used} request work units and {run_budget.used} run work units. Detailed review qualification is unavailable."
                     )
-                    findings = [_finding(result, "resource_limit")]
+                    findings = [*budget.partial_findings, _finding(result, "resource_limit")]
             else:
                 result = _placeholder(request, selected=True, reason="unsupported_operation")
                 findings = [_finding(result, "unsupported_operation")]

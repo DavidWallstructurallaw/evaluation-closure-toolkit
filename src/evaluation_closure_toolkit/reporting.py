@@ -93,14 +93,18 @@ def _criterion(value) -> None:
     _require(identifiers == sorted(set(identifiers)))
 
 
-def _lint_values(value) -> None:
+def _lint_values(value, *, partial=False) -> None:
     _keys(value, {"disclosures", "documentary_completeness", "currentness", "scope_mismatches", "validation", "claim_conclusion", "open_evaluation"})
     _require(value["open_evaluation"] in {"not_applicable", "not_assessed"})
     _require(value["documentary_completeness"] in {"complete", "incomplete", "not_assessed"})
     _require(value["currentness"] in {"current_under_declared_date", "expired_under_declared_date", "unestablished"})
     _require(value["claim_conclusion"] in {"supported_under_scope", "defeated_under_scope", "unestablished", "not_assessed"})
     _require(type(value["disclosures"]) is list)
-    _require([row["id"] for row in value["disclosures"]] == [f"R{i:02}" for i in range(1, 11)])
+    count = len(value["disclosures"])
+    _require(0 <= count <= 10 if partial else count == 10)
+    _require([row["id"] for row in value["disclosures"]] == [f"R{i:02}" for i in range(1, count + 1)])
+    if partial:
+        _require(value["claim_conclusion"] == "not_assessed" and value["documentary_completeness"] == "not_assessed")
     for row in value["disclosures"]:
         _keys(row, {"id", "presence", "well_formed", "linked", "qualification", "applicability", "reasons", "anchor_ids", "review", "applicability_review"})
         _require(row["presence"] in {"missing", "present", "unknown", "withheld", "disputed", "explicit_absence"})
@@ -214,6 +218,9 @@ def _check_report(report: dict) -> None:
         _require((result["selection"] == "selected") == (result["request_id"] in report["selected_request_ids"]))
         if result["operation"] == "lint" and result["execution"] == "completed":
             _lint_values(result["values"])
+        elif result["operation"] == "lint" and result["execution"] == "partial" and result["values"]:
+            _require(result["assessment"] == "not_assessed" and "resource_limit" in result["reason_codes"])
+            _lint_values(result["values"], partial=True)
         else:
             _require(result["values"] == {} and result["execution"] in {"not_run", "partial"})
     request_ids = [r["request_id"] for r in report["results"]]

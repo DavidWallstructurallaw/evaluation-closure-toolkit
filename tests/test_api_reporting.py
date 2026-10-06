@@ -20,7 +20,8 @@ import urllib.request
 
 from evaluation_closure_toolkit import analyze_bytes, render_markdown, validate_bytes
 from evaluation_closure_toolkit.errors import ReportError, RequestError
-from evaluation_closure_toolkit.budget import RequestBudget, RunBudget
+from evaluation_closure_toolkit.budget import RequestBudget, RunBudget, WorkLimit
+import evaluation_closure_toolkit.lint as lint_module
 
 
 def fixture_bytes(name='supported-narrow-regression'):
@@ -261,6 +262,49 @@ class APIReportingTests(unittest.TestCase):
             self.assertEqual(row['reason_codes'], ['resource_limit'])
         self.assertEqual([(f['family'], f['request_id']) for f in report['findings']],
                          [('EC108', 'lint-first'), ('EC108', 'lint-later')])
+        self.assertEqual(detailed_json(render_markdown(report)), report)
+
+    def test_partial_lint_retains_completed_prefix_without_aggregate_conclusion(self):
+        original = lint_module.evaluate_reviews
+        calls = 0
+
+        def interrupt_sixth(*args, **kwargs):
+            nonlocal calls
+            calls += 1
+            if calls == 6:
+                raise WorkLimit(run_exhausted=False)
+            return original(*args, **kwargs)
+
+        # Overall validation and two full disclosure rows complete. Interrupt
+        # the next review through the actual public analysis boundary.
+        with patch('evaluation_closure_toolkit.lint.evaluate_reviews', side_effect=interrupt_sixth):
+            report = analyze_bytes(fixture_bytes('scope-mismatch'))
+        self.assertEqual(calls, 6)
+        self.assertEqual(report['admission'], 'valid')
+        self.assertEqual(report['execution'], 'partial')
+        result = report['results'][0]
+        self.assertEqual(result['execution'], 'partial')
+        self.assertEqual(result['assessment'], 'not_assessed')
+        self.assertIn('resource_limit', result['reason_codes'])
+        values = result['values']
+        self.assertEqual(values['claim_conclusion'], 'not_assessed')
+        self.assertEqual(values['documentary_completeness'], 'not_assessed')
+        self.assertEqual([row['id'] for row in values['disclosures']], ['R01', 'R02'])
+        for row in values['disclosures']:
+            self.assertEqual(row['qualification'], 'supported_under_scope')
+            self.assertEqual(row['review']['execution'], 'completed')
+        self.assertEqual(values['validation']['assessment'], 'supported_under_scope')
+        self.assertEqual(values['validation']['execution'], 'completed')
+        self.assertIn('validation-review', values['validation']['support_ids'])
+        self.assertEqual(values['scope_mismatches'], [
+            {'required_feature': 'long_horizon', 'frame_id': 'frame-v1',
+             'reason_codes': ['scope_mismatch']}])
+        mismatch = next(f for f in report['findings'] if f['rule'] == 'required_feature_absent')
+        self.assertEqual(mismatch['family'], 'EC101')
+        self.assertEqual(mismatch['assessment'], 'contradicted_under_scope')
+        self.assertTrue(mismatch['basis'])
+        self.assertTrue(any(f['family'] == 'EC108' and 'resource_limit' in f['reason_codes']
+                            for f in report['findings']))
         self.assertEqual(detailed_json(render_markdown(report)), report)
 
     def test_bytes_api_does_no_file_network_or_subprocess_work(self):

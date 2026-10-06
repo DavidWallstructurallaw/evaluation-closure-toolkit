@@ -218,6 +218,28 @@ class LintQualificationTests(unittest.TestCase):
             lint_claim(self.dossier, self.dossier["requests"][0], budget=restricted)
         self.assertEqual(restricted.used, restricted.limit)
 
+    def test_partial_lint_retains_completed_witnesses_without_claim_support(self):
+        class StopAfterTwoRows(RequestBudget):
+            def charge(inner, n=1):
+                if inner.partial_result and len(inner.partial_result["values"]["disclosures"]) >= 2:
+                    raise WorkLimit(run_exhausted=False)
+                super().charge(n)
+
+        self.claim["requirements"]["value"].append("recovery")
+        budget = StopAfterTwoRows()
+        with self.assertRaises(WorkLimit):
+            lint_claim(self.dossier, self.dossier["requests"][0], budget=budget)
+        partial = budget.partial_result
+        self.assertEqual(partial["execution"], "partial")
+        self.assertEqual(partial["assessment"], "not_assessed")
+        self.assertEqual(partial["values"]["claim_conclusion"], "not_assessed")
+        self.assertEqual(partial["values"]["documentary_completeness"], "not_assessed")
+        self.assertEqual([row["id"] for row in partial["values"]["disclosures"]], ["R01", "R02"])
+        self.assertEqual(partial["values"]["validation"]["assessment"], "supported_under_scope")
+        self.assertIn(self.review["id"], partial["support_ids"])
+        self.assertEqual(partial["values"]["scope_mismatches"][0]["required_feature"], "recovery")
+        self.assertTrue(any(f["rule"] == "required_feature_absent" for f in budget.partial_findings))
+
 
 if __name__ == "__main__":
     unittest.main()

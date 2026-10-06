@@ -183,6 +183,36 @@ def lint_claim(dossier: dict, request: dict, *, budget=None) -> tuple[dict, list
     all_reasons = set(claim_field_gaps) | currentness_reasons | validation_reasons
     if mismatches:
         all_reasons.add("scope_mismatch")
+
+    def checkpoint():
+        # Only fully completed subresults enter this snapshot. Subsequent
+        # review work cannot mutate the retained completed disclosure prefix.
+        partial = {
+            "request_id": request["id"], "operation": "lint", "scope_id": scope_id,
+            "selection": "selected", "applicability": "applicable", "execution": "partial",
+            "assessment": "not_assessed", "reason_codes": sorted(all_reasons | {"resource_limit"}),
+            "values": {
+                "disclosures": list(disclosures), "documentary_completeness": "not_assessed",
+                "currentness": currentness, "scope_mismatches": list(mismatches),
+                "validation": validation, "claim_conclusion": "not_assessed",
+                "open_evaluation": "not_applicable" if claim["profile"] == "narrow_regression" else "not_assessed",
+            },
+            "basis": [{"kind": "supplied_assertion", "record_ids": sorted({claim["id"], scope_id})},
+                      {"kind": "local_deduction", "record_ids": sorted(dependencies)}],
+            "support_ids": sorted(support_ids), "contrary_ids": sorted(contrary_ids),
+            "dependency_ids": sorted(dependencies),
+            "limitations": [
+                "Completed subresults are retained; remaining disclosure checks were not completed.",
+                "No aggregate affirmative or clean-negative conclusion follows from partial execution.",
+                "Completed qualification remains conditional on supplied scoped evidence and attributed reviews.",
+            ],
+        }
+        if len(json.dumps(partial, ensure_ascii=True, separators=(",", ":"))) > 20 * 1024 * 1024:
+            raise WorkLimit(run_exhausted=False)
+        budget.partial_result = partial
+        budget.partial_findings = list(findings)
+
+    checkpoint()
     for row_id in ROWS:
         presence, well_formed, linked, anchor_ids, reasons = _presence(claim, row_id)
         dependencies.update(anchor_ids)
@@ -261,6 +291,7 @@ def lint_claim(dossier: dict, request: dict, *, budget=None) -> tuple[dict, list
             findings.append(_finding(request, [claim["id"], *anchor_ids], f"disclosure_{row_id}", reasons,
                                      assessment=qualification, support_ids=review["support_ids"],
                                      contrary_ids=review["contrary_ids"], basis=review["basis"]))
+        checkpoint()
     # A known scope window is necessary for a time-bounded capability claim.
     window_gap = known(scope, "window") is None
     if window_gap:

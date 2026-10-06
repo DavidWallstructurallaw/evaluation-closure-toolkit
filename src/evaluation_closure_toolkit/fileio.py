@@ -124,6 +124,17 @@ def write_output(path: str | os.PathLike[str], content: bytes) -> None:
     """Create a private new regular file, never replacing a preexisting path."""
     checked = _path(path, "IO_OUTPUT_REFUSED")
     _ordinary_components(checked, include_file=False, code="IO_OUTPUT_REFUSED")
+    # Windows O_EXCL can follow a dangling leaf link to an absent target.
+    # Refuse every existing directory entry explicitly, including broken links,
+    # before supplementing this check with exclusive descriptor creation.
+    try:
+        os.lstat(checked)
+    except FileNotFoundError:
+        pass
+    except (OSError, ValueError):
+        raise FileBoundaryError("IO_OUTPUT_REFUSED") from None
+    else:
+        raise FileBoundaryError("IO_OUTPUT_REFUSED")
     descriptor = None
     identity = None
     completed = False

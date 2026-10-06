@@ -22,6 +22,8 @@ class RequestBudget:
     run: RunBudget | None = field(default=None)
     limit: int = 1_000_000
     used: int = 0
+    partial_result: dict | None = field(default=None, init=False)
+    partial_findings: list = field(default_factory=list, init=False)
 
     def __post_init__(self) -> None:
         if self.run is None:
