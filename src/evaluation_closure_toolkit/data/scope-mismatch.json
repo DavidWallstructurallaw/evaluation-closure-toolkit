@@ -1,0 +1,532 @@
+{
+  "schema": "ect-dossier/0.1",
+  "id": "demo-scope-mismatch",
+  "analysis_time": "2026-10-06T21:00:00Z",
+  "policy": "ect-core/0.1",
+  "records": [
+    {
+      "id": "process-v1",
+      "type": "entity",
+      "kind": "process",
+      "logical_id": "process-v1",
+      "version": "v1"
+    },
+    {
+      "id": "assessor-v1",
+      "type": "entity",
+      "kind": "actor",
+      "logical_id": "assessor-v1",
+      "version": "v1"
+    },
+    {
+      "id": "evaluator-v1",
+      "type": "entity",
+      "kind": "model",
+      "logical_id": "evaluator-v1",
+      "version": "v1"
+    },
+    {
+      "id": "source-v1",
+      "type": "entity",
+      "kind": "artifact",
+      "logical_id": "source-v1",
+      "version": "v1"
+    },
+    {
+      "id": "scope-main",
+      "type": "scope",
+      "process_id": "process-v1",
+      "claim_id": "claim-v1",
+      "frame_id": "frame-v1",
+      "snapshot_ids": [
+        "snapshot-v1"
+      ],
+      "window": {
+        "state": "known",
+        "value": {
+          "start": "2026-10-01T00:00:00Z",
+          "end": "2026-11-01T00:00:00Z"
+        }
+      }
+    },
+    {
+      "id": "claim-v1",
+      "type": "claim",
+      "scope_id": "scope-main",
+      "profile": "narrow_regression",
+      "statement": {
+        "state": "known",
+        "value": "The named finite synthetic regression cases passed in the supplied run."
+      },
+      "intended_use": {
+        "state": "known",
+        "value": "One captured synthetic regression suite, including the named state and consequence cases."
+      },
+      "horizon": {
+        "state": "known",
+        "value": "One supplied finite test run and the stated case horizon only."
+      },
+      "frame_id": {
+        "state": "known",
+        "value": "frame-v1"
+      },
+      "requirements": {
+        "state": "known",
+        "value": [
+          "single_turn",
+          "persistent_state",
+          "human_consequence",
+          "long_horizon"
+        ]
+      },
+      "validation_kind": {
+        "state": "known",
+        "value": "execution"
+      },
+      "valid_until": {
+        "state": "known",
+        "value": "2026-11-01T00:00:00Z"
+      },
+      "disclosures": {
+        "R01": {
+          "state": "known",
+          "value": [
+            "claim-v1"
+          ]
+        },
+        "R02": {
+          "state": "known",
+          "value": [
+            "frame-v1"
+          ]
+        },
+        "R03": {
+          "state": "known",
+          "value": [
+            "item-v1",
+            "origin-relation"
+          ]
+        },
+        "R04": {
+          "state": "known",
+          "value": [
+            "execution-receipt"
+          ]
+        },
+        "R05": {
+          "state": "known",
+          "value": [
+            "evaluator-v1"
+          ]
+        },
+        "R06": {
+          "state": "known",
+          "value": [
+            "snapshot-v1"
+          ]
+        },
+        "R07": {
+          "state": "known",
+          "value": [
+            "execution-receipt"
+          ]
+        },
+        "R08": {
+          "state": "known",
+          "value": [
+            "human-receipt"
+          ]
+        },
+        "R09": {
+          "state": "known",
+          "value": [
+            "correction-v1"
+          ]
+        },
+        "R10": {
+          "state": "known",
+          "value": [
+            "currentness-explanation"
+          ]
+        }
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "assessor-v1"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-05T12:00:00Z"
+      }
+    },
+    {
+      "id": "frame-v1",
+      "type": "frame",
+      "task": {
+        "state": "known",
+        "value": "Synthetic finite regression checks"
+      },
+      "context": {
+        "state": "known",
+        "value": "Named toy cases in one controlled offline run"
+      },
+      "horizon": {
+        "state": "known",
+        "value": "One captured finite run"
+      },
+      "resolution": {
+        "state": "known",
+        "value": "One declared class per item version"
+      },
+      "exclusions": {
+        "state": "known",
+        "value": "No field deployment, open-world generalization, or ongoing capability claim."
+      },
+      "validity_rubric": {
+        "state": "known",
+        "value": "The captured toy-case validity rubric"
+      },
+      "admission_policy": {
+        "state": "known",
+        "value": "One explicitly selected attributed hard assignment"
+      },
+      "selection_policy": {
+        "state": "known",
+        "value": "The one named immutable toy item"
+      },
+      "features": {
+        "state": "known",
+        "value": [
+          "single_turn",
+          "persistent_state",
+          "human_consequence"
+        ]
+      },
+      "classes": {
+        "state": "known",
+        "value": [
+          {
+            "id": "class-main",
+            "definition": "The named toy regression case"
+          }
+        ]
+      },
+      "tail_designations": {
+        "state": "known",
+        "value": []
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "assessor-v1"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-05T12:00:00Z"
+      }
+    },
+    {
+      "id": "item-v1",
+      "type": "item",
+      "logical_id": "toy-item",
+      "version": "v1",
+      "body": {
+        "state": "known",
+        "value": "Synthetic case: retain a toy user preference across two turns, then record the scripted user-consequence check. PRIVATE_ITEM_BODY_SENTINEL_73"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "assessor-v1"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-05T12:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-v1",
+      "type": "assignment",
+      "item_id": "item-v1",
+      "frame_id": "frame-v1",
+      "class_id": {
+        "state": "known",
+        "value": "class-main"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic manual assignment"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "assessor-v1"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-05T12:00:00Z"
+      }
+    },
+    {
+      "id": "snapshot-v1",
+      "type": "snapshot",
+      "frame_id": "frame-v1",
+      "members": [
+        "item-v1"
+      ],
+      "membership": {
+        "state": "known",
+        "value": "complete"
+      },
+      "selection_policy": {
+        "state": "known",
+        "value": "The one named immutable toy item"
+      },
+      "assignments": [
+        {
+          "item_id": "item-v1",
+          "assignment_id": "assignment-v1"
+        }
+      ],
+      "observed_at": {
+        "state": "known",
+        "value": "2026-10-05T10:00:00Z"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "assessor-v1"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-05T12:00:00Z"
+      }
+    },
+    {
+      "id": "origin-relation",
+      "type": "relation",
+      "scope_id": "scope-main",
+      "from_id": "item-v1",
+      "to_id": "source-v1",
+      "kind": "derived_from",
+      "asserted_by": {
+        "state": "known",
+        "value": "assessor-v1"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-05T12:00:00Z"
+      }
+    },
+    {
+      "id": "correction-v1",
+      "type": "correction_case",
+      "scope_id": "scope-main",
+      "claim_id": "claim-v1",
+      "issue": {
+        "state": "known",
+        "value": "Withdraw the finite assertion if a named regression case is invalidated."
+      },
+      "context": {
+        "state": "known",
+        "value": "drill"
+      },
+      "objective": {
+        "state": "known",
+        "value": "withdraw"
+      },
+      "route": {
+        "state": "known",
+        "value": {
+          "actor_id": "assessor-v1",
+          "target_id": "claim-v1",
+          "procedure": "Record a failing case and withdraw this finite assertion.",
+          "evidence_ids": [
+            "execution-receipt"
+          ]
+        }
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "assessor-v1"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-05T12:00:00Z"
+      }
+    },
+    {
+      "id": "execution-receipt",
+      "type": "evidence",
+      "scope_id": "scope-main",
+      "kind": {
+        "state": "known",
+        "value": "execution_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "assessor-v1"
+      },
+      "occurred_at": {
+        "state": "known",
+        "value": "2026-10-05T10:00:00Z"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-05T11:00:00Z"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Project-owned synthetic receipt run-1: the named item-v1 state checks passed under frame-v1; this is an attributed fixture premise and no real model execution is asserted. PRIVATE_EXECUTION_RECEIPT_SENTINEL_73"
+      },
+      "locator": {
+        "state": "known",
+        "value": "https://private.invalid/PRIVATE_LOCATOR_SENTINEL_73"
+      },
+      "subject_ids": [
+        "claim-v1",
+        "item-v1"
+      ],
+      "uncertainty": {
+        "state": "known",
+        "value": "Project-owned synthetic software fixture only."
+      }
+    },
+    {
+      "id": "human-receipt",
+      "type": "evidence",
+      "scope_id": "scope-main",
+      "kind": {
+        "state": "known",
+        "value": "human_consequence_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "assessor-v1"
+      },
+      "occurred_at": {
+        "state": "known",
+        "value": "2026-10-05T10:00:00Z"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-05T11:00:00Z"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Project-owned synthetic human-consequence receipt: the scripted participant outcome for item-v1 satisfied its declared toy-case criterion; no real participant study is represented. PRIVATE_HUMAN_RECEIPT_SENTINEL_73"
+      },
+      "locator": {
+        "state": "known",
+        "value": "https://private.invalid/PRIVATE_LOCATOR_SENTINEL_73"
+      },
+      "subject_ids": [
+        "claim-v1",
+        "item-v1"
+      ],
+      "uncertainty": {
+        "state": "known",
+        "value": "Project-owned synthetic software fixture only."
+      }
+    },
+    {
+      "id": "currentness-explanation",
+      "type": "evidence",
+      "scope_id": "scope-main",
+      "kind": {
+        "state": "known",
+        "value": "document"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "assessor-v1"
+      },
+      "occurred_at": {
+        "state": "known",
+        "value": "2026-10-05T10:00:00Z"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-05T11:00:00Z"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "The supplied review limits this finite assertion to the declared assessment time and the exclusive validity date 2026-11-01T00:00:00Z. PRIVATE_CURRENTNESS_SENTINEL_73"
+      },
+      "locator": {
+        "state": "known",
+        "value": "https://private.invalid/PRIVATE_LOCATOR_SENTINEL_73"
+      },
+      "subject_ids": [
+        "claim-v1"
+      ],
+      "uncertainty": {
+        "state": "known",
+        "value": "Project-owned synthetic software fixture only."
+      }
+    },
+    {
+      "id": "validation-review",
+      "type": "review",
+      "target_id": "claim-v1",
+      "criterion": "claim_validation",
+      "scope_id": "scope-main",
+      "assessor_id": {
+        "state": "known",
+        "value": "assessor-v1"
+      },
+      "reviewed_at": {
+        "state": "known",
+        "value": "2026-10-05T12:00:00Z"
+      },
+      "method": {
+        "state": "known",
+        "value": "Inspect the supplied synthetic run and disclosure records under the named finite scope."
+      },
+      "rationale": {
+        "state": "known",
+        "value": "The declared scope is limited to these named toy cases and receipts."
+      },
+      "verdict": {
+        "state": "known",
+        "value": "supports"
+      },
+      "evidence_ids": [
+        "execution-receipt",
+        "human-receipt"
+      ],
+      "disclosure_ids": [
+        "R01",
+        "R02",
+        "R03",
+        "R04",
+        "R05",
+        "R06",
+        "R07",
+        "R08",
+        "R09",
+        "R10"
+      ]
+    }
+  ],
+  "requests": [
+    {
+      "id": "lint-main",
+      "operation": "lint",
+      "scope_id": "scope-main",
+      "claim_id": "claim-v1"
+    }
+  ]
+}

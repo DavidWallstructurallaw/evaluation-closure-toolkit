@@ -1,0 +1,57 @@
+{
+  "schema": "ect-dossier/0.1",
+  "id": "demo-incomplete-regression",
+  "analysis_time": "2026-10-06T21:00:00Z",
+  "policy": "ect-core/0.1",
+  "records": [
+    {
+      "id": "process-v1",
+      "type": "entity",
+      "kind": "process",
+      "logical_id": "process-v1",
+      "version": "v1"
+    },
+    {
+      "id": "scope-main",
+      "type": "scope",
+      "process_id": "process-v1",
+      "claim_id": "claim-v1"
+    },
+    {
+      "id": "claim-v1",
+      "type": "claim",
+      "scope_id": "scope-main",
+      "profile": "narrow_regression",
+      "statement": {
+        "state": "known",
+        "value": "The declared finite regression cases passed in run 1."
+      },
+      "intended_use": {
+        "state": "known",
+        "value": "Regression tracking for the named single-turn cases only."
+      },
+      "horizon": {
+        "state": "known",
+        "value": "One isolated turn per case."
+      },
+      "requirements": {
+        "state": "known",
+        "value": [
+          "single_turn"
+        ]
+      },
+      "validation_kind": {
+        "state": "known",
+        "value": "execution"
+      }
+    }
+  ],
+  "requests": [
+    {
+      "id": "lint-main",
+      "operation": "lint",
+      "scope_id": "scope-main",
+      "claim_id": "claim-v1"
+    }
+  ]
+}
