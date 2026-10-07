@@ -19,7 +19,7 @@ _LIMITATIONS = [
     "Development build identity is unknown; exact same-build provenance is not established.",
     "Analysis time is supplied by the dossier; it is not a captured execution time or historical evidence cutoff.",
     "Conclusions are conditional on supplied records, declared scope and ect-core/0.1; evidence authenticity and textual truth are not independently verified.",
-    "P1-2 executes claim lint, structural profiles and compatible comparisons. Open-evaluation five-condition assessment is unavailable.",
+    "P1-3 executes claim lint, structural profiles, compatible comparisons, typed lineage and external-contact qualification. Open-evaluation five-condition assessment is unavailable.",
 ]
 
 
@@ -166,7 +166,7 @@ def analyze_bytes(data: bytes, *, request_ids: tuple[str, ...] | None = None) ->
                 result = _placeholder(request, selected=True, reason="resource_limit")
                 result["limitations"].append("Later work was not scheduled after a run work or report-delivery limit was reached.")
                 findings = [_finding(result, "resource_limit")]
-            elif request["operation"] in {"lint", "profile", "compare"}:
+            elif request["operation"] in {"lint", "profile", "compare", "lineage", "external"}:
                 budget = RequestBudget(run=run_budget)
                 try:
                     if request["operation"] == "lint":
@@ -174,9 +174,15 @@ def analyze_bytes(data: bytes, *, request_ids: tuple[str, ...] | None = None) ->
                     elif request["operation"] == "profile":
                         from .structural import profile_request
                         result, findings = profile_request(dossier, request, budget=budget)
-                    else:
+                    elif request["operation"] == "compare":
                         from .comparison import compare_request
                         result, findings = compare_request(dossier, request, budget=budget)
+                    elif request["operation"] == "lineage":
+                        from .lineage import lineage_request
+                        result, findings = lineage_request(dossier, request, budget=budget)
+                    else:
+                        from .external import external_request
+                        result, findings = external_request(dossier, request, budget=budget)
                 except WorkLimit as exc:
                     run_exhausted = exc.run_exhausted
                     result = budget.partial_result or _placeholder(request, selected=True, reason="resource_limit")
