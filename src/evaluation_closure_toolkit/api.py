@@ -19,7 +19,7 @@ _LIMITATIONS = [
     "Development build identity is unknown; exact same-build provenance is not established.",
     "Analysis time is supplied by the dossier; it is not a captured execution time or historical evidence cutoff.",
     "Conclusions are conditional on supplied records, declared scope and ect-core/0.1; evidence authenticity and textual truth are not independently verified.",
-    "P1-1 executes claim lint only. Open-evaluation five-condition assessment is unavailable.",
+    "P1-2 executes claim lint, structural profiles and compatible comparisons. Open-evaluation five-condition assessment is unavailable.",
 ]
 
 
@@ -166,16 +166,35 @@ def analyze_bytes(data: bytes, *, request_ids: tuple[str, ...] | None = None) ->
                 result = _placeholder(request, selected=True, reason="resource_limit")
                 result["limitations"].append("Later work was not scheduled after a run work or report-delivery limit was reached.")
                 findings = [_finding(result, "resource_limit")]
-            elif request["operation"] == "lint":
+            elif request["operation"] in {"lint", "profile", "compare"}:
                 budget = RequestBudget(run=run_budget)
                 try:
-                    result, findings = lint_claim(dossier, request, budget=budget)
+                    if request["operation"] == "lint":
+                        result, findings = lint_claim(dossier, request, budget=budget)
+                    elif request["operation"] == "profile":
+                        from .structural import profile_request
+                        result, findings = profile_request(dossier, request, budget=budget)
+                    else:
+                        from .comparison import compare_request
+                        result, findings = compare_request(dossier, request, budget=budget)
                 except WorkLimit as exc:
                     run_exhausted = exc.run_exhausted
                     result = budget.partial_result or _placeholder(request, selected=True, reason="resource_limit")
                     result["execution"] = "partial"
+                    progress = budget.profile_progress
+                    if progress and (progress["member_reasons"] or progress["validity_members"]):
+                        # Preserve completed member witnesses without treating
+                        # an interrupted population scan as a full distribution.
+                        result["values"]["partial_profiles"] = [{
+                            key: progress[key] for key in (
+                                "snapshot_id", "frame_id", "population", "member_reasons", "validity_members")
+                        } | {"reason_codes": ["resource_limit"]}]
+                        for key in ("dependency_ids", "support_ids", "contrary_ids"):
+                            result[key] = sorted(set(result[key]) | set(progress[key]))
+                        result["basis"].append({"kind": "supplied_assertion",
+                                                "record_ids": sorted(progress["dependency_ids"])})
                     result["limitations"].append(
-                        f"Lint stopped at the deterministic graph-work limit after {budget.used} request work units and {run_budget.used} run work units. Detailed review qualification is unavailable."
+                        f"Selected work stopped at a deterministic resource limit after {budget.used} request work units and {run_budget.used} run work units. Only completed intermediate results are retained."
                     )
                     findings = [*budget.partial_findings, _finding(result, "resource_limit")]
             else:
