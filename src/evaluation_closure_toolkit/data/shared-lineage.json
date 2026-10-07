@@ -1,0 +1,209 @@
+{
+  "schema": "ect-dossier/0.1",
+  "id": "synthetic-shared-lineage",
+  "analysis_time": "2026-10-07T00:00:00Z",
+  "policy": "ect-core/0.1",
+  "records": [
+    {
+      "id": "assessor",
+      "type": "entity",
+      "kind": "actor",
+      "logical_id": "assessor",
+      "version": "v1"
+    },
+    {
+      "id": "evaluation",
+      "type": "entity",
+      "kind": "process",
+      "logical_id": "evaluation",
+      "version": "v1"
+    },
+    {
+      "id": "scope",
+      "type": "scope",
+      "process_id": "evaluation",
+      "window": {
+        "state": "known",
+        "value": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-10-01T00:00:00Z"
+        }
+      }
+    },
+    {
+      "id": "x",
+      "type": "entity",
+      "kind": "artifact",
+      "logical_id": "x",
+      "version": "v1"
+    },
+    {
+      "id": "y",
+      "type": "entity",
+      "kind": "artifact",
+      "logical_id": "y",
+      "version": "v1"
+    },
+    {
+      "id": "origin",
+      "type": "entity",
+      "kind": "artifact",
+      "logical_id": "origin",
+      "version": "v1"
+    },
+    {
+      "id": "unknown-node",
+      "type": "entity",
+      "kind": "artifact",
+      "logical_id": "unknown-node",
+      "version": "v1"
+    },
+    {
+      "id": "edge-x-origin",
+      "type": "relation",
+      "scope_id": "scope",
+      "from_id": "x",
+      "to_id": "origin",
+      "kind": "acquired_from",
+      "asserted_by": {
+        "state": "known",
+        "value": "assessor"
+      }
+    },
+    {
+      "id": "edge-y-origin",
+      "type": "relation",
+      "scope_id": "scope",
+      "from_id": "y",
+      "to_id": "origin",
+      "kind": "derived_from",
+      "asserted_by": {
+        "state": "known",
+        "value": "assessor"
+      }
+    },
+    {
+      "id": "edge-x-unknown",
+      "type": "relation",
+      "scope_id": "scope",
+      "from_id": "x",
+      "to_id": "unknown-node",
+      "kind": "acquired_from",
+      "asserted_by": {
+        "state": "known",
+        "value": "assessor"
+      }
+    },
+    {
+      "id": "unknown-frontier",
+      "type": "frontier",
+      "scope_id": "scope",
+      "node_id": "unknown-node",
+      "view": "acquisition",
+      "reason": {
+        "state": "known",
+        "value": "unknown"
+      }
+    },
+    {
+      "id": "independence-xy",
+      "type": "independence",
+      "scope_id": "scope",
+      "members": [
+        "x",
+        "y"
+      ],
+      "form": "pairwise",
+      "dimension": "acquisition",
+      "method": {
+        "state": "known",
+        "value": "Synthetic acquisition review with an explicit conflicting shared-source witness."
+      },
+      "unexamined_dimensions": [
+        "model_ancestry",
+        "analytical_method",
+        "evaluation_rubric",
+        "organizational_control"
+      ]
+    },
+    {
+      "id": "independence-review",
+      "type": "review",
+      "target_id": "independence-xy",
+      "scope_id": "scope",
+      "criterion": "independence",
+      "assessor_id": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "reviewed_at": {
+        "state": "known",
+        "value": "2026-09-30T00:00:00Z"
+      },
+      "method": {
+        "state": "known",
+        "value": "Synthetic exact-scope documentary inspection."
+      },
+      "rationale": {
+        "state": "known",
+        "value": "This is a supplied synthetic premise, not field validation."
+      },
+      "verdict": {
+        "state": "known",
+        "value": "supports"
+      },
+      "evidence_ids": [
+        "independence-review-receipt"
+      ]
+    },
+    {
+      "id": "independence-review-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "process_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic supplied receipt; no real-world validation is asserted."
+      },
+      "subject_ids": [
+        "independence-xy",
+        "x",
+        "y"
+      ]
+    }
+  ],
+  "requests": [
+    {
+      "id": "lineage-acquisition",
+      "operation": "lineage",
+      "scope_id": "scope",
+      "seed_ids": [
+        "x",
+        "y"
+      ],
+      "view": "acquisition"
+    },
+    {
+      "id": "lineage-rubric",
+      "operation": "lineage",
+      "scope_id": "scope",
+      "seed_ids": [
+        "x",
+        "y"
+      ],
+      "view": "evaluation_rubric",
+      "independence_ids": []
+    }
+  ]
+}
