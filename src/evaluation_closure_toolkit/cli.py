@@ -15,6 +15,9 @@ DEMOS = (
     "supported-narrow-regression",
     "scope-mismatch",
     "open-claim-lint",
+    "growing-catalog",
+    "matched-cohort",
+    "recut-comparison",
 )
 _REQUEST_CODES = {
     "USAGE_INVALID_REQUEST",
@@ -38,14 +41,14 @@ class _Parser(argparse.ArgumentParser):
 def _parser() -> argparse.ArgumentParser:
     parser = _Parser(
         prog="evaluation-closure",
-        description="Inspect supplied evaluation dossiers offline. Development P1-1: validation and claim lint.",
+        description="Inspect supplied evaluation dossiers offline. Development P1-2: validation, claim lint, structural profiles and compatible comparison.",
         allow_abbrev=False,
     )
     parser.add_argument("--version", action="version", version=f"evaluation-closure {__version__}")
     commands = parser.add_subparsers(dest="command", required=True)
     for name, explanation in (
         ("validate", "Check dossier syntax, schema and references."),
-        ("analyze", "Execute selected dossier requests. P1-1 implements lint."),
+        ("analyze", "Execute selected dossier requests. Implements lint, profile and compare; later operations remain unsupported."),
         ("demo", "Analyze one installed synthetic example."),
     ):
         sub = commands.add_parser(name, help=explanation, description=explanation, allow_abbrev=False)

@@ -101,19 +101,35 @@ def _counterexample_in_scope(counterexample_id: str, review: dict,
     return False
 
 
+def make_review_index(records: dict) -> dict:
+    """Index all supplied declarations once; qualifications remain request-local."""
+    index = defaultdict(list)
+    for record in records.values():
+        if record["type"] == "review":
+            index[(record["target_id"], record["criterion"])].append(record)
+    return {key: sorted(value, key=lambda r: r["id"]) for key, value in index.items()}
+
+
 def evaluate_reviews(records: dict, target_id: str, criterion: str,
                      scope_id: str, *, required_kinds=(), disclosure_id=None,
-                     applicability_row=None, budget=None) -> dict:
+                     applicability_row=None, request_id=None, review_index=None,
+                     budget=None) -> dict:
     """Assess every relevant declaration, retaining conflicts and resolutions.
 
     ``records`` is indexed by ID. Disclosures filter claim-review coverage;
     applicability_row instead binds a row-specific applicability review.
+    Matching-basis reviews are bound to an exact comparison request. An optional
+    index must contain all declarations, including wrong-scope and contrary ones.
     """
     if budget is None:
         budget = RequestBudget()
-    candidates = sorted((r for r in records.values()
+    if criterion == "matching_basis" and request_id is None:
+        raise ValueError("MATCHING_REQUEST_REQUIRED")
+    pool = records.values() if review_index is None else review_index.get((target_id, criterion), ())
+    candidates = sorted((r for r in pool
                          if r["type"] == "review" and r["target_id"] == target_id
                          and r["criterion"] == criterion
+                         and (request_id is None or r.get("request_id") == request_id)
                          and (disclosure_id is None or disclosure_id in r.get("disclosure_ids", []))
                          and (applicability_row is None or r.get("disclosure_id") == applicability_row)),
                         key=lambda r: r["id"])

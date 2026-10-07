@@ -222,15 +222,15 @@ class AcceptanceTests(unittest.TestCase):
 
     def test_admitted_unimplemented_request_emits_not_run_ec108(self):
         dossier = self.positive()
-        dossier['requests'] = [{'id': 'profile-main', 'operation': 'profile',
-                               'scope_id': 'scope-main', 'snapshot_id': 'snapshot-v1'}]
+        dossier['requests'] = [{'id': 'cases-main', 'operation': 'cases',
+                               'scope_id': 'scope-main'}]
         report = analyze_bytes(encoded(dossier))
         self.assertEqual(report['admission'], 'valid')
-        profile = result(report, 'profile-main')
+        profile = result(report, 'cases-main')
         self.assertEqual(profile['execution'], 'not_run')
         self.assertEqual(profile['assessment'], 'not_assessed')
         self.assertIn('unsupported_operation', profile['reason_codes'])
-        self.assertTrue(any(f['family'] == 'EC108' and f['request_id'] == 'profile-main'
+        self.assertTrue(any(f['family'] == 'EC108' and f['request_id'] == 'cases-main'
                             for f in report['findings']))
 
     def test_exact_request_selection_does_not_execute_future_request(self):

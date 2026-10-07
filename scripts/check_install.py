@@ -1,6 +1,6 @@
 """Verify a built wheel in a fresh offline virtual environment outside the source tree.
 
-Usage: python scripts/check_install.py --wheel dist/evaluation_closure_toolkit-0.1.0.dev1-py3-none-any.whl
+Usage: python scripts/check_install.py --wheel dist/evaluation_closure_toolkit-0.1.0.dev2-py3-none-any.whl
 
 This development-only script intentionally launches installation and CLI processes.
 The installed toolkit runtime does not launch subprocesses or make network calls.
@@ -17,6 +17,11 @@ import tempfile
 import venv
 from pathlib import Path
 
+_DEMOS = (
+    "incomplete-regression", "supported-narrow-regression", "scope-mismatch", "open-claim-lint",
+    "growing-catalog", "matched-cohort", "recut-comparison",
+)
+
 _INSTALLED_API_CHECK = r'''
 import json
 import sys
@@ -31,14 +36,63 @@ assert distribution.version == ect.__version__, "Version identity disagrees"
 data_root = resources.files("evaluation_closure_toolkit").joinpath("data")
 schema = json.loads(data_root.joinpath("dossier.schema.json").read_bytes())
 assert schema["type"] == "object", "Packaged dossier schema missing"
-data = data_root.joinpath("incomplete-regression.json").read_bytes()
-assert ect.validate_bytes(data)["admission"] == "valid"
-report = ect.analyze_bytes(data)
-assert report["execution"] == "completed"
-assert report["results"][0]["values"]["claim_conclusion"] == "unestablished"
-assert ect.render_markdown(report).strip(), "Markdown renderer returned no report"
-Path("dossier.json").write_bytes(data)
-print("API, version identity, packaged schema and zero runtime dependencies verified")
+
+def fraction(numerator, denominator):
+    return {"state": "available", "value": {"numerator": str(numerator), "denominator": str(denominator)}}
+
+def integer(value):
+    return {"state": "available", "value": value}
+
+conclusions = {
+    "incomplete-regression": "unestablished",
+    "supported-narrow-regression": "supported_under_scope",
+    "scope-mismatch": "defeated_under_scope",
+    "open-claim-lint": "unestablished",
+}
+for name in (*conclusions, "growing-catalog", "matched-cohort", "recut-comparison"):
+    data = data_root.joinpath(name + ".json").read_bytes()
+    assert ect.validate_bytes(data)["admission"] == "valid", name
+    report = ect.analyze_bytes(data)
+    assert report["execution"] == "completed", name
+    rows = {row["request_id"]: row for row in report["results"]}
+    if name in conclusions:
+        assert report["results"][0]["values"]["claim_conclusion"] == conclusions[name], name
+    if name in {"growing-catalog", "matched-cohort"}:
+        before = rows["profile-a"]["values"]["profiles"][0]
+        after = rows["profile-b"]["values"]["profiles"][0]
+        assert before["N"] == integer(24) and after["N"] == integer(48), name
+        assert before["SCI"] == fraction(25, 72) and before["D"] == fraction(47, 72), name
+        assert after["SCI"] == fraction(7, 18) and after["D"] == fraction(11, 18), name
+        comparison = rows["compare-catalog"]["values"]
+        assert comparison["compatibility"]["state"] == "supported", name
+        assert comparison["delta_SCI"] == fraction(1, 24), name
+        assert comparison["delta_D"] == fraction(-1, 24), name
+    if name == "matched-cohort":
+        matched = rows["compare-matched"]["values"]
+        assert matched["mode"] == "matched"
+        assert matched["compatibility"]["state"] == "supported"
+        assert matched["pair_count"] == integer(24)
+        assert matched["after"]["SCI"] == fraction(31, 72)
+        assert matched["after"]["D"] == fraction(41, 72)
+        assert matched["catalog_profiles"]["after"][0]["N"] == integer(48)
+        assert matched["delta_SCI"] == fraction(1, 12)
+        assert matched["delta_D"] == fraction(-1, 12)
+    if name == "recut-comparison":
+        recut = rows["compare-catalog"]["values"]
+        assert recut["compatibility"]["state"] == "unavailable"
+        assert "incompatible_frame" in recut["compatibility"]["reason_codes"]
+        assert recut["delta_SCI"]["state"] == "unavailable"
+        assert recut["delta_D"]["state"] == "unavailable"
+        assert len(recut["after"]["class_counts"]) == 5
+        assert recut["after"]["SCI"] == fraction(2, 9)
+        assert recut["after"]["D"] == fraction(7, 9)
+        assert recut["new_observations"] == integer(0)
+    markdown = ect.render_markdown(report)
+    assert markdown.strip(), name
+    Path(name + ".json").write_bytes(data)
+    Path(name + ".report.json").write_text(json.dumps(report), encoding="utf-8")
+    Path(name + ".report.md").write_text(markdown, encoding="utf-8")
+print("API, seven exact demo results, version identity, packaged schema and zero runtime dependencies verified")
 '''
 
 
@@ -92,23 +146,23 @@ def main() -> int:
         version = _run([str(console), "--version"], working, environment, "Console entry point")
         module_version = _run([str(python), "-m", "evaluation_closure_toolkit", "--version"], working, environment, "Module entry point")
         assert version == module_version, "Console/module identity disagrees"
-        expected = {
-            "incomplete-regression": "unestablished",
-            "supported-narrow-regression": "supported_under_scope",
-            "scope-mismatch": "defeated_under_scope",
-            "open-claim-lint": "unestablished",
-        }
-        for name, conclusion in expected.items():
+        for name in _DEMOS:
             report = json.loads(_run([str(console), "demo", name], working, environment, f"Packaged demo {name}"))
-            assert report["admission"] == "valid" and report["execution"] == "completed"
-            assert report["results"][0]["values"]["claim_conclusion"] == conclusion, name
-        admitted = json.loads(_run([str(console), "validate", "dossier.json"], working, environment, "Installed validate"))
+            expected = json.loads((working / f"{name}.report.json").read_text(encoding="utf-8"))
+            assert report == expected, f"Console/API result differs for {name}"
+            if name in {"growing-catalog", "matched-cohort", "recut-comparison"}:
+                markdown = _run([str(console), "demo", name, "--format", "markdown"], working, environment, f"Packaged Markdown demo {name}")
+                assert markdown == (working / f"{name}.report.md").read_text(encoding="utf-8"), name
+        admitted = json.loads(_run([str(console), "validate", "incomplete-regression.json"], working, environment, "Installed validate"))
         assert admitted["admission"] == "valid" and admitted["results"] == []
-        analyzed = json.loads(_run([str(console), "analyze", "dossier.json", "--request", "lint-main"], working, environment, "Installed analyze"))
+        analyzed = json.loads(_run([str(console), "analyze", "incomplete-regression.json", "--request", "lint-main"], working, environment, "Installed analyze"))
         assert analyzed["results"][0]["values"]["claim_conclusion"] == "unestablished"
-        _run([str(console), "analyze", "dossier.json", "--format", "markdown", "--output", "report.md"], working, environment, "Installed Markdown output")
+        structural = json.loads(_run([str(console), "analyze", "growing-catalog.json", "--request", "profile-a", "--request", "compare-catalog"], working, environment, "Installed profile/compare selection"))
+        assert structural["selected_request_ids"] == ["compare-catalog", "profile-a"]
+        assert structural["execution"] == "completed"
+        _run([str(console), "analyze", "incomplete-regression.json", "--format", "markdown", "--output", "report.md"], working, environment, "Installed Markdown output")
         assert (working / "report.md").read_text(encoding="utf-8").strip()
-        print(f"{version.strip()}: fresh offline install, both entry points, four demos, validate/analyze and Markdown output passed")
+        print(f"{version.strip()}: fresh offline install, both entry points, seven demos, validate/analyze, profile/compare selection and Markdown output passed")
         print(f"Local verification runtime: {sys.implementation.name} {sys.version.split()[0]} on {sys.platform}")
     return 0
 

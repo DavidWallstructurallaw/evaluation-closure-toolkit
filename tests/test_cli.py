@@ -104,6 +104,40 @@ class CommandLineTests(unittest.TestCase):
                 self.assertEqual(report["execution"], "completed")
         self.assertEqual(list(self.root.iterdir()), [self.path])
 
+    def test_profile_and_compare_selection_has_exact_numeric_cli_results(self):
+        data = resources.files("evaluation_closure_toolkit").joinpath("data", "growing-catalog.json").read_bytes()
+        self.path.write_bytes(data)
+        status, stdout, stderr = self.run_cli(
+            "analyze", str(self.path), "--request", "profile-a", "--request", "compare-catalog"
+        )
+        self.assertEqual((status, stderr), (0, ""))
+        report = json.loads(stdout)
+        self.assertEqual(report["selected_request_ids"], ["compare-catalog", "profile-a"])
+        selected = {r["request_id"]: r for r in report["results"] if r["selection"] == "selected"}
+        profile = selected["profile-a"]["values"]["profiles"][0]
+        self.assertEqual(profile["N"], {"state": "available", "value": 24})
+        self.assertEqual(profile["SCI"], {
+            "state": "available", "value": {"numerator": "25", "denominator": "72"}
+        })
+        comparison = selected["compare-catalog"]["values"]
+        self.assertEqual(comparison["delta_SCI"], {
+            "state": "available", "value": {"numerator": "1", "denominator": "24"}
+        })
+
+    def test_profile_and_compare_markdown_matches_complete_api_report(self):
+        for name, expected_tokens in (
+            ("growing-catalog", ("profile-a", "compare-catalog", "delta_SCI", "25/72")),
+            ("matched-cohort", ("compare-matched", "matched", "pair_count", "1/12")),
+            ("recut-comparison", ("compare-catalog", "incompatible_frame")),
+        ):
+            with self.subTest(name=name):
+                data = resources.files("evaluation_closure_toolkit").joinpath("data", f"{name}.json").read_bytes()
+                expected = ect.render_markdown(ect.analyze_bytes(data))
+                status, stdout, stderr = self.run_cli("demo", name, "--format", "markdown")
+                self.assertEqual((status, stdout, stderr), (0, expected, ""))
+                for token in expected_tokens:
+                    self.assertIn(token, stdout)
+
     def test_missing_installed_demo_fails_truthfully_without_traceback(self):
         with patch.object(cli.resources, "files", side_effect=FileNotFoundError("SECRET-INSTALL-PATH")):
             status, stdout, stderr = self.run_cli("demo", "incomplete-regression")
