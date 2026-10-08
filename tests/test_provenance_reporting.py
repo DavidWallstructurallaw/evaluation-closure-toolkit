@@ -153,14 +153,14 @@ class ProvenanceReportingTests(unittest.TestCase):
         self.assertEqual(row["assessment"], "not_assessed")
         render_markdown(report)
 
-    def test_cases_and_assess_are_still_explicitly_deferred(self):
+    def test_cases_and_assess_execute_after_the_p1_4_implementation(self):
         d = fixture("incomplete-regression")
         scope, claim = d["requests"][0]["scope_id"], d["requests"][0]["claim_id"]
         d["requests"] = [{"id": "future-cases", "operation": "cases", "scope_id": scope},
                          {"id": "future-assess", "operation": "assess", "scope_id": scope, "claim_id": claim}]
         report = analyze_bytes(wire(d))
         self.assertEqual(report["admission"], "valid")
-        self.assertTrue(all(r["execution"] == "not_run" and r["reason_codes"] == ["unsupported_operation"] for r in report["results"]))
+        self.assertTrue(all(r["execution"] == "completed" and "unsupported_operation" not in r["reason_codes"] for r in report["results"]))
         render_markdown(report)
 
 

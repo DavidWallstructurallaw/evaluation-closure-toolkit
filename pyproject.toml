@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "evaluation-closure-toolkit"
-version = "0.1.0.dev3"
+version = "0.1.0.dev4"
 description = "An offline auditor for supplied AI evaluation dossiers."
 readme = "README.md"
 requires-python = ">=3.12,<3.14"

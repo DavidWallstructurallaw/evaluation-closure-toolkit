@@ -1,6 +1,6 @@
 """Offline analysis of supplied evaluation dossiers, under explicit scope."""
 
-__version__ = "0.1.0.dev3"
+__version__ = "0.1.0.dev4"
 
 from .api import analyze_bytes, validate_bytes
 from .errors import AdmissionError, InternalError, ReportError, RequestError
