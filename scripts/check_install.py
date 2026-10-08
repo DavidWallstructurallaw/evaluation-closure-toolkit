@@ -1,6 +1,6 @@
 """Verify a built wheel in a fresh offline virtual environment outside the source tree.
 
-Usage: python scripts/check_install.py --wheel dist/evaluation_closure_toolkit-0.1.0.dev3-py3-none-any.whl
+Usage: python scripts/check_install.py --wheel dist/evaluation_closure_toolkit-0.1.0.dev4-py3-none-any.whl
 
 This development-only script intentionally launches installation and CLI processes.
 The installed toolkit runtime does not launch subprocesses or make network calls.
@@ -21,6 +21,7 @@ _DEMOS = (
     "incomplete-regression", "supported-narrow-regression", "scope-mismatch", "open-claim-lint",
     "growing-catalog", "matched-cohort", "recut-comparison",
     "shared-lineage", "recursive-reuse", "external-contact",
+    "correction-cases", "revision-accountability", "supported-open-evaluation",
 )
 
 _INSTALLED_API_CHECK = r'''
@@ -50,7 +51,7 @@ conclusions = {
     "scope-mismatch": "defeated_under_scope",
     "open-claim-lint": "unestablished",
 }
-for name in (*conclusions, "growing-catalog", "matched-cohort", "recut-comparison", "shared-lineage", "recursive-reuse", "external-contact"):
+for name in (*conclusions, "growing-catalog", "matched-cohort", "recut-comparison", "shared-lineage", "recursive-reuse", "external-contact", "correction-cases", "revision-accountability", "supported-open-evaluation"):
     data = data_root.joinpath(name + ".json").read_bytes()
     assert ect.validate_bytes(data)["admission"] == "valid", name
     report = ect.analyze_bytes(data)
@@ -112,12 +113,36 @@ for name in (*conclusions, "growing-catalog", "matched-cohort", "recut-compariso
         assert members["q"]["stages"]["received"]["state"] == "unresolved"
         assert members["q"]["externality"]["assessment"] == "unresolved"
         assert members["r"]["contact_state"] == "carryover_only"
+    if name == "correction-cases":
+        cases = rows["cases-main"]["values"]
+        assert cases["pair_counts"]["effective"] == integer(1)
+        assert cases["pair_counts"]["authorized"] == integer(0)
+        assert cases["event_counts"]["handling"] == integer(2)
+        first, ticket = cases["corrections"]
+        assert first["authority"]["assessment"] == "unresolved"
+        assert first["outcomes"][0]["review"]["assessment"] == "supported_under_scope"
+        assert first["outcomes"][0]["objective"] == "restrict"
+        assert ticket["handling"][0]["check"]["assessment"] == "supported_under_scope"
+        assert ticket["actions"] == ticket["outcomes"] == []
+    if name == "revision-accountability":
+        recut, rename = rows["cases-main"]["values"]["revisions"]
+        assert recut["cut_state"] == "recut_documented" and recut["fidelity"]["assessment"] == "supported_under_scope"
+        assert rename["cut_state"] == "relabel_only" and rename["incorporated"]["assessment"] == "supported_under_scope"
+        assert rename["fidelity"]["assessment"] == "unresolved"
+    if name == "supported-open-evaluation":
+        assessment = rows["assess-main"]["values"]
+        assert assessment["conclusion"] == "supported_under_scope"
+        assert assessment["capacity_extent"] == "tested_route"
+        assert len(assessment["conditions"]) == 5
+        assert all(g["assessment"] == "supported_under_scope" for g in assessment["conditions"])
+        assert sum(len(g["values"]["criteria"]) for g in assessment["conditions"]) == 14
+        assert {p["role"] for p in assessment["prerequisites"]} == {"structural", "cases", "external"}
     markdown = ect.render_markdown(report)
     assert markdown.strip(), name
     Path(name + ".json").write_bytes(data)
     Path(name + ".report.json").write_text(json.dumps(report), encoding="utf-8")
     Path(name + ".report.md").write_text(markdown, encoding="utf-8")
-print("API, ten exact demo results, version identity, packaged schema and zero runtime dependencies verified")
+print("API, thirteen exact demo results, version identity, packaged schema and zero runtime dependencies verified")
 '''
 
 
@@ -175,7 +200,7 @@ def main() -> int:
             report = json.loads(_run([str(console), "demo", name], working, environment, f"Packaged demo {name}"))
             expected = json.loads((working / f"{name}.report.json").read_text(encoding="utf-8"))
             assert report == expected, f"Console/API result differs for {name}"
-            if name in {"growing-catalog", "matched-cohort", "recut-comparison", "shared-lineage", "recursive-reuse", "external-contact"}:
+            if name in {"growing-catalog", "matched-cohort", "recut-comparison", "shared-lineage", "recursive-reuse", "external-contact", "correction-cases", "revision-accountability", "supported-open-evaluation"}:
                 markdown = _run([str(console), "demo", name, "--format", "markdown"], working, environment, f"Packaged Markdown demo {name}")
                 assert markdown == (working / f"{name}.report.md").read_text(encoding="utf-8"), name
         admitted = json.loads(_run([str(console), "validate", "incomplete-regression.json"], working, environment, "Installed validate"))
@@ -192,7 +217,11 @@ def main() -> int:
         assert provenance["execution"] == "completed"
         contact = json.loads(_run([str(console), "analyze", "external-contact.json", "--request", "external-main"], working, environment, "Installed external selection"))
         assert contact["execution"] == "completed"
-        print(f"{version.strip()}: fresh offline install, both entry points, ten demos, validate/analyze, profile/compare/lineage/external selection and Markdown output passed")
+        cases = json.loads(_run([str(console), "analyze", "correction-cases.json", "--request", "cases-main"], working, environment, "Installed cases selection"))
+        assert cases["execution"] == "completed"
+        assessment = json.loads(_run([str(console), "analyze", "supported-open-evaluation.json", "--request", "assess-main"], working, environment, "Installed assess selection"))
+        assert assessment["results"][0]["values"]["conclusion"] == "supported_under_scope"
+        print(f"{version.strip()}: fresh offline install, both entry points, thirteen demos, validate/analyze, all seven request operations and Markdown output passed")
         print(f"Local verification runtime: {sys.implementation.name} {sys.version.split()[0]} on {sys.platform}")
     return 0
 

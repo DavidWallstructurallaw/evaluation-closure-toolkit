@@ -1,4 +1,4 @@
-name: P1-3 verification
+name: P1-4 verification
 
 on:
   push:
@@ -25,10 +25,10 @@ jobs:
       - name: Build sdist and wheel from sdist
         run: python -m build
       - name: Install wheel
-        run: python -m pip --disable-pip-version-check install --no-index --no-deps dist/evaluation_closure_toolkit-0.1.0.dev3-py3-none-any.whl
+        run: python -m pip --disable-pip-version-check install --no-index --no-deps dist/evaluation_closure_toolkit-0.1.0.dev4-py3-none-any.whl
       - name: Test public behavior
         run: python -m unittest discover -s tests -v
       - name: Verify schema generation
         run: python scripts/generate_schema.py --check
       - name: Verify isolated installed distribution
-        run: python scripts/check_install.py --wheel dist/evaluation_closure_toolkit-0.1.0.dev3-py3-none-any.whl
+        run: python scripts/check_install.py --wheel dist/evaluation_closure_toolkit-0.1.0.dev4-py3-none-any.whl
