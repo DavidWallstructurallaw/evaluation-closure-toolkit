@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "evaluation-closure-toolkit"
-version = "0.1.0.dev5"
+version = "0.1.0rc1"
 description = "An offline auditor for supplied AI evaluation dossiers."
 readme = "README.md"
 requires-python = ">=3.12,<3.14"
@@ -12,7 +12,7 @@ license = "Apache-2.0"
 license-files = ["LICENSE"]
 dependencies = []
 classifiers = [
-  "Development Status :: 3 - Alpha",
+  "Development Status :: 4 - Beta",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Topic :: Software Development :: Testing",

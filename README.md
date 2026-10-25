@@ -2,31 +2,56 @@
 
 Inspect a supplied AI evaluation dossier offline, with conclusions tied to its declared scope and evidence.
 
-**Development stage: P1-5, version `0.1.0.dev5`.** All seven specified operations execute: dossier admission and claim lint, structural accounting, compatible snapshot comparison, typed lineage, external contact, correction accounting and fixed five-condition assessment. This step consolidates readable reports, a complete synthetic workflow and deterministic rerun guidance.
+Use it when an evaluation claim needs an inspectable record of what was tested, what its population covers, where its evidence came from, and whether external input and correction routes were actually documented. Supply one local JSON dossier; receive scoped findings and exact counts in JSON or Markdown. No model service or credentials are required.
+
+**P1-6 release candidate: `0.1.0rc1`.** All seven specified operations are implemented. This branch prepares release qualification and user documentation; it does not publish stable `0.1.0`. See the [user guide](docs/USER_GUIDE.md) for preparing real dossiers and the [release procedure](docs/RELEASE.md) for candidate provenance and acceptance.
 
 ## Install and try
 
-Use CPython 3.12 or 3.13. From a checkout:
+Use 64-bit CPython 3.12 or 3.13. The qualification matrix is Ubuntu 22.04 x64 and Windows Server 2022 x64; other systems remain unqualified. From this candidate checkout:
 
 ```sh
 python -m pip install .
-evaluation-closure demo bounded-workflow --format markdown
-evaluation-closure demo incomplete-regression
-evaluation-closure demo supported-narrow-regression --format markdown
-evaluation-closure demo scope-mismatch
-evaluation-closure demo open-claim-lint
-evaluation-closure demo growing-catalog --format markdown
-evaluation-closure demo matched-cohort
-evaluation-closure demo recut-comparison
-evaluation-closure demo shared-lineage --format markdown
-evaluation-closure demo recursive-reuse
-evaluation-closure demo external-contact --format markdown
-evaluation-closure demo correction-cases --format markdown
-evaluation-closure demo revision-accountability
-evaluation-closure demo supported-open-evaluation --format markdown
 ```
 
-The runtime uses only the Python standard library. Installation needs setuptools as a build dependency. The fourteen demos are synthetic, packaged with the wheel, and require no network, credentials, external model or predecessor toolkit. `demo` analyzes a packaged dossier; it does not export the dossier.
+A source-checkout install reports `build_id=unknown`. For an already qualified local wheel, use `python -m pip install --no-index --no-deps PATH_TO_WHEEL`; the [release procedure](docs/RELEASE.md) explains how its source revision is embedded and verified. No package-index publication is assumed.
+
+The runtime uses only the Python standard library. Source installation needs setuptools as a build dependency and may access a package index for build tooling. The fourteen demos are synthetic, packaged with the wheel, and require no network, credentials, external model or predecessor toolkit. `demo` analyzes a packaged dossier; it does not export the dossier.
+
+Run the following after installation in a private working directory with fresh output names. These examples are executed from the installed wheel during qualification.
+
+<!-- ect-quickstart:start -->
+
+```sh
+evaluation-closure --version
+evaluation-closure demo bounded-workflow --format markdown --output demo-report.md
+```
+
+For an editable dossier and a public-API example, save this as `quickstart.py` and run it with your installed Python:
+
+```python
+from importlib import resources
+from pathlib import Path
+from evaluation_closure_toolkit import analyze_bytes, render_markdown, validate_bytes
+
+dossier_bytes = resources.files("evaluation_closure_toolkit").joinpath(
+    "data", "bounded-workflow.json"
+).read_bytes()
+with Path("dossier.json").open("xb") as output:
+    output.write(dossier_bytes)
+admission = validate_bytes(dossier_bytes)
+report = analyze_bytes(dossier_bytes, request_ids=("lint-main",))
+markdown = render_markdown(report)
+print(admission["admission"], report["execution"])
+```
+
+```sh
+evaluation-closure validate dossier.json
+evaluation-closure analyze dossier.json --request lint-main --output report.json
+evaluation-closure analyze dossier.json --request lint-main --format markdown --output report.md
+```
+
+<!-- ect-quickstart:end -->
 
 Start with `bounded-workflow` for all seven operations in one finite scope. It compares two captured items with three: SCI changes from `1/2` to `5/9` and D from `1/2` to `4/9`. Its open-claim lint has complete disclosures yet remains `unestablished`; separate assessment supports all five conditions under the supplied evidence and policy. Shared lineage remains visible and supplies no automatic independence conclusion. Correction capacity remains a tested drill route. These statements describe the fixture, not a real evaluated system.
 
@@ -57,21 +82,9 @@ Start with `bounded-workflow` for all seven operations in one finite scope. It c
 
 ## Use your dossier
 
-```sh
-evaluation-closure validate dossier.json
-evaluation-closure analyze dossier.json --request lint-main
-evaluation-closure analyze dossier.json --format markdown --output new-report.md
-```
+The [user guide](docs/USER_GUIDE.md) maps each operation to the records it needs, explains unknown/withheld facts, and starts with a smaller incomplete example. Replace synthetic records with your own evidence before making any real-world claim.
 
 Input must be an explicit regular JSON file. Output defaults to stdout; `--output` creates one new file in an existing directory and refuses overwrite. Symlinks, reparse points and nonregular files are refused. Locators and evidence text stay inert. The tool never fetches documents, executes models, launches processes, or publishes reports.
-
-```python
-from evaluation_closure_toolkit import analyze_bytes, validate_bytes, render_markdown
-
-admission = validate_bytes(dossier_bytes)
-report = analyze_bytes(dossier_bytes, request_ids=("lint-main",))
-markdown = render_markdown(report)
-```
 
 Both byte APIs return a sanitized report for invalid JSON or schema/reference failures. Selection mistakes raise `RequestError`; non-byte arguments raise `TypeError`. Unexpected engine faults raise payload-free `InternalError`. Rendering an invalid current report raises `ReportError`.
 
@@ -106,7 +119,7 @@ Review receipts use explicit `subject_ids` to bind the supplied judgment to the 
 
 The tool does not authenticate receipts, prove textual assertions or authorize deployment. JSON and Markdown omit raw evidence bodies and locators. Reports contain supplied identifiers and should be treated as private. Markdown includes a scoped reading view with request states, disclosures, criteria, prerequisite status, findings, evidence references, needed information and limitations, followed by the complete inert report object. Finding families identify the kind of issue or observation; they are not severity rankings. Inventory/arithmetic rows remain `not_assessed`.
 
-Input identity hashes the original bytes. Result identity hashes canonical JSON excluding its own digest, with a final newline. The development `build_id` is explicitly `unknown`; no immutable source-build provenance claim is made. Results include interpreter identity, so cross-runtime comparisons use normalized substantive fields.
+Input identity hashes the original bytes. Result identity hashes canonical JSON excluding its own digest, with a final newline. Candidate builds embed `ect-VERSION+git.SOURCE_REVISION` from a clean committed export; ordinary source builds remain `unknown`. Retain the actual artifact and check its hash and expected revision. These identities do not supply a signature, authenticate evidence or promise byte-reproducible packaging. Results include interpreter identity, so cross-runtime comparisons use normalized substantive fields.
 
 The [deterministic rerun guide](docs/REPRODUCIBILITY.md) shows how to retain an exact dossier, rerun the existing commands, verify report bytes and digests, and render saved JSON through the public API. Keep original bytes and matching selection/contracts before comparing normalized outputs. Capture archives, a `replay` command and simulation remain outside this release.
 
@@ -121,6 +134,9 @@ The bounded local-file checks assume a user-controlled directory. They do not cl
 - [P1-3 implementation and verification](docs/P1-3.md)
 - [P1-4 implementation and verification](docs/P1-4.md)
 - [P1-5 reporting, workflow and rerun integration](docs/P1-5.md)
+- [P1-6 release qualification](docs/P1-6.md)
+- [User guide](docs/USER_GUIDE.md)
+- [Candidate build and release procedure](docs/RELEASE.md)
 - [Deterministic rerun guide](docs/REPRODUCIBILITY.md)
 - [Machine-readable dossier schema](src/evaluation_closure_toolkit/data/dossier.schema.json)
 
@@ -132,9 +148,9 @@ python -m unittest discover -s tests -v
 python scripts/generate_schema.py --check
 python -m pip install build
 python -m build
-python scripts/check_install.py --wheel dist/evaluation_closure_toolkit-0.1.0.dev5-py3-none-any.whl
+python scripts/check_install.py --wheel dist/evaluation_closure_toolkit-0.1.0rc1-py3-none-any.whl
 ```
 
-CI targets CPython 3.12/3.13 on Ubuntu 22.04 and Windows Server 2022. The workflow builds a wheel through its source distribution, runs the behavioral suite and performs a fresh installed-package check. See the pull request checks for actual target results.
+The commands above check an ordinary source build with unknown identity. The [candidate build procedure](docs/RELEASE.md) additionally requires an exact clean source revision and verifies the stamped artifact. CI qualifies that exact revision in all four selected cells, including tests from the extracted source distribution and fresh offline installation outside the checkout. See the pull request checks for actual results. All examples remain synthetic; no real-data effectiveness pilot is claimed.
 
 License: Apache-2.0.

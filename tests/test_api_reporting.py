@@ -336,6 +336,22 @@ class APIReportingTests(unittest.TestCase):
         self.assertEqual(detail['build_id'], 'unknown')
         self.assertEqual(detail['limitations'], report['limitations'])
 
+    def test_named_package_build_identity_changes_identity_without_promoting_evidence(self):
+        data = fixture_bytes()
+        with patch('evaluation_closure_toolkit.api.BUILD_ID', 'unknown'):
+            unknown = analyze_bytes(data)
+        named_id = 'ect-0.1.0rc1+git.' + 'a' * 40
+        with patch('evaluation_closure_toolkit.api.BUILD_ID', named_id):
+            named = analyze_bytes(data)
+            self.assertEqual(validate_bytes(data)['build_id'], named_id)
+            self.assertEqual(validate_bytes(b'{')['build_id'], named_id)
+        self.assertEqual(named['build_id'], named_id)
+        self.assertEqual(named['results'], unknown['results'])
+        self.assertEqual(named['findings'], unknown['findings'])
+        self.assertEqual(named['limitations'], unknown['limitations'])
+        self.assertNotEqual(named['result_sha256'], unknown['result_sha256'])
+        self.assertEqual(detailed_json(render_markdown(named)), named)
+
     def test_normalized_demo_bytes_match_cross_runtime_golden_digests(self):
         # Generated golden hashes verify reproducibility only. They are separate
         # from the independent scientific/semantic expectations in acceptance.
