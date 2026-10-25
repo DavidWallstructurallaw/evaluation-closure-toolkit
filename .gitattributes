@@ -1,0 +1,2 @@
+# Preserve canonical JSON bytes and source/document identity on every platform.
+* text=auto eol=lf
