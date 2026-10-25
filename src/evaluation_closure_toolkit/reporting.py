@@ -4,11 +4,14 @@ from __future__ import annotations
 
 import hashlib
 import datetime as dt
+from io import StringIO
 import json
 import math
 import re
 
 from .errors import ReportError
+
+MAX_REPORT_BYTES = 20 * 1024 * 1024
 
 _BASE = {
     "schema", "method", "serialization", "tool_version", "build_id",
@@ -767,6 +770,41 @@ def _table(lines: list[str], headers: list[str], rows: list[list[str]]) -> None:
     lines.append("")
 
 
+def _references_markdown(lines: list[str], value: dict) -> None:
+    fields = [("Support IDs", "support_ids"), ("Contrary IDs", "contrary_ids")]
+    if "dependency_ids" in value:
+        fields.append(("Dependency IDs", "dependency_ids"))
+    _table(lines, ["Premises", "Captured IDs"],
+           [[label, ", ".join(value[field]) or "none recorded"] for label, field in fields])
+    if value["limitations"]:
+        lines += ["Scoped limitations:", ""]
+        lines.extend("- " + _escape(limit) for limit in value["limitations"])
+        lines.append("")
+
+
+def _lint_markdown(lines: list[str], result: dict) -> None:
+    value = result["values"]
+    lines += ["Claim conclusion: " + _escape(value["claim_conclusion"]) + ". "
+              "Documentary completeness: " + _escape(value["documentary_completeness"]) + ".", "",
+              "Currentness: " + _escape(value["currentness"]) + ". "
+              "Open evaluation: " + _escape(value["open_evaluation"]) + ".", "",
+              "Documentary completeness describes declarations, not scientific support. Open-claim lint does not perform the five-condition assessment.", ""]
+    if result["execution"] == "partial":
+        lines += ["Partial execution: only completed disclosure rows are shown; unfinished rows do not establish completeness.", ""]
+    _table(lines, ["Disclosure", "Presence", "Well formed", "Linked", "Applicability", "Qualification", "Anchors", "Reasons"],
+           [[row["id"], row["presence"], row["well_formed"], row["linked"], row["applicability"],
+             row["qualification"], ", ".join(row["anchor_ids"]), ", ".join(row["reasons"])]
+            for row in value["disclosures"]])
+    validation = value["validation"]
+    _table(lines, ["Validation selection", "Applicability", "Execution", "Assessment", "Reasons"],
+           [[validation[k] for k in ("selection", "applicability", "execution", "assessment")]
+            + [", ".join(validation["reason_codes"])]])
+    if value["scope_mismatches"]:
+        _table(lines, ["Required feature", "Conflicting frame", "Reasons"],
+               [[row["required_feature"], row["frame_id"], ", ".join(row["reason_codes"])]
+                for row in value["scope_mismatches"]])
+
+
 def _profile_markdown(lines: list[str], profile: dict, label: str) -> None:
     lines += ["### " + _escape(label), "",
               "Snapshot: " + _escape(profile["snapshot_id"]) + ". Frame: " + _escape(profile["frame_id"]) + ".", "",
@@ -799,7 +837,6 @@ def _profile_markdown(lines: list[str], profile: dict, label: str) -> None:
 
 def _structural_markdown(lines: list[str], result: dict) -> None:
     values = result["values"]
-    lines += ["## " + _escape(result["operation"] + " " + result["request_id"]), ""]
     if result["execution"] == "partial":
         lines += ["Execution is partial. Completed views are retained; unfinished views and comparisons remain unavailable.", ""]
     if values.get("partial_profiles"):
@@ -839,7 +876,6 @@ def _structural_markdown(lines: list[str], result: dict) -> None:
 
 def _provenance_markdown(lines, result):
     value = result["values"]
-    lines += ["## " + _escape(result["operation"] + " " + result["request_id"]), ""]
     if result["execution"] == "partial":
         lines += ["Partial execution: completed witnesses remain visible; unfinished inventories and totals cannot establish absence.", ""]
     if result["operation"] == "lineage":
@@ -870,7 +906,6 @@ def _provenance_markdown(lines, result):
 
 def _assessment_markdown(lines, result):
     value = result["values"]
-    lines += ["## " + _escape(result["operation"] + " " + result["request_id"]), ""]
     if result["execution"] == "partial":
         lines += ["Partial execution: completed checks and decisive counterevidence survive; unfinished checks cannot support an affirmative conclusion.", ""]
     if result["operation"] == "assess":
@@ -879,13 +914,20 @@ def _assessment_markdown(lines, result):
         if value["conclusion"] == "supported_under_scope":
             lines += ["Supported under the declared scope, supplied evidence and ect-core/0.1 policy.", ""]
         if value["conditions"]:
-            _table(lines, ["Condition", "Selection", "Execution", "Assessment"],
-                   [[r[k] for k in ("condition", "selection", "execution", "assessment")] for r in value["conditions"]])
-            _table(lines, ["Criterion", "Assessment", "Reasons"],
-                   [[r["criterion"], r["assessment"], ", ".join(r["reason_codes"])] for c in value["conditions"] for r in c["values"]["criteria"]])
-        for prerequisite in value["prerequisites"]:
-            if prerequisite["role"] == "cases":
-                _assessment_markdown(lines, prerequisite["result"])
+            _table(lines, ["Condition", "Selection", "Applicability", "Execution", "Assessment", "Reasons"],
+                   [[r[k] for k in ("condition", "selection", "applicability", "execution", "assessment")]
+                    + [", ".join(r["reason_codes"])] for r in value["conditions"]])
+            _table(lines, ["Criterion", "Selection", "Applicability", "Execution", "Assessment", "Reasons"],
+                   [[r[k] for k in ("criterion", "selection", "applicability", "execution", "assessment")]
+                    + [", ".join(r["reason_codes"])] for c in value["conditions"] for r in c["values"]["criteria"]])
+        else:
+            lines += ["Open evaluation: " + _escape(value["open_evaluation"]) + ".", ""]
+        lines += ["### Actual prerequisites", "",
+                  "These are the retained results used by this assessment, not assumptions about separately scheduled requests. Missing or unfinished work is not a satisfied prerequisite.", ""]
+        _table(lines, ["Role", "Operation", "Scope", "Selection", "Execution", "Assessment", "Reasons"],
+               [[p["role"], *[p["result"][k] for k in ("operation", "scope_id", "selection", "execution", "assessment")],
+                 ", ".join(p["result"]["reason_codes"])] for p in value["prerequisites"]])
+        lines += ["Exact prerequisite bodies, criterion-level premises and limitations remain in the complete report.", ""]
         return
     if value["anomalies"]:
         _table(lines, ["Anomaly", "Preservation", "Disposition", "Disposition check"],
@@ -898,25 +940,101 @@ def _assessment_markdown(lines, result):
                [[r["case_id"], r["context"], r["objective"], *[(r[k] or {}).get("assessment", "not_assessed") for k in ("authority", "capacity")]] for r in value["corrections"]])
         _table(lines, ["Case", "Outcome", "Objective", "Stated result", "Review"],
                [[c["case_id"], o["event_id"], o["objective"], o["result"], o["review"]["assessment"]] for c in value["corrections"] for o in c["outcomes"]])
-    _table(lines, ["Unique case/target pair state", "Count"], [[k, _number_text(v)] for k, v in value["pair_counts"].items()])
-    _table(lines, ["Raw event type", "Count"], [[k, _number_text(v)] for k, v in value["event_counts"].items()])
+    _table(lines, ["Unique case/target pair state", "Count"],
+           [[key, _number_text(value["pair_counts"][key])] for key in ("attempted", "acted", "authorized", "effective")])
+    _table(lines, ["Raw event type", "Count"],
+           [[key, _number_text(value["event_counts"][key])] for key in ("handling", "attempts", "actions", "outcomes")])
 
 
-def render_markdown(report: dict) -> str:
-    """Render current reports with complete detail, without a second analysis.
+def _result_markdown(lines: list[str], result: dict) -> None:
+    lines += ["## " + _escape(result["operation"] + " " + result["request_id"]), "",
+              "Scope: " + _escape(result["scope_id"]) + ".", ""]
+    _table(lines, ["Selection", "Applicability", "Execution", "Assessment", "Reasons"],
+           [[result[k] for k in ("selection", "applicability", "execution", "assessment")]
+            + [", ".join(result["reason_codes"])]])
+    if result["values"]:
+        if result["operation"] == "lint":
+            _lint_markdown(lines, result)
+        elif result["operation"] in {"profile", "compare"}:
+            _structural_markdown(lines, result)
+        elif result["operation"] in {"lineage", "external"}:
+            _provenance_markdown(lines, result)
+        elif result["operation"] in {"cases", "assess"}:
+            _assessment_markdown(lines, result)
+    else:
+        lines += ["No detailed operation values were delivered. Selection, execution and reasons above govern this result.", ""]
+    _references_markdown(lines, result)
 
-    The report digest and current envelope are checked. The digest establishes
-    consistency only, never authenticity. All substantive detail is retained in
-    an inert JSON code block after the concise reading view.
+
+def _findings_markdown(lines: list[str], findings: list[dict]) -> None:
+    lines += ["## Findings", "",
+              "Families identify rule categories, not severity or a universal risk ranking. Empty contrary-ID arrays do not establish that no contrary evidence exists.", ""]
+    if not findings:
+        lines += ["No findings were emitted within the selected captured scope and execution state.", ""]
+    for finding in findings:
+        lines += ["### " + _escape(finding["family"] + " / " + finding["rule"]), "",
+                  "Request: " + _escape(finding["request_id"]) + ". Scope: " + _escape(finding["scope_id"]) + ".", "",
+                  "Subjects: " + _escape(", ".join(finding["subject_ids"]) or "none recorded") + ".", "",
+                  "Assessment: " + _escape(finding["assessment"]) + ". Reasons: "
+                  + _escape(", ".join(finding["reason_codes"]) or "none recorded") + ".", ""]
+        if finding["basis"]:
+            _table(lines, ["Basis kind", "Record IDs"],
+                   [[row["kind"], ", ".join(row["record_ids"]) or "none recorded"] for row in finding["basis"]])
+        _references_markdown(lines, finding)
+        lines += ["Needed information: " + _escape(finding["needed_information"]), ""]
+
+
+class _MarkdownLimit(Exception):
+    """Private bounded-formatting signal, never a new public report code."""
+
+
+class _MarkdownLines(list):
+    """Stop collecting a view as soon as its UTF-8 output exceeds the cap."""
+
+    def __init__(self, max_bytes: int):
+        super().__init__()
+        self.max_bytes = max_bytes
+        self.byte_count = 0
+
+    def append(self, line: str) -> None:
+        size = len(line.encode("utf-8")) + bool(self)
+        if self.byte_count + size > self.max_bytes:
+            raise _MarkdownLimit
+        super().append(line)
+        self.byte_count += size
+
+    def extend(self, lines) -> None:
+        for line in lines:
+            self.append(line)
+
+    def __iadd__(self, lines):
+        self.extend(lines)
+        return self
+
+
+def _format_markdown(report: dict, *, max_bytes: int) -> str:
+    """Format a signed internal report, without validating or analyzing it.
+
+    Both the reading view and JSON detail are bounded while being collected.
+    The API uses this same formatter before choosing a compact report object;
+    the public renderer validates a saved object and never substitutes one.
     """
-    try:
-        if len(canonical_json(report)) > 20 * 1024 * 1024:
-            raise ReportError("REPORT_INVALID")
-        _check_report(report)
-        lines = ["# Evaluation Closure Toolkit report", "",
-                 f"Admission: **{_escape(report['admission'])}**. Execution: **{_escape(report['execution'])}**.", ""]
+    lines = _MarkdownLines(max_bytes)
+    lines += ["# Evaluation Closure Toolkit report", "",
+              f"Admission: **{_escape(report['admission'])}**. Execution: **{_escape(report['execution'])}**.", ""]
+    compact = "resource_summary" in report
+    if compact:
+        lines += ["## Delivery resource limit", "",
+                  "Detailed basis and conclusions were omitted together. Affected selected requests are partial and unassessed; unselected requests remain not run. Generated counts describe internal work, not delivered evidence or a complete analysis.", "",
+                  "Reasons: resource\\_limit. Exact selection, execution, generated counts, identity and limitations follow in the same authoritative report object.", "",
+                  "## Complete report", ""]
+    else:
         if report["admission"] == "valid":
             lines += [f"Dossier: {_escape(report['dossier_id'])}. Declared analysis time: {_escape(report['analysis_time'])}.", ""]
+        if report.get("diagnostics"):
+            lines += ["## Admission diagnostics", ""]
+            _table(lines, ["Code", "JSON pointer"],
+                   [[row["code"], row["pointer"] or "root"] for row in report["diagnostics"]])
         if report["results"]:
             lines += ["## Requests", "", "| Request | Scope | Operation | Selection | Execution | Conclusion |",
                       "| --- | --- | --- | --- | --- | --- |"]
@@ -926,21 +1044,42 @@ def render_markdown(report: dict) -> str:
                 lines.append("| " + " | ".join(_escape(v) for v in columns) + " |")
             lines.append("")
             for result in report["results"]:
-                if result["operation"] in {"profile", "compare"} and result["values"]:
-                    _structural_markdown(lines, result)
-                elif result["operation"] in {"lineage", "external"} and result["values"]:
-                    _provenance_markdown(lines, result)
-                elif result["operation"] in {"cases", "assess"} and result["values"]:
-                    _assessment_markdown(lines, result)
+                _result_markdown(lines, result)
+        _findings_markdown(lines, report["findings"])
         lines += ["## Limitations", ""]
         lines.extend("- " + _escape(value) for value in report["limitations"])
         lines += ["", "## Complete report", "",
                   "All disclosure rows, review qualifications, contrary premises, findings, scope and identity fields follow. This is the same report as the JSON output.", ""]
-        detail = json.dumps(report, ensure_ascii=True, sort_keys=True, indent=2, allow_nan=False)
-        longest = max((len(match.group()) for match in re.finditer(r"`+", detail)), default=0)
-        fence = "`" * max(3, longest + 1)
-        lines += [fence + "json", detail, fence, ""]
-        return "\n".join(lines)
+    encoder = json.JSONEncoder(ensure_ascii=True, sort_keys=True, allow_nan=False,
+                               indent=None if compact else 2,
+                               separators=(",", ":") if compact else None)
+    detail_buffer = StringIO()
+    detail_bytes = 0
+    for part in encoder.iterencode(report):
+        detail_bytes += len(part.encode("utf-8"))
+        if lines.byte_count + detail_bytes > max_bytes:
+            raise _MarkdownLimit
+        detail_buffer.write(part)
+    detail = detail_buffer.getvalue()
+    longest = max((len(match.group()) for match in re.finditer(r"`+", detail)), default=0)
+    fence = "`" * max(3, longest + 1)
+    lines += [fence + "json", detail, fence, ""]
+    return "\n".join(lines)
+
+
+def render_markdown(report: dict) -> str:
+    """Render a current report within the delivery cap, without reanalysis.
+
+    The digest and envelope are checked. All substantive detail is retained in
+    an inert JSON code block. An oversized saved report is rejected unchanged;
+    admission/analysis chooses one shared compact object for both output forms.
+    The digest establishes consistency only, never authenticity.
+    """
+    try:
+        if len(canonical_json(report)) > MAX_REPORT_BYTES:
+            raise ReportError("REPORT_INVALID")
+        _check_report(report)
+        return _format_markdown(report, max_bytes=MAX_REPORT_BYTES)
     except ReportError:
         raise
     except Exception:
