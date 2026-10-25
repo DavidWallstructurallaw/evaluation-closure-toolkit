@@ -1,6 +1,6 @@
 """Verify a built wheel in a fresh offline virtual environment outside the source tree.
 
-Usage: python scripts/check_install.py --wheel dist/evaluation_closure_toolkit-0.1.0rc1-py3-none-any.whl
+Usage: python scripts/check_install.py --wheel dist/evaluation_closure_toolkit-0.1.0-py3-none-any.whl
 
 This development-only script intentionally launches installation and CLI processes.
 The installed toolkit runtime does not launch subprocesses or make network calls.
