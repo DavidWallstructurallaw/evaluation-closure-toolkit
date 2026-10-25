@@ -24,6 +24,7 @@ DEMOS = (
     "correction-cases",
     "revision-accountability",
     "supported-open-evaluation",
+    "bounded-workflow",
 )
 _REQUEST_CODES = {
     "USAGE_INVALID_REQUEST",
@@ -47,7 +48,7 @@ class _Parser(argparse.ArgumentParser):
 def _parser() -> argparse.ArgumentParser:
     parser = _Parser(
         prog="evaluation-closure",
-        description="Inspect supplied evaluation dossiers offline. Development P1-4: seven operations, including correction records and fixed five-condition assessment.",
+        description="Inspect supplied evaluation dossiers offline. Development P1-5: seven operations with consolidated reports, synthetic demos and deterministic reruns.",
         allow_abbrev=False,
     )
     parser.add_argument("--version", action="version", version=f"evaluation-closure {__version__}")

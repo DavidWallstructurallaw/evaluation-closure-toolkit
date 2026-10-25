@@ -1,6 +1,6 @@
 """Verify a built wheel in a fresh offline virtual environment outside the source tree.
 
-Usage: python scripts/check_install.py --wheel dist/evaluation_closure_toolkit-0.1.0.dev4-py3-none-any.whl
+Usage: python scripts/check_install.py --wheel dist/evaluation_closure_toolkit-0.1.0.dev5-py3-none-any.whl
 
 This development-only script intentionally launches installation and CLI processes.
 The installed toolkit runtime does not launch subprocesses or make network calls.
@@ -11,6 +11,8 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
+import shlex
 import subprocess
 import sys
 import tempfile
@@ -22,6 +24,7 @@ _DEMOS = (
     "growing-catalog", "matched-cohort", "recut-comparison",
     "shared-lineage", "recursive-reuse", "external-contact",
     "correction-cases", "revision-accountability", "supported-open-evaluation",
+    "bounded-workflow",
 )
 
 _INSTALLED_API_CHECK = r'''
@@ -51,7 +54,7 @@ conclusions = {
     "scope-mismatch": "defeated_under_scope",
     "open-claim-lint": "unestablished",
 }
-for name in (*conclusions, "growing-catalog", "matched-cohort", "recut-comparison", "shared-lineage", "recursive-reuse", "external-contact", "correction-cases", "revision-accountability", "supported-open-evaluation"):
+for name in (*conclusions, "growing-catalog", "matched-cohort", "recut-comparison", "shared-lineage", "recursive-reuse", "external-contact", "correction-cases", "revision-accountability", "supported-open-evaluation", "bounded-workflow"):
     data = data_root.joinpath(name + ".json").read_bytes()
     assert ect.validate_bytes(data)["admission"] == "valid", name
     report = ect.analyze_bytes(data)
@@ -129,7 +132,7 @@ for name in (*conclusions, "growing-catalog", "matched-cohort", "recut-compariso
         assert recut["cut_state"] == "recut_documented" and recut["fidelity"]["assessment"] == "supported_under_scope"
         assert rename["cut_state"] == "relabel_only" and rename["incorporated"]["assessment"] == "supported_under_scope"
         assert rename["fidelity"]["assessment"] == "unresolved"
-    if name == "supported-open-evaluation":
+    if name in {"supported-open-evaluation", "bounded-workflow"}:
         assessment = rows["assess-main"]["values"]
         assert assessment["conclusion"] == "supported_under_scope"
         assert assessment["capacity_extent"] == "tested_route"
@@ -137,12 +140,22 @@ for name in (*conclusions, "growing-catalog", "matched-cohort", "recut-compariso
         assert all(g["assessment"] == "supported_under_scope" for g in assessment["conditions"])
         assert sum(len(g["values"]["criteria"]) for g in assessment["conditions"]) == 14
         assert {p["role"] for p in assessment["prerequisites"]} == {"structural", "cases", "external"}
+    if name == "bounded-workflow":
+        assert {r["operation"] for r in rows.values()} == {"lint", "profile", "compare", "lineage", "external", "cases", "assess"}
+        assert rows["lint-main"]["values"]["claim_conclusion"] == "unestablished"
+        comparison = rows["compare-main"]["values"]
+        assert comparison["before"]["SCI"] == fraction(1, 2)
+        assert comparison["after"]["SCI"] == fraction(5, 9)
+        assert comparison["delta_SCI"] == fraction(1, 18)
+        assert comparison["delta_D"] == fraction(-1, 18)
+        assert rows["lineage-main"]["values"]["witnesses"]
     markdown = ect.render_markdown(report)
     assert markdown.strip(), name
+    assert ect.render_markdown(json.loads(json.dumps(report, sort_keys=True))) == markdown, name
     Path(name + ".json").write_bytes(data)
     Path(name + ".report.json").write_text(json.dumps(report), encoding="utf-8")
     Path(name + ".report.md").write_text(markdown, encoding="utf-8")
-print("API, thirteen exact demo results, version identity, packaged schema and zero runtime dependencies verified")
+print("API, fourteen exact demo results, saved-JSON Markdown parity, version identity, packaged schema and zero runtime dependencies verified")
 '''
 
 
@@ -166,6 +179,35 @@ def _run(command: list[str], cwd: Path, environment: dict[str, str], label: str)
             f"{result.stdout[-3000:]}\n{result.stderr[-3000:]}"
         )
     return result.stdout
+
+
+def _check_documented_rerun(python: Path, working: Path, environment: dict[str, str]) -> None:
+    """Execute the actual guide snippets using only the installed distribution."""
+    guide = Path(__file__).resolve().parents[1] / "docs" / "REPRODUCIBILITY.md"
+    blocks = re.findall(r"```(python|sh)\n(.*?)\n```", guide.read_text(encoding="utf-8"), re.S)
+    assert [language for language, _ in blocks] == ["sh", "python", "sh", "sh", "python", "python"]
+    for index, (language, code) in enumerate(blocks):
+        if language == "sh":
+            for line in code.splitlines():
+                arguments = shlex.split(line)
+                assert arguments and arguments[0] == "python", "Unexpected guide command"
+                _run([str(python), *arguments[1:]], working, environment, "Documented CLI command")
+        else:
+            if index == 5:
+                prelude = (
+                    "import json\nfrom pathlib import Path\n"
+                    "left = json.loads(Path('run-a.json').read_bytes())\n"
+                    "right = json.loads(Path('run-b.json').read_bytes())\n"
+                )
+                _run([str(python), "-c", prelude + code], working, environment, "Documented normalization")
+                # A changed input must fail before identity fields are excluded.
+                negative = prelude + "right['input_sha256'] = '0' * 64\n"
+                negative += "try:\n" + "\n".join("    " + line for line in code.splitlines())
+                negative += "\nexcept AssertionError as exc:\n    assert 'input_sha256' in str(exc)\nelse:\n    raise AssertionError('Changed input was normalized away')\n"
+                _run([str(python), "-c", negative], working, environment, "Documented input-identity guard")
+            else:
+                _run([str(python), "-c", code], working, environment, "Documented Python snippet")
+    print("Documented installed example, exact digests, saved-report rendering and normalization guard passed")
 
 
 def main() -> int:
@@ -200,7 +242,7 @@ def main() -> int:
             report = json.loads(_run([str(console), "demo", name], working, environment, f"Packaged demo {name}"))
             expected = json.loads((working / f"{name}.report.json").read_text(encoding="utf-8"))
             assert report == expected, f"Console/API result differs for {name}"
-            if name in {"growing-catalog", "matched-cohort", "recut-comparison", "shared-lineage", "recursive-reuse", "external-contact", "correction-cases", "revision-accountability", "supported-open-evaluation"}:
+            if name in {"growing-catalog", "matched-cohort", "recut-comparison", "shared-lineage", "recursive-reuse", "external-contact", "correction-cases", "revision-accountability", "supported-open-evaluation", "bounded-workflow"}:
                 markdown = _run([str(console), "demo", name, "--format", "markdown"], working, environment, f"Packaged Markdown demo {name}")
                 assert markdown == (working / f"{name}.report.md").read_text(encoding="utf-8"), name
         admitted = json.loads(_run([str(console), "validate", "incomplete-regression.json"], working, environment, "Installed validate"))
@@ -221,7 +263,20 @@ def main() -> int:
         assert cases["execution"] == "completed"
         assessment = json.loads(_run([str(console), "analyze", "supported-open-evaluation.json", "--request", "assess-main"], working, environment, "Installed assess selection"))
         assert assessment["results"][0]["values"]["conclusion"] == "supported_under_scope"
-        print(f"{version.strip()}: fresh offline install, both entry points, thirteen demos, validate/analyze, all seven request operations and Markdown output passed")
+        # Exact bytes are checked across both entry points and equivalent explicit
+        # selections in opposite input order. No stdout newline translation occurs.
+        selection = sorted(json.loads((working / "bounded-workflow.report.json").read_text(encoding="utf-8"))["selected_request_ids"])
+        for entry, request_ids, output in (
+            ([str(console)], selection, "rerun-a.json"),
+            ([str(python), "-m", "evaluation_closure_toolkit"], list(reversed(selection)), "rerun-b.json"),
+        ):
+            options = [argument for request_id in request_ids for argument in ("--request", request_id)]
+            _run(entry + ["analyze", "bounded-workflow.json", *options, "--output", output], working, environment, "Installed deterministic rerun")
+        first = (working / "rerun-a.json").read_bytes()
+        assert first == (working / "rerun-b.json").read_bytes(), "Same-input rerun bytes differ"
+        assert json.loads(first) == json.loads((working / "bounded-workflow.report.json").read_text(encoding="utf-8"))
+        _check_documented_rerun(python, working, environment)
+        print(f"{version.strip()}: fresh offline install, both entry points, fourteen demos, validate/analyze, all seven request operations, saved-JSON Markdown parity and deterministic rerun passed")
         print(f"Local verification runtime: {sys.implementation.name} {sys.version.split()[0]} on {sys.platform}")
     return 0
 

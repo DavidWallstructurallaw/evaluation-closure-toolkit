@@ -2,7 +2,7 @@
 
 Inspect a supplied AI evaluation dossier offline, with conclusions tied to its declared scope and evidence.
 
-**Development stage: P1-4, version `0.1.0.dev4`.** All seven specified operations execute: dossier admission and claim lint, structural accounting, compatible snapshot comparison, typed lineage, external contact, correction accounting and fixed five-condition assessment.
+**Development stage: P1-5, version `0.1.0.dev5`.** All seven specified operations execute: dossier admission and claim lint, structural accounting, compatible snapshot comparison, typed lineage, external contact, correction accounting and fixed five-condition assessment. This step consolidates readable reports, a complete synthetic workflow and deterministic rerun guidance.
 
 ## Install and try
 
@@ -10,6 +10,7 @@ Use CPython 3.12 or 3.13. From a checkout:
 
 ```sh
 python -m pip install .
+evaluation-closure demo bounded-workflow --format markdown
 evaluation-closure demo incomplete-regression
 evaluation-closure demo supported-narrow-regression --format markdown
 evaluation-closure demo scope-mismatch
@@ -25,7 +26,9 @@ evaluation-closure demo revision-accountability
 evaluation-closure demo supported-open-evaluation --format markdown
 ```
 
-The runtime uses only the Python standard library. Installation needs setuptools as a build dependency. The thirteen demos are synthetic, packaged with the wheel, and require no network, credentials, external model or predecessor toolkit.
+The runtime uses only the Python standard library. Installation needs setuptools as a build dependency. The fourteen demos are synthetic, packaged with the wheel, and require no network, credentials, external model or predecessor toolkit. `demo` analyzes a packaged dossier; it does not export the dossier.
+
+Start with `bounded-workflow` for all seven operations in one finite scope. It compares two captured items with three: SCI changes from `1/2` to `5/9` and D from `1/2` to `4/9`. Its open-claim lint has complete disclosures yet remains `unestablished`; separate assessment supports all five conditions under the supplied evidence and policy. Shared lineage remains visible and supplies no automatic independence conclusion. Correction capacity remains a tested drill route. These statements describe the fixture, not a real evaluated system.
 
 | Demo | Expected claim conclusion |
 | --- | --- |
@@ -81,6 +84,8 @@ Both byte APIs return a sanitized report for invalid JSON or schema/reference fa
 
 `lint`, `profile`, `compare`, `lineage`, `external`, `cases` and `assess` all execute. Unknown operations fail admission. Default analysis selects all requests, subject to the 16-request execution limit; explicit selections must be nonempty, unique and exact. Deterministic resource limits produce partial results, an `EC108` finding and exit `3`.
 
+The 20 MiB report-delivery limit applies to both canonical JSON and expanded Markdown. If either would exceed it, analysis returns one compact partial report for both formats, omitting detailed basis and conclusions together. Rendering a separately supplied oversized saved report raises `ReportError` rather than silently changing it.
+
 ## What the result establishes
 
 Lint checks ten disclosure rows, structured feature mismatches, documentary review qualification, contrary premises and expiry under the dossier's supplied `analysis_time`. Missing semantic facts remain explicit gaps. A narrow regression claim can be supported only under the declared scope, supplied evidence and `ect-core/0.1` policy. Open-claim lint does not execute the five-condition assessment.
@@ -99,9 +104,11 @@ Assessment requests execute their structural, external and case prerequisites di
 
 Review receipts use explicit `subject_ids` to bind the supplied judgment to the relevant frame, inventory, member/use target or case. The [P1-4 interpretation guide](docs/P1-4.md) explains these anchors, bounded empty inventories and history receipts. Favorable prose cannot replace a missing fixed criterion. A narrow `assess` request retains the existing finite regression rule, an empty conditions list and `open_evaluation=not_applicable`.
 
-The tool does not authenticate receipts, prove textual assertions or authorize deployment. JSON and Markdown omit raw evidence bodies and locators. Reports contain supplied identifiers and should be treated as private. Markdown includes a concise reading view and the complete inert report object, preserving every finding and premise.
+The tool does not authenticate receipts, prove textual assertions or authorize deployment. JSON and Markdown omit raw evidence bodies and locators. Reports contain supplied identifiers and should be treated as private. Markdown includes a scoped reading view with request states, disclosures, criteria, prerequisite status, findings, evidence references, needed information and limitations, followed by the complete inert report object. Finding families identify the kind of issue or observation; they are not severity rankings. Inventory/arithmetic rows remain `not_assessed`.
 
 Input identity hashes the original bytes. Result identity hashes canonical JSON excluding its own digest, with a final newline. The development `build_id` is explicitly `unknown`; no immutable source-build provenance claim is made. Results include interpreter identity, so cross-runtime comparisons use normalized substantive fields.
+
+The [deterministic rerun guide](docs/REPRODUCIBILITY.md) shows how to retain an exact dossier, rerun the existing commands, verify report bytes and digests, and render saved JSON through the public API. Keep original bytes and matching selection/contracts before comparing normalized outputs. Capture archives, a `replay` command and simulation remain outside this release.
 
 The bounded local-file checks assume a user-controlled directory. They do not claim protection against a concurrent hostile process replacing directory components.
 
@@ -113,6 +120,8 @@ The bounded local-file checks assume a user-controlled directory. They do not cl
 - [P1-2 implementation and verification](docs/P1-2.md)
 - [P1-3 implementation and verification](docs/P1-3.md)
 - [P1-4 implementation and verification](docs/P1-4.md)
+- [P1-5 reporting, workflow and rerun integration](docs/P1-5.md)
+- [Deterministic rerun guide](docs/REPRODUCIBILITY.md)
 - [Machine-readable dossier schema](src/evaluation_closure_toolkit/data/dossier.schema.json)
 
 The JSON Schema describes closed local shapes. Admission also checks exact byte/token limits, timestamps, typed references, immutable identities and cross-record bindings. A generic JSON Schema validator cannot replace the byte API.
@@ -123,7 +132,7 @@ python -m unittest discover -s tests -v
 python scripts/generate_schema.py --check
 python -m pip install build
 python -m build
-python scripts/check_install.py --wheel dist/evaluation_closure_toolkit-0.1.0.dev4-py3-none-any.whl
+python scripts/check_install.py --wheel dist/evaluation_closure_toolkit-0.1.0.dev5-py3-none-any.whl
 ```
 
 CI targets CPython 3.12/3.13 on Ubuntu 22.04 and Windows Server 2022. The workflow builds a wheel through its source distribution, runs the behavioral suite and performs a fresh installed-package check. See the pull request checks for actual target results.

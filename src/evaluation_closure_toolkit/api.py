@@ -10,16 +10,15 @@ from .admission import admit
 from .budget import RequestBudget, RunBudget, WorkLimit
 from .errors import AdmissionError, InternalError, RequestError
 from .lint import lint_claim
-from .reporting import canonical_json
+from .reporting import MAX_REPORT_BYTES, _format_markdown, _MarkdownLimit, canonical_json
 
 BUILD_ID = "unknown"
-MAX_REPORT_BYTES = 20 * 1024 * 1024
 MAX_FINDINGS = 10_000
 _LIMITATIONS = [
     "Development build identity is unknown; exact same-build provenance is not established.",
     "Analysis time is supplied by the dossier; it is not a captured execution time or historical evidence cutoff.",
     "Conclusions are conditional on supplied records, declared scope and ect-core/0.1; evidence authenticity and textual truth are not independently verified.",
-    "P1-4 executes all seven specified operations, including objective-bound correction accounting and fixed five-condition assessment. Evidence authentication and release qualification remain outside this development slice.",
+    "P1-5 consolidates reporting, synthetic demonstrations and deterministic rerun guidance for all seven specified operations. Evidence authentication and release qualification remain outside this development slice.",
 ]
 
 
@@ -82,7 +81,26 @@ def _finding(result: dict, reason: str) -> dict:
 def _finish(report: dict, *, resource_limited: bool = False) -> dict:
     report["findings"].sort(key=lambda f: (
         f["request_id"], f["family"], f["rule"], f["subject_ids"], f["reason_codes"]))
-    if resource_limited or len(report["findings"]) > MAX_FINDINGS or len(canonical_json(report)) + 100 > MAX_REPORT_BYTES:
+    def sign():
+        report.pop("result_sha256", None)
+        report["result_sha256"] = hashlib.sha256(canonical_json(report)).hexdigest()
+
+    def fits_delivery():
+        if len(canonical_json(report)) > MAX_REPORT_BYTES:
+            return False
+        try:
+            _format_markdown(report, max_bytes=MAX_REPORT_BYTES)
+        except _MarkdownLimit:
+            return False
+        return True
+
+    limited = resource_limited or len(report["findings"]) > MAX_FINDINGS
+    if not limited:
+        sign()
+        limited = not fits_delivery()
+    if limited:
+        if report["admission"] != "valid":
+            raise InternalError("INTERNAL_ERROR")
         # Delivery must never retain a complete conclusion after its basis is dropped.
         old_results = report["results"]
         report["execution"] = "partial"
@@ -103,7 +121,10 @@ def _finish(report: dict, *, resource_limited: bool = False) -> dict:
                 result["execution"] = "partial"
         report["findings"] = [_finding(r, "resource_limit") for r in report["results"] if r["selection"] == "selected"]
         report["limitations"].append("Detailed results could not be delivered within the report or finding limit. All affected conclusions are unassessed.")
-    report["result_sha256"] = hashlib.sha256(canonical_json(report)).hexdigest()
+        # The provisional complete digest must not enter the compact identity.
+        sign()
+        if not fits_delivery():
+            raise InternalError("INTERNAL_ERROR")
     return report
 
 

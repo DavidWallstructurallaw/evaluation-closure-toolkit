@@ -145,13 +145,16 @@ class ProvenanceReportingTests(unittest.TestCase):
                         self.assertTrue(any(f["family"] == "EC108" for f in report["findings"]))
 
     def test_delivery_limit_drops_conclusion_with_its_undeliverable_basis(self):
-        with patch("evaluation_closure_toolkit.api.MAX_REPORT_BYTES", 2000):
+        # Leave room for the compact envelope in both formats, while the full
+        # result still exceeds the artificial delivery budget.
+        with patch("evaluation_closure_toolkit.api.MAX_REPORT_BYTES", 4096):
             report = analyze_bytes(wire(fixture("external-contact")))
         row = result(report, "external-main")
         self.assertEqual(report["execution"], "partial")
         self.assertEqual(row["values"], {})
         self.assertEqual(row["assessment"], "not_assessed")
-        render_markdown(report)
+        self.assertLessEqual(len(wire(report)), 4096)
+        self.assertLessEqual(len(render_markdown(report).encode("utf-8")), 4096)
 
     def test_cases_and_assess_execute_after_the_p1_4_implementation(self):
         d = fixture("incomplete-regression")
