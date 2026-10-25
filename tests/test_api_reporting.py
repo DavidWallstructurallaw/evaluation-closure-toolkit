@@ -345,7 +345,8 @@ class APIReportingTests(unittest.TestCase):
                     'python_version', 'input_sha256', 'result_sha256'}
         self.assertEqual(set(golden['excluded_fields']), excluded)
         self.assertEqual(set(golden['sha256']), {'incomplete-regression',
-                         'supported-narrow-regression', 'scope-mismatch', 'open-claim-lint'})
+                         'supported-narrow-regression', 'scope-mismatch', 'open-claim-lint',
+                         'growing-catalog', 'matched-cohort', 'recut-comparison'})
         for name, expected_digest in golden['sha256'].items():
             with self.subTest(fixture=name):
                 report = analyze_bytes(fixture_bytes(name))

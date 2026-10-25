@@ -1,0 +1,3816 @@
+{
+  "schema": "ect-dossier/0.1",
+  "id": "recut-comparison",
+  "analysis_time": "2026-10-06T21:00:00Z",
+  "policy": "ect-core/0.1",
+  "records": [
+    {
+      "id": "actor-fixture",
+      "type": "entity",
+      "kind": "actor",
+      "logical_id": "synthetic-assessor",
+      "version": "v1",
+      "label": {
+        "state": "known",
+        "value": "Project-owned synthetic assessor"
+      }
+    },
+    {
+      "id": "process-fixture",
+      "type": "entity",
+      "kind": "process",
+      "logical_id": "synthetic-process",
+      "version": "v1"
+    },
+    {
+      "id": "scope-main",
+      "type": "scope",
+      "process_id": "process-fixture",
+      "snapshot_ids": [
+        "snapshot-a",
+        "snapshot-b"
+      ],
+      "window": {
+        "state": "known",
+        "value": {
+          "start": "2026-10-01T00:00:00Z",
+          "end": "2026-10-07T00:00:00Z"
+        }
+      }
+    },
+    {
+      "id": "frame-main",
+      "type": "frame",
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      },
+      "task": {
+        "state": "known",
+        "value": "Classify the project-owned synthetic case population."
+      },
+      "context": {
+        "state": "known",
+        "value": "Synthetic software-verification fixture; no external model run."
+      },
+      "horizon": {
+        "state": "known",
+        "value": "The two declared synthetic observation checkpoints."
+      },
+      "resolution": {
+        "state": "known",
+        "value": "One selected class per immutable item version."
+      },
+      "exclusions": {
+        "state": "known",
+        "value": "No members excluded from the named synthetic rosters."
+      },
+      "selection_policy": {
+        "state": "known",
+        "value": "Retain every member of the declared synthetic catalog."
+      },
+      "admission_policy": {
+        "state": "known",
+        "value": "Require a supplied body and attributed definite class decision."
+      },
+      "validity_rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "features": {
+        "state": "known",
+        "value": [
+          "single_turn"
+        ]
+      },
+      "classes": {
+        "state": "known",
+        "value": [
+          {
+            "id": "class-one",
+            "definition": "Synthetic structural category class-one."
+          },
+          {
+            "id": "class-two",
+            "definition": "Synthetic structural category class-two."
+          },
+          {
+            "id": "class-three",
+            "definition": "Synthetic structural category class-three."
+          },
+          {
+            "id": "class-four",
+            "definition": "Synthetic structural category class-four."
+          }
+        ]
+      },
+      "tail_designations": {
+        "state": "known",
+        "value": [
+          {
+            "class_id": "class-four",
+            "rationale": "Required fourth structural distinction designated before the synthetic run.",
+            "severity": "Required coverage in the toy task.",
+            "rarity_basis": "Two baseline observations of this declared distinction."
+          }
+        ]
+      }
+    },
+    {
+      "id": "item-a-001",
+      "type": "item",
+      "logical_id": "logical-a-001",
+      "version": "v1",
+      "body": {
+        "state": "known",
+        "value": "Project-owned toy case a-001. PRIVATE_STRUCTURAL_BODY_91"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-a-001",
+      "type": "assignment",
+      "item_id": "item-a-001",
+      "frame_id": "frame-main",
+      "class_id": {
+        "state": "known",
+        "value": "class-one"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-a-001",
+      "type": "validity",
+      "item_id": "item-a-001",
+      "frame_id": "frame-main",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "item-a-002",
+      "type": "item",
+      "logical_id": "logical-a-002",
+      "version": "v1",
+      "body": {
+        "state": "known",
+        "value": "Project-owned toy case a-002. PRIVATE_STRUCTURAL_BODY_91"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-a-002",
+      "type": "assignment",
+      "item_id": "item-a-002",
+      "frame_id": "frame-main",
+      "class_id": {
+        "state": "known",
+        "value": "class-one"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-a-002",
+      "type": "validity",
+      "item_id": "item-a-002",
+      "frame_id": "frame-main",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "item-a-003",
+      "type": "item",
+      "logical_id": "logical-a-003",
+      "version": "v1",
+      "body": {
+        "state": "known",
+        "value": "Project-owned toy case a-003. PRIVATE_STRUCTURAL_BODY_91"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-a-003",
+      "type": "assignment",
+      "item_id": "item-a-003",
+      "frame_id": "frame-main",
+      "class_id": {
+        "state": "known",
+        "value": "class-one"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-a-003",
+      "type": "validity",
+      "item_id": "item-a-003",
+      "frame_id": "frame-main",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "item-a-004",
+      "type": "item",
+      "logical_id": "logical-a-004",
+      "version": "v1",
+      "body": {
+        "state": "known",
+        "value": "Project-owned toy case a-004. PRIVATE_STRUCTURAL_BODY_91"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-a-004",
+      "type": "assignment",
+      "item_id": "item-a-004",
+      "frame_id": "frame-main",
+      "class_id": {
+        "state": "known",
+        "value": "class-one"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-a-004",
+      "type": "validity",
+      "item_id": "item-a-004",
+      "frame_id": "frame-main",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "item-a-005",
+      "type": "item",
+      "logical_id": "logical-a-005",
+      "version": "v1",
+      "body": {
+        "state": "known",
+        "value": "Project-owned toy case a-005. PRIVATE_STRUCTURAL_BODY_91"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-a-005",
+      "type": "assignment",
+      "item_id": "item-a-005",
+      "frame_id": "frame-main",
+      "class_id": {
+        "state": "known",
+        "value": "class-one"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-a-005",
+      "type": "validity",
+      "item_id": "item-a-005",
+      "frame_id": "frame-main",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "item-a-006",
+      "type": "item",
+      "logical_id": "logical-a-006",
+      "version": "v1",
+      "body": {
+        "state": "known",
+        "value": "Project-owned toy case a-006. PRIVATE_STRUCTURAL_BODY_91"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-a-006",
+      "type": "assignment",
+      "item_id": "item-a-006",
+      "frame_id": "frame-main",
+      "class_id": {
+        "state": "known",
+        "value": "class-one"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-a-006",
+      "type": "validity",
+      "item_id": "item-a-006",
+      "frame_id": "frame-main",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "item-a-007",
+      "type": "item",
+      "logical_id": "logical-a-007",
+      "version": "v1",
+      "body": {
+        "state": "known",
+        "value": "Project-owned toy case a-007. PRIVATE_STRUCTURAL_BODY_91"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-a-007",
+      "type": "assignment",
+      "item_id": "item-a-007",
+      "frame_id": "frame-main",
+      "class_id": {
+        "state": "known",
+        "value": "class-one"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-a-007",
+      "type": "validity",
+      "item_id": "item-a-007",
+      "frame_id": "frame-main",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "item-a-008",
+      "type": "item",
+      "logical_id": "logical-a-008",
+      "version": "v1",
+      "body": {
+        "state": "known",
+        "value": "Project-owned toy case a-008. PRIVATE_STRUCTURAL_BODY_91"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-a-008",
+      "type": "assignment",
+      "item_id": "item-a-008",
+      "frame_id": "frame-main",
+      "class_id": {
+        "state": "known",
+        "value": "class-one"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-a-008",
+      "type": "validity",
+      "item_id": "item-a-008",
+      "frame_id": "frame-main",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "item-a-009",
+      "type": "item",
+      "logical_id": "logical-a-009",
+      "version": "v1",
+      "body": {
+        "state": "known",
+        "value": "Project-owned toy case a-009. PRIVATE_STRUCTURAL_BODY_91"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-a-009",
+      "type": "assignment",
+      "item_id": "item-a-009",
+      "frame_id": "frame-main",
+      "class_id": {
+        "state": "known",
+        "value": "class-one"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-a-009",
+      "type": "validity",
+      "item_id": "item-a-009",
+      "frame_id": "frame-main",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "item-a-010",
+      "type": "item",
+      "logical_id": "logical-a-010",
+      "version": "v1",
+      "body": {
+        "state": "known",
+        "value": "Project-owned toy case a-010. PRIVATE_STRUCTURAL_BODY_91"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-a-010",
+      "type": "assignment",
+      "item_id": "item-a-010",
+      "frame_id": "frame-main",
+      "class_id": {
+        "state": "known",
+        "value": "class-one"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-a-010",
+      "type": "validity",
+      "item_id": "item-a-010",
+      "frame_id": "frame-main",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "item-a-011",
+      "type": "item",
+      "logical_id": "logical-a-011",
+      "version": "v1",
+      "body": {
+        "state": "known",
+        "value": "Project-owned toy case a-011. PRIVATE_STRUCTURAL_BODY_91"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-a-011",
+      "type": "assignment",
+      "item_id": "item-a-011",
+      "frame_id": "frame-main",
+      "class_id": {
+        "state": "known",
+        "value": "class-one"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-a-011",
+      "type": "validity",
+      "item_id": "item-a-011",
+      "frame_id": "frame-main",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "item-a-012",
+      "type": "item",
+      "logical_id": "logical-a-012",
+      "version": "v1",
+      "body": {
+        "state": "known",
+        "value": "Project-owned toy case a-012. PRIVATE_STRUCTURAL_BODY_91"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-a-012",
+      "type": "assignment",
+      "item_id": "item-a-012",
+      "frame_id": "frame-main",
+      "class_id": {
+        "state": "known",
+        "value": "class-one"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-a-012",
+      "type": "validity",
+      "item_id": "item-a-012",
+      "frame_id": "frame-main",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "item-a-013",
+      "type": "item",
+      "logical_id": "logical-a-013",
+      "version": "v1",
+      "body": {
+        "state": "known",
+        "value": "Project-owned toy case a-013. PRIVATE_STRUCTURAL_BODY_91"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-a-013",
+      "type": "assignment",
+      "item_id": "item-a-013",
+      "frame_id": "frame-main",
+      "class_id": {
+        "state": "known",
+        "value": "class-two"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-a-013",
+      "type": "validity",
+      "item_id": "item-a-013",
+      "frame_id": "frame-main",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "item-a-014",
+      "type": "item",
+      "logical_id": "logical-a-014",
+      "version": "v1",
+      "body": {
+        "state": "known",
+        "value": "Project-owned toy case a-014. PRIVATE_STRUCTURAL_BODY_91"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-a-014",
+      "type": "assignment",
+      "item_id": "item-a-014",
+      "frame_id": "frame-main",
+      "class_id": {
+        "state": "known",
+        "value": "class-two"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-a-014",
+      "type": "validity",
+      "item_id": "item-a-014",
+      "frame_id": "frame-main",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "item-a-015",
+      "type": "item",
+      "logical_id": "logical-a-015",
+      "version": "v1",
+      "body": {
+        "state": "known",
+        "value": "Project-owned toy case a-015. PRIVATE_STRUCTURAL_BODY_91"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-a-015",
+      "type": "assignment",
+      "item_id": "item-a-015",
+      "frame_id": "frame-main",
+      "class_id": {
+        "state": "known",
+        "value": "class-two"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-a-015",
+      "type": "validity",
+      "item_id": "item-a-015",
+      "frame_id": "frame-main",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "item-a-016",
+      "type": "item",
+      "logical_id": "logical-a-016",
+      "version": "v1",
+      "body": {
+        "state": "known",
+        "value": "Project-owned toy case a-016. PRIVATE_STRUCTURAL_BODY_91"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-a-016",
+      "type": "assignment",
+      "item_id": "item-a-016",
+      "frame_id": "frame-main",
+      "class_id": {
+        "state": "known",
+        "value": "class-two"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-a-016",
+      "type": "validity",
+      "item_id": "item-a-016",
+      "frame_id": "frame-main",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "item-a-017",
+      "type": "item",
+      "logical_id": "logical-a-017",
+      "version": "v1",
+      "body": {
+        "state": "known",
+        "value": "Project-owned toy case a-017. PRIVATE_STRUCTURAL_BODY_91"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-a-017",
+      "type": "assignment",
+      "item_id": "item-a-017",
+      "frame_id": "frame-main",
+      "class_id": {
+        "state": "known",
+        "value": "class-two"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-a-017",
+      "type": "validity",
+      "item_id": "item-a-017",
+      "frame_id": "frame-main",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "item-a-018",
+      "type": "item",
+      "logical_id": "logical-a-018",
+      "version": "v1",
+      "body": {
+        "state": "known",
+        "value": "Project-owned toy case a-018. PRIVATE_STRUCTURAL_BODY_91"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-a-018",
+      "type": "assignment",
+      "item_id": "item-a-018",
+      "frame_id": "frame-main",
+      "class_id": {
+        "state": "known",
+        "value": "class-two"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-a-018",
+      "type": "validity",
+      "item_id": "item-a-018",
+      "frame_id": "frame-main",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "item-a-019",
+      "type": "item",
+      "logical_id": "logical-a-019",
+      "version": "v1",
+      "body": {
+        "state": "known",
+        "value": "Project-owned toy case a-019. PRIVATE_STRUCTURAL_BODY_91"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-a-019",
+      "type": "assignment",
+      "item_id": "item-a-019",
+      "frame_id": "frame-main",
+      "class_id": {
+        "state": "known",
+        "value": "class-three"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-a-019",
+      "type": "validity",
+      "item_id": "item-a-019",
+      "frame_id": "frame-main",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "item-a-020",
+      "type": "item",
+      "logical_id": "logical-a-020",
+      "version": "v1",
+      "body": {
+        "state": "known",
+        "value": "Project-owned toy case a-020. PRIVATE_STRUCTURAL_BODY_91"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-a-020",
+      "type": "assignment",
+      "item_id": "item-a-020",
+      "frame_id": "frame-main",
+      "class_id": {
+        "state": "known",
+        "value": "class-three"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-a-020",
+      "type": "validity",
+      "item_id": "item-a-020",
+      "frame_id": "frame-main",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "item-a-021",
+      "type": "item",
+      "logical_id": "logical-a-021",
+      "version": "v1",
+      "body": {
+        "state": "known",
+        "value": "Project-owned toy case a-021. PRIVATE_STRUCTURAL_BODY_91"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-a-021",
+      "type": "assignment",
+      "item_id": "item-a-021",
+      "frame_id": "frame-main",
+      "class_id": {
+        "state": "known",
+        "value": "class-three"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-a-021",
+      "type": "validity",
+      "item_id": "item-a-021",
+      "frame_id": "frame-main",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "item-a-022",
+      "type": "item",
+      "logical_id": "logical-a-022",
+      "version": "v1",
+      "body": {
+        "state": "known",
+        "value": "Project-owned toy case a-022. PRIVATE_STRUCTURAL_BODY_91"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-a-022",
+      "type": "assignment",
+      "item_id": "item-a-022",
+      "frame_id": "frame-main",
+      "class_id": {
+        "state": "known",
+        "value": "class-three"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-a-022",
+      "type": "validity",
+      "item_id": "item-a-022",
+      "frame_id": "frame-main",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "item-a-023",
+      "type": "item",
+      "logical_id": "logical-a-023",
+      "version": "v1",
+      "body": {
+        "state": "known",
+        "value": "Project-owned toy case a-023. PRIVATE_STRUCTURAL_BODY_91"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-a-023",
+      "type": "assignment",
+      "item_id": "item-a-023",
+      "frame_id": "frame-main",
+      "class_id": {
+        "state": "known",
+        "value": "class-four"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-a-023",
+      "type": "validity",
+      "item_id": "item-a-023",
+      "frame_id": "frame-main",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "item-a-024",
+      "type": "item",
+      "logical_id": "logical-a-024",
+      "version": "v1",
+      "body": {
+        "state": "known",
+        "value": "Project-owned toy case a-024. PRIVATE_STRUCTURAL_BODY_91"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-a-024",
+      "type": "assignment",
+      "item_id": "item-a-024",
+      "frame_id": "frame-main",
+      "class_id": {
+        "state": "known",
+        "value": "class-four"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-a-024",
+      "type": "validity",
+      "item_id": "item-a-024",
+      "frame_id": "frame-main",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "snapshot-a",
+      "type": "snapshot",
+      "frame_id": "frame-main",
+      "members": [
+        "item-a-001",
+        "item-a-002",
+        "item-a-003",
+        "item-a-004",
+        "item-a-005",
+        "item-a-006",
+        "item-a-007",
+        "item-a-008",
+        "item-a-009",
+        "item-a-010",
+        "item-a-011",
+        "item-a-012",
+        "item-a-013",
+        "item-a-014",
+        "item-a-015",
+        "item-a-016",
+        "item-a-017",
+        "item-a-018",
+        "item-a-019",
+        "item-a-020",
+        "item-a-021",
+        "item-a-022",
+        "item-a-023",
+        "item-a-024"
+      ],
+      "membership": {
+        "state": "known",
+        "value": "complete"
+      },
+      "selection_policy": {
+        "state": "known",
+        "value": "Retain every member of the declared synthetic catalog."
+      },
+      "assignments": [
+        {
+          "item_id": "item-a-001",
+          "assignment_id": "assignment-a-001"
+        },
+        {
+          "item_id": "item-a-002",
+          "assignment_id": "assignment-a-002"
+        },
+        {
+          "item_id": "item-a-003",
+          "assignment_id": "assignment-a-003"
+        },
+        {
+          "item_id": "item-a-004",
+          "assignment_id": "assignment-a-004"
+        },
+        {
+          "item_id": "item-a-005",
+          "assignment_id": "assignment-a-005"
+        },
+        {
+          "item_id": "item-a-006",
+          "assignment_id": "assignment-a-006"
+        },
+        {
+          "item_id": "item-a-007",
+          "assignment_id": "assignment-a-007"
+        },
+        {
+          "item_id": "item-a-008",
+          "assignment_id": "assignment-a-008"
+        },
+        {
+          "item_id": "item-a-009",
+          "assignment_id": "assignment-a-009"
+        },
+        {
+          "item_id": "item-a-010",
+          "assignment_id": "assignment-a-010"
+        },
+        {
+          "item_id": "item-a-011",
+          "assignment_id": "assignment-a-011"
+        },
+        {
+          "item_id": "item-a-012",
+          "assignment_id": "assignment-a-012"
+        },
+        {
+          "item_id": "item-a-013",
+          "assignment_id": "assignment-a-013"
+        },
+        {
+          "item_id": "item-a-014",
+          "assignment_id": "assignment-a-014"
+        },
+        {
+          "item_id": "item-a-015",
+          "assignment_id": "assignment-a-015"
+        },
+        {
+          "item_id": "item-a-016",
+          "assignment_id": "assignment-a-016"
+        },
+        {
+          "item_id": "item-a-017",
+          "assignment_id": "assignment-a-017"
+        },
+        {
+          "item_id": "item-a-018",
+          "assignment_id": "assignment-a-018"
+        },
+        {
+          "item_id": "item-a-019",
+          "assignment_id": "assignment-a-019"
+        },
+        {
+          "item_id": "item-a-020",
+          "assignment_id": "assignment-a-020"
+        },
+        {
+          "item_id": "item-a-021",
+          "assignment_id": "assignment-a-021"
+        },
+        {
+          "item_id": "item-a-022",
+          "assignment_id": "assignment-a-022"
+        },
+        {
+          "item_id": "item-a-023",
+          "assignment_id": "assignment-a-023"
+        },
+        {
+          "item_id": "item-a-024",
+          "assignment_id": "assignment-a-024"
+        }
+      ],
+      "validities": [
+        {
+          "item_id": "item-a-001",
+          "validity_id": "validity-a-001"
+        },
+        {
+          "item_id": "item-a-002",
+          "validity_id": "validity-a-002"
+        },
+        {
+          "item_id": "item-a-003",
+          "validity_id": "validity-a-003"
+        },
+        {
+          "item_id": "item-a-004",
+          "validity_id": "validity-a-004"
+        },
+        {
+          "item_id": "item-a-005",
+          "validity_id": "validity-a-005"
+        },
+        {
+          "item_id": "item-a-006",
+          "validity_id": "validity-a-006"
+        },
+        {
+          "item_id": "item-a-007",
+          "validity_id": "validity-a-007"
+        },
+        {
+          "item_id": "item-a-008",
+          "validity_id": "validity-a-008"
+        },
+        {
+          "item_id": "item-a-009",
+          "validity_id": "validity-a-009"
+        },
+        {
+          "item_id": "item-a-010",
+          "validity_id": "validity-a-010"
+        },
+        {
+          "item_id": "item-a-011",
+          "validity_id": "validity-a-011"
+        },
+        {
+          "item_id": "item-a-012",
+          "validity_id": "validity-a-012"
+        },
+        {
+          "item_id": "item-a-013",
+          "validity_id": "validity-a-013"
+        },
+        {
+          "item_id": "item-a-014",
+          "validity_id": "validity-a-014"
+        },
+        {
+          "item_id": "item-a-015",
+          "validity_id": "validity-a-015"
+        },
+        {
+          "item_id": "item-a-016",
+          "validity_id": "validity-a-016"
+        },
+        {
+          "item_id": "item-a-017",
+          "validity_id": "validity-a-017"
+        },
+        {
+          "item_id": "item-a-018",
+          "validity_id": "validity-a-018"
+        },
+        {
+          "item_id": "item-a-019",
+          "validity_id": "validity-a-019"
+        },
+        {
+          "item_id": "item-a-020",
+          "validity_id": "validity-a-020"
+        },
+        {
+          "item_id": "item-a-021",
+          "validity_id": "validity-a-021"
+        },
+        {
+          "item_id": "item-a-022",
+          "validity_id": "validity-a-022"
+        },
+        {
+          "item_id": "item-a-023",
+          "validity_id": "validity-a-023"
+        },
+        {
+          "item_id": "item-a-024",
+          "validity_id": "validity-a-024"
+        }
+      ],
+      "observed_at": {
+        "state": "known",
+        "value": "2026-10-04T10:00:00Z"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      },
+      "tail_results": {
+        "state": "known",
+        "value": [
+          {
+            "class_id": "class-four",
+            "evidence_ids": [
+              "tail-failure-receipt"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "frame-recut",
+      "type": "frame",
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      },
+      "task": {
+        "state": "known",
+        "value": "Classify the project-owned synthetic case population."
+      },
+      "context": {
+        "state": "known",
+        "value": "Synthetic software-verification fixture; no external model run."
+      },
+      "horizon": {
+        "state": "known",
+        "value": "The two declared synthetic observation checkpoints."
+      },
+      "resolution": {
+        "state": "known",
+        "value": "One selected class per immutable item version."
+      },
+      "exclusions": {
+        "state": "known",
+        "value": "No members excluded from the named synthetic rosters."
+      },
+      "selection_policy": {
+        "state": "known",
+        "value": "Retain every member of the declared synthetic catalog."
+      },
+      "admission_policy": {
+        "state": "known",
+        "value": "Require a supplied body and attributed definite class decision."
+      },
+      "validity_rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "features": {
+        "state": "known",
+        "value": [
+          "single_turn"
+        ]
+      },
+      "classes": {
+        "state": "known",
+        "value": [
+          {
+            "id": "recut-one",
+            "definition": "Synthetic structural category recut-one."
+          },
+          {
+            "id": "recut-two",
+            "definition": "Synthetic structural category recut-two."
+          },
+          {
+            "id": "recut-three",
+            "definition": "Synthetic structural category recut-three."
+          },
+          {
+            "id": "recut-four",
+            "definition": "Synthetic structural category recut-four."
+          },
+          {
+            "id": "recut-five",
+            "definition": "Synthetic structural category recut-five."
+          }
+        ]
+      },
+      "tail_designations": {
+        "state": "known",
+        "value": [
+          {
+            "class_id": "recut-four",
+            "rationale": "Required fourth structural distinction designated before the synthetic run.",
+            "severity": "Required coverage in the toy task.",
+            "rarity_basis": "Two baseline observations of this declared distinction."
+          }
+        ]
+      }
+    },
+    {
+      "id": "assignment-b-001",
+      "type": "assignment",
+      "item_id": "item-a-001",
+      "frame_id": "frame-recut",
+      "class_id": {
+        "state": "known",
+        "value": "recut-one"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-b-001",
+      "type": "validity",
+      "item_id": "item-a-001",
+      "frame_id": "frame-recut",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-b-002",
+      "type": "assignment",
+      "item_id": "item-a-002",
+      "frame_id": "frame-recut",
+      "class_id": {
+        "state": "known",
+        "value": "recut-one"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-b-002",
+      "type": "validity",
+      "item_id": "item-a-002",
+      "frame_id": "frame-recut",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-b-003",
+      "type": "assignment",
+      "item_id": "item-a-003",
+      "frame_id": "frame-recut",
+      "class_id": {
+        "state": "known",
+        "value": "recut-one"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-b-003",
+      "type": "validity",
+      "item_id": "item-a-003",
+      "frame_id": "frame-recut",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-b-004",
+      "type": "assignment",
+      "item_id": "item-a-004",
+      "frame_id": "frame-recut",
+      "class_id": {
+        "state": "known",
+        "value": "recut-one"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-b-004",
+      "type": "validity",
+      "item_id": "item-a-004",
+      "frame_id": "frame-recut",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-b-005",
+      "type": "assignment",
+      "item_id": "item-a-005",
+      "frame_id": "frame-recut",
+      "class_id": {
+        "state": "known",
+        "value": "recut-one"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-b-005",
+      "type": "validity",
+      "item_id": "item-a-005",
+      "frame_id": "frame-recut",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-b-006",
+      "type": "assignment",
+      "item_id": "item-a-006",
+      "frame_id": "frame-recut",
+      "class_id": {
+        "state": "known",
+        "value": "recut-one"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-b-006",
+      "type": "validity",
+      "item_id": "item-a-006",
+      "frame_id": "frame-recut",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-b-007",
+      "type": "assignment",
+      "item_id": "item-a-007",
+      "frame_id": "frame-recut",
+      "class_id": {
+        "state": "known",
+        "value": "recut-two"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-b-007",
+      "type": "validity",
+      "item_id": "item-a-007",
+      "frame_id": "frame-recut",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-b-008",
+      "type": "assignment",
+      "item_id": "item-a-008",
+      "frame_id": "frame-recut",
+      "class_id": {
+        "state": "known",
+        "value": "recut-two"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-b-008",
+      "type": "validity",
+      "item_id": "item-a-008",
+      "frame_id": "frame-recut",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-b-009",
+      "type": "assignment",
+      "item_id": "item-a-009",
+      "frame_id": "frame-recut",
+      "class_id": {
+        "state": "known",
+        "value": "recut-two"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-b-009",
+      "type": "validity",
+      "item_id": "item-a-009",
+      "frame_id": "frame-recut",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-b-010",
+      "type": "assignment",
+      "item_id": "item-a-010",
+      "frame_id": "frame-recut",
+      "class_id": {
+        "state": "known",
+        "value": "recut-two"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-b-010",
+      "type": "validity",
+      "item_id": "item-a-010",
+      "frame_id": "frame-recut",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-b-011",
+      "type": "assignment",
+      "item_id": "item-a-011",
+      "frame_id": "frame-recut",
+      "class_id": {
+        "state": "known",
+        "value": "recut-two"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-b-011",
+      "type": "validity",
+      "item_id": "item-a-011",
+      "frame_id": "frame-recut",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-b-012",
+      "type": "assignment",
+      "item_id": "item-a-012",
+      "frame_id": "frame-recut",
+      "class_id": {
+        "state": "known",
+        "value": "recut-two"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-b-012",
+      "type": "validity",
+      "item_id": "item-a-012",
+      "frame_id": "frame-recut",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-b-013",
+      "type": "assignment",
+      "item_id": "item-a-013",
+      "frame_id": "frame-recut",
+      "class_id": {
+        "state": "known",
+        "value": "recut-three"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-b-013",
+      "type": "validity",
+      "item_id": "item-a-013",
+      "frame_id": "frame-recut",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-b-014",
+      "type": "assignment",
+      "item_id": "item-a-014",
+      "frame_id": "frame-recut",
+      "class_id": {
+        "state": "known",
+        "value": "recut-three"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-b-014",
+      "type": "validity",
+      "item_id": "item-a-014",
+      "frame_id": "frame-recut",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-b-015",
+      "type": "assignment",
+      "item_id": "item-a-015",
+      "frame_id": "frame-recut",
+      "class_id": {
+        "state": "known",
+        "value": "recut-three"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-b-015",
+      "type": "validity",
+      "item_id": "item-a-015",
+      "frame_id": "frame-recut",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-b-016",
+      "type": "assignment",
+      "item_id": "item-a-016",
+      "frame_id": "frame-recut",
+      "class_id": {
+        "state": "known",
+        "value": "recut-three"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-b-016",
+      "type": "validity",
+      "item_id": "item-a-016",
+      "frame_id": "frame-recut",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-b-017",
+      "type": "assignment",
+      "item_id": "item-a-017",
+      "frame_id": "frame-recut",
+      "class_id": {
+        "state": "known",
+        "value": "recut-three"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-b-017",
+      "type": "validity",
+      "item_id": "item-a-017",
+      "frame_id": "frame-recut",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-b-018",
+      "type": "assignment",
+      "item_id": "item-a-018",
+      "frame_id": "frame-recut",
+      "class_id": {
+        "state": "known",
+        "value": "recut-three"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-b-018",
+      "type": "validity",
+      "item_id": "item-a-018",
+      "frame_id": "frame-recut",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-b-019",
+      "type": "assignment",
+      "item_id": "item-a-019",
+      "frame_id": "frame-recut",
+      "class_id": {
+        "state": "known",
+        "value": "recut-four"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-b-019",
+      "type": "validity",
+      "item_id": "item-a-019",
+      "frame_id": "frame-recut",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-b-020",
+      "type": "assignment",
+      "item_id": "item-a-020",
+      "frame_id": "frame-recut",
+      "class_id": {
+        "state": "known",
+        "value": "recut-four"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-b-020",
+      "type": "validity",
+      "item_id": "item-a-020",
+      "frame_id": "frame-recut",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-b-021",
+      "type": "assignment",
+      "item_id": "item-a-021",
+      "frame_id": "frame-recut",
+      "class_id": {
+        "state": "known",
+        "value": "recut-four"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-b-021",
+      "type": "validity",
+      "item_id": "item-a-021",
+      "frame_id": "frame-recut",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-b-022",
+      "type": "assignment",
+      "item_id": "item-a-022",
+      "frame_id": "frame-recut",
+      "class_id": {
+        "state": "known",
+        "value": "recut-four"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-b-022",
+      "type": "validity",
+      "item_id": "item-a-022",
+      "frame_id": "frame-recut",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-b-023",
+      "type": "assignment",
+      "item_id": "item-a-023",
+      "frame_id": "frame-recut",
+      "class_id": {
+        "state": "known",
+        "value": "recut-five"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-b-023",
+      "type": "validity",
+      "item_id": "item-a-023",
+      "frame_id": "frame-recut",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "assignment-b-024",
+      "type": "assignment",
+      "item_id": "item-a-024",
+      "frame_id": "frame-recut",
+      "class_id": {
+        "state": "known",
+        "value": "recut-five"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic fixture classification fixed by the documented oracle."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "validity-b-024",
+      "type": "validity",
+      "item_id": "item-a-024",
+      "frame_id": "frame-recut",
+      "verdict": {
+        "state": "known",
+        "value": "valid"
+      },
+      "rubric": {
+        "state": "known",
+        "value": "The synthetic item states the finite toy-case input."
+      },
+      "basis": {
+        "state": "known",
+        "value": "Synthetic validity decision independent of model response success."
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "snapshot-b",
+      "type": "snapshot",
+      "frame_id": "frame-recut",
+      "members": [
+        "item-a-001",
+        "item-a-002",
+        "item-a-003",
+        "item-a-004",
+        "item-a-005",
+        "item-a-006",
+        "item-a-007",
+        "item-a-008",
+        "item-a-009",
+        "item-a-010",
+        "item-a-011",
+        "item-a-012",
+        "item-a-013",
+        "item-a-014",
+        "item-a-015",
+        "item-a-016",
+        "item-a-017",
+        "item-a-018",
+        "item-a-019",
+        "item-a-020",
+        "item-a-021",
+        "item-a-022",
+        "item-a-023",
+        "item-a-024"
+      ],
+      "membership": {
+        "state": "known",
+        "value": "complete"
+      },
+      "selection_policy": {
+        "state": "known",
+        "value": "Retain every member of the declared synthetic catalog."
+      },
+      "assignments": [
+        {
+          "item_id": "item-a-001",
+          "assignment_id": "assignment-b-001"
+        },
+        {
+          "item_id": "item-a-002",
+          "assignment_id": "assignment-b-002"
+        },
+        {
+          "item_id": "item-a-003",
+          "assignment_id": "assignment-b-003"
+        },
+        {
+          "item_id": "item-a-004",
+          "assignment_id": "assignment-b-004"
+        },
+        {
+          "item_id": "item-a-005",
+          "assignment_id": "assignment-b-005"
+        },
+        {
+          "item_id": "item-a-006",
+          "assignment_id": "assignment-b-006"
+        },
+        {
+          "item_id": "item-a-007",
+          "assignment_id": "assignment-b-007"
+        },
+        {
+          "item_id": "item-a-008",
+          "assignment_id": "assignment-b-008"
+        },
+        {
+          "item_id": "item-a-009",
+          "assignment_id": "assignment-b-009"
+        },
+        {
+          "item_id": "item-a-010",
+          "assignment_id": "assignment-b-010"
+        },
+        {
+          "item_id": "item-a-011",
+          "assignment_id": "assignment-b-011"
+        },
+        {
+          "item_id": "item-a-012",
+          "assignment_id": "assignment-b-012"
+        },
+        {
+          "item_id": "item-a-013",
+          "assignment_id": "assignment-b-013"
+        },
+        {
+          "item_id": "item-a-014",
+          "assignment_id": "assignment-b-014"
+        },
+        {
+          "item_id": "item-a-015",
+          "assignment_id": "assignment-b-015"
+        },
+        {
+          "item_id": "item-a-016",
+          "assignment_id": "assignment-b-016"
+        },
+        {
+          "item_id": "item-a-017",
+          "assignment_id": "assignment-b-017"
+        },
+        {
+          "item_id": "item-a-018",
+          "assignment_id": "assignment-b-018"
+        },
+        {
+          "item_id": "item-a-019",
+          "assignment_id": "assignment-b-019"
+        },
+        {
+          "item_id": "item-a-020",
+          "assignment_id": "assignment-b-020"
+        },
+        {
+          "item_id": "item-a-021",
+          "assignment_id": "assignment-b-021"
+        },
+        {
+          "item_id": "item-a-022",
+          "assignment_id": "assignment-b-022"
+        },
+        {
+          "item_id": "item-a-023",
+          "assignment_id": "assignment-b-023"
+        },
+        {
+          "item_id": "item-a-024",
+          "assignment_id": "assignment-b-024"
+        }
+      ],
+      "validities": [
+        {
+          "item_id": "item-a-001",
+          "validity_id": "validity-b-001"
+        },
+        {
+          "item_id": "item-a-002",
+          "validity_id": "validity-b-002"
+        },
+        {
+          "item_id": "item-a-003",
+          "validity_id": "validity-b-003"
+        },
+        {
+          "item_id": "item-a-004",
+          "validity_id": "validity-b-004"
+        },
+        {
+          "item_id": "item-a-005",
+          "validity_id": "validity-b-005"
+        },
+        {
+          "item_id": "item-a-006",
+          "validity_id": "validity-b-006"
+        },
+        {
+          "item_id": "item-a-007",
+          "validity_id": "validity-b-007"
+        },
+        {
+          "item_id": "item-a-008",
+          "validity_id": "validity-b-008"
+        },
+        {
+          "item_id": "item-a-009",
+          "validity_id": "validity-b-009"
+        },
+        {
+          "item_id": "item-a-010",
+          "validity_id": "validity-b-010"
+        },
+        {
+          "item_id": "item-a-011",
+          "validity_id": "validity-b-011"
+        },
+        {
+          "item_id": "item-a-012",
+          "validity_id": "validity-b-012"
+        },
+        {
+          "item_id": "item-a-013",
+          "validity_id": "validity-b-013"
+        },
+        {
+          "item_id": "item-a-014",
+          "validity_id": "validity-b-014"
+        },
+        {
+          "item_id": "item-a-015",
+          "validity_id": "validity-b-015"
+        },
+        {
+          "item_id": "item-a-016",
+          "validity_id": "validity-b-016"
+        },
+        {
+          "item_id": "item-a-017",
+          "validity_id": "validity-b-017"
+        },
+        {
+          "item_id": "item-a-018",
+          "validity_id": "validity-b-018"
+        },
+        {
+          "item_id": "item-a-019",
+          "validity_id": "validity-b-019"
+        },
+        {
+          "item_id": "item-a-020",
+          "validity_id": "validity-b-020"
+        },
+        {
+          "item_id": "item-a-021",
+          "validity_id": "validity-b-021"
+        },
+        {
+          "item_id": "item-a-022",
+          "validity_id": "validity-b-022"
+        },
+        {
+          "item_id": "item-a-023",
+          "validity_id": "validity-b-023"
+        },
+        {
+          "item_id": "item-a-024",
+          "validity_id": "validity-b-024"
+        }
+      ],
+      "observed_at": {
+        "state": "known",
+        "value": "2026-10-05T10:00:00Z"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "tail-failure-receipt",
+      "type": "evidence",
+      "scope_id": "scope-main",
+      "kind": {
+        "state": "known",
+        "value": "execution_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "occurred_at": {
+        "state": "known",
+        "value": "2026-10-04T10:00:00Z"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-04T11:00:00Z"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic outcome: the scripted model failed item-a-023 and item-a-024. Both remain structurally present. No external model was run. PRIVATE_MODEL_FAILURE_91"
+      },
+      "subject_ids": [
+        "item-a-023",
+        "item-a-024"
+      ],
+      "uncertainty": {
+        "state": "known",
+        "value": "Software fixture only; no measured capability result."
+      }
+    },
+    {
+      "id": "recut-anomaly-receipt",
+      "type": "evidence",
+      "scope_id": "scope-main",
+      "kind": {
+        "state": "known",
+        "value": "observation_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic inspection distinguished a fifth structural category in the same 24 cases. PRIVATE_RECUT_EVIDENCE_91"
+      },
+      "subject_ids": [
+        "frame-main",
+        "frame-recut"
+      ]
+    },
+    {
+      "id": "anomaly-recut",
+      "type": "anomaly",
+      "scope_id": "scope-main",
+      "frame_id": "frame-main",
+      "record": {
+        "state": "known",
+        "value": "recut-anomaly-receipt"
+      },
+      "context": {
+        "state": "known",
+        "value": "Reannotation of the same synthetic 24 item versions."
+      },
+      "distinction": {
+        "state": "known",
+        "value": "The revised partition has five distinctions."
+      },
+      "disposition": {
+        "state": "known",
+        "value": "recut"
+      },
+      "revision_ids": [
+        "revision-recut"
+      ],
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "revision-recut",
+      "type": "revision",
+      "scope_id": "scope-main",
+      "from_frame": "frame-main",
+      "to_frame": "frame-recut",
+      "kind": {
+        "state": "known",
+        "value": "recut"
+      },
+      "anomaly_ids": [
+        "anomaly-recut"
+      ],
+      "changed_distinction": {
+        "state": "known",
+        "value": "Repartition the existing 24 synthetic observations into five categories."
+      },
+      "incorporation_evidence_ids": [
+        "recut-anomaly-receipt"
+      ],
+      "new_assignment_ids": [
+        "assignment-b-001",
+        "assignment-b-002",
+        "assignment-b-003",
+        "assignment-b-004",
+        "assignment-b-005",
+        "assignment-b-006",
+        "assignment-b-007",
+        "assignment-b-008",
+        "assignment-b-009",
+        "assignment-b-010",
+        "assignment-b-011",
+        "assignment-b-012",
+        "assignment-b-013",
+        "assignment-b-014",
+        "assignment-b-015",
+        "assignment-b-016",
+        "assignment-b-017",
+        "assignment-b-018",
+        "assignment-b-019",
+        "assignment-b-020",
+        "assignment-b-021",
+        "assignment-b-022",
+        "assignment-b-023",
+        "assignment-b-024"
+      ],
+      "asserted_by": {
+        "state": "known",
+        "value": "actor-fixture"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-01T10:00:00Z"
+      }
+    }
+  ],
+  "requests": [
+    {
+      "id": "profile-a",
+      "operation": "profile",
+      "scope_id": "scope-main",
+      "snapshot_id": "snapshot-a"
+    },
+    {
+      "id": "profile-b",
+      "operation": "profile",
+      "scope_id": "scope-main",
+      "snapshot_id": "snapshot-b"
+    },
+    {
+      "id": "compare-catalog",
+      "operation": "compare",
+      "scope_id": "scope-main",
+      "before_id": "snapshot-a",
+      "after_id": "snapshot-b",
+      "mode": "descriptive",
+      "revision_id": "revision-recut"
+    }
+  ]
+}
