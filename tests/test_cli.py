@@ -54,14 +54,14 @@ class CommandLineTests(unittest.TestCase):
         self.assertNotIn("PRIVATE-RAW-INPUT", stdout + stderr)
         self.assertNotIn(str(self.path), stdout + stderr)
 
-    def test_unsupported_selected_operation_emits_exit_three(self):
+    def test_case_analysis_completes_even_with_documentary_gaps(self):
         dossier = json.loads(self.data)
         dossier["requests"] = [{"id": "cases-one", "operation": "cases", "scope_id": "scope-main"}]
         self.path.write_text(json.dumps(dossier), encoding="utf-8")
         status, stdout, stderr = self.run_cli("analyze", str(self.path))
-        self.assertEqual((status, stderr), (3, ""))
-        self.assertIn("unsupported_operation", stdout)
-        self.assertIn("EC108", stdout)
+        self.assertEqual((status, stderr), (0, ""))
+        self.assertNotIn("unsupported_operation", stdout)
+        self.assertEqual(json.loads(stdout)["results"][0]["assessment"], "not_assessed")
 
     def test_unknown_duplicate_and_empty_selections_are_usage_errors(self):
         for arguments, expected in (

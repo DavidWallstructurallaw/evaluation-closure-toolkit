@@ -698,6 +698,18 @@ def _check_report(report: dict) -> None:
                 _require("resource_limit" in result["reason_codes"])
             checker = _lineage_values if result["operation"] == "lineage" else _external_values
             checker(result["values"], partial=partial)
+        elif result["operation"] in {"cases", "assess"} and result["execution"] in {"completed", "partial"} and result["values"]:
+            from .report_assessment import assess_values, cases_values
+            partial = result["execution"] == "partial"
+            if partial:
+                _require("resource_limit" in result["reason_codes"])
+            if result["operation"] == "cases":
+                _require(result["assessment"] == "not_assessed")
+                cases_values(result["values"], partial=partial)
+            else:
+                assess_values(result["values"], partial=partial)
+                expected = {"defeated_under_scope": "contradicted_under_scope", "unestablished": "unresolved"}.get(result["values"]["conclusion"], result["values"]["conclusion"])
+                _require(result["assessment"] == expected)
         else:
             _require(result["values"] == {} and result["execution"] in {"not_run", "partial"})
     request_ids = [r["request_id"] for r in report["results"]]
@@ -856,6 +868,40 @@ def _provenance_markdown(lines, result):
     lines += ["Full paths, premise IDs, contrary records, qualification gaps and limitations are retained in the complete report below.", ""]
 
 
+def _assessment_markdown(lines, result):
+    value = result["values"]
+    lines += ["## " + _escape(result["operation"] + " " + result["request_id"]), ""]
+    if result["execution"] == "partial":
+        lines += ["Partial execution: completed checks and decisive counterevidence survive; unfinished checks cannot support an affirmative conclusion.", ""]
+    if result["operation"] == "assess":
+        lines += ["Conclusion: " + _escape(value["conclusion"]) + ". Currentness: " + _escape(value["currentness"]) + ".", "",
+                  "Capacity extent: " + _escape(value["capacity_extent"]) + ".", ""]
+        if value["conclusion"] == "supported_under_scope":
+            lines += ["Supported under the declared scope, supplied evidence and ect-core/0.1 policy.", ""]
+        if value["conditions"]:
+            _table(lines, ["Condition", "Selection", "Execution", "Assessment"],
+                   [[r[k] for k in ("condition", "selection", "execution", "assessment")] for r in value["conditions"]])
+            _table(lines, ["Criterion", "Assessment", "Reasons"],
+                   [[r["criterion"], r["assessment"], ", ".join(r["reason_codes"])] for c in value["conditions"] for r in c["values"]["criteria"]])
+        for prerequisite in value["prerequisites"]:
+            if prerequisite["role"] == "cases":
+                _assessment_markdown(lines, prerequisite["result"])
+        return
+    if value["anomalies"]:
+        _table(lines, ["Anomaly", "Preservation", "Disposition", "Disposition check"],
+               [[r["anomaly_id"], r["preservation"]["assessment"], r["disposition"], r["disposition_check"]["assessment"]] for r in value["anomalies"]])
+    if value["revisions"]:
+        _table(lines, ["Revision", "Cut", "Documented", "Incorporated", "Reviewed fidelity"],
+               [[r["revision_id"], r["cut_state"], *[r[k]["assessment"] for k in ("documented", "incorporated", "fidelity")]] for r in value["revisions"]])
+    if value["corrections"]:
+        _table(lines, ["Case", "Context", "Objective", "Authority", "Tested route"],
+               [[r["case_id"], r["context"], r["objective"], *[(r[k] or {}).get("assessment", "not_assessed") for k in ("authority", "capacity")]] for r in value["corrections"]])
+        _table(lines, ["Case", "Outcome", "Objective", "Stated result", "Review"],
+               [[c["case_id"], o["event_id"], o["objective"], o["result"], o["review"]["assessment"]] for c in value["corrections"] for o in c["outcomes"]])
+    _table(lines, ["Unique case/target pair state", "Count"], [[k, _number_text(v)] for k, v in value["pair_counts"].items()])
+    _table(lines, ["Raw event type", "Count"], [[k, _number_text(v)] for k, v in value["event_counts"].items()])
+
+
 def render_markdown(report: dict) -> str:
     """Render current reports with complete detail, without a second analysis.
 
@@ -876,7 +922,7 @@ def render_markdown(report: dict) -> str:
                       "| --- | --- | --- | --- | --- | --- |"]
             for result in report["results"]:
                 columns = [result[k] for k in ("request_id", "scope_id", "operation", "selection", "execution")]
-                columns.append(result["values"].get("claim_conclusion", result["assessment"]))
+                columns.append(result["values"].get("conclusion", result["values"].get("claim_conclusion", result["assessment"])))
                 lines.append("| " + " | ".join(_escape(v) for v in columns) + " |")
             lines.append("")
             for result in report["results"]:
@@ -884,6 +930,8 @@ def render_markdown(report: dict) -> str:
                     _structural_markdown(lines, result)
                 elif result["operation"] in {"lineage", "external"} and result["values"]:
                     _provenance_markdown(lines, result)
+                elif result["operation"] in {"cases", "assess"} and result["values"]:
+                    _assessment_markdown(lines, result)
         lines += ["## Limitations", ""]
         lines.extend("- " + _escape(value) for value in report["limitations"])
         lines += ["", "## Complete report", "",

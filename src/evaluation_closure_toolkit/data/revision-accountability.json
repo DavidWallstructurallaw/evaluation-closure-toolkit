@@ -1,0 +1,2489 @@
+{
+  "schema": "ect-dossier/0.1",
+  "id": "demo-revision-accountability",
+  "analysis_time": "2026-10-06T00:00:00Z",
+  "policy": "ect-core/0.1",
+  "records": [
+    {
+      "id": "process",
+      "type": "entity",
+      "kind": "process",
+      "logical_id": "process",
+      "version": "v1"
+    },
+    {
+      "id": "actor",
+      "type": "entity",
+      "kind": "actor",
+      "logical_id": "actor",
+      "version": "v1"
+    },
+    {
+      "id": "model",
+      "type": "entity",
+      "kind": "model",
+      "logical_id": "model",
+      "version": "v1"
+    },
+    {
+      "id": "reference",
+      "type": "entity",
+      "kind": "artifact",
+      "logical_id": "reference",
+      "version": "v1"
+    },
+    {
+      "id": "judge",
+      "type": "entity",
+      "kind": "model",
+      "logical_id": "judge",
+      "version": "v1"
+    },
+    {
+      "id": "source",
+      "type": "entity",
+      "kind": "artifact",
+      "logical_id": "source",
+      "version": "v1"
+    },
+    {
+      "id": "z",
+      "type": "entity",
+      "kind": "contribution",
+      "logical_id": "z",
+      "version": "v1"
+    },
+    {
+      "id": "scope",
+      "type": "scope",
+      "process_id": "process",
+      "claim_id": "claim",
+      "frame_id": "frame",
+      "snapshot_ids": [
+        "snapshot"
+      ],
+      "dimension": {
+        "state": "known",
+        "value": "acquisition"
+      },
+      "window": {
+        "state": "known",
+        "value": {
+          "start": "2026-10-01T00:00:00Z",
+          "end": "2026-11-01T00:00:00Z"
+        }
+      }
+    },
+    {
+      "id": "claim",
+      "type": "claim",
+      "scope_id": "scope",
+      "profile": "open_evaluation",
+      "statement": {
+        "state": "known",
+        "value": "Open evaluation of these two finite synthetic items under the supplied five conditions."
+      },
+      "intended_use": {
+        "state": "known",
+        "value": "Bounded synthetic evaluation"
+      },
+      "horizon": {
+        "state": "known",
+        "value": "The declared October window"
+      },
+      "frame_id": {
+        "state": "known",
+        "value": "frame"
+      },
+      "requirements": {
+        "state": "known",
+        "value": [
+          "single_turn"
+        ]
+      },
+      "validation_kind": {
+        "state": "known",
+        "value": "execution"
+      },
+      "valid_until": {
+        "state": "known",
+        "value": "2026-11-01T00:00:00Z"
+      },
+      "capacity_extent": {
+        "state": "known",
+        "value": "tested_route"
+      }
+    },
+    {
+      "id": "frame",
+      "type": "frame",
+      "task": {
+        "state": "known",
+        "value": "Bounded synthetic task"
+      },
+      "context": {
+        "state": "known",
+        "value": "Bounded synthetic context"
+      },
+      "horizon": {
+        "state": "known",
+        "value": "Bounded synthetic horizon"
+      },
+      "resolution": {
+        "state": "known",
+        "value": "Bounded synthetic resolution"
+      },
+      "exclusions": {
+        "state": "known",
+        "value": "Bounded synthetic exclusions"
+      },
+      "validity_rubric": {
+        "state": "known",
+        "value": "Bounded synthetic validity_rubric"
+      },
+      "admission_policy": {
+        "state": "known",
+        "value": "Bounded synthetic admission_policy"
+      },
+      "selection_policy": {
+        "state": "known",
+        "value": "Bounded synthetic selection_policy"
+      },
+      "features": {
+        "state": "known",
+        "value": [
+          "single_turn"
+        ]
+      },
+      "classes": {
+        "state": "known",
+        "value": [
+          {
+            "id": "usual",
+            "definition": "Usual finite cases"
+          },
+          {
+            "id": "rare",
+            "definition": "Rare finite cases"
+          }
+        ]
+      },
+      "tail_designations": {
+        "state": "known",
+        "value": [
+          {
+            "class_id": "rare",
+            "rationale": "Rare but relevant failure condition",
+            "severity": "Severe within this finite use",
+            "rarity_basis": "Supplied finite roster"
+          }
+        ]
+      }
+    },
+    {
+      "id": "snapshot",
+      "type": "snapshot",
+      "frame_id": "frame",
+      "members": [
+        "item-a",
+        "item-b"
+      ],
+      "membership": {
+        "state": "known",
+        "value": "complete"
+      },
+      "selection_policy": {
+        "state": "known",
+        "value": "Two fixed items"
+      },
+      "observed_at": {
+        "state": "known",
+        "value": "2026-10-04T00:00:00Z"
+      },
+      "assignments": [
+        {
+          "item_id": "item-a",
+          "assignment_id": "assignment-a"
+        },
+        {
+          "item_id": "item-b",
+          "assignment_id": "assignment-b"
+        }
+      ],
+      "tail_results": {
+        "state": "known",
+        "value": [
+          {
+            "class_id": "rare",
+            "evidence_ids": [
+              "tail-receipt"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "item-a",
+      "type": "item",
+      "logical_id": "item-a",
+      "version": "v1",
+      "body": {
+        "state": "known",
+        "value": "Toy item a"
+      }
+    },
+    {
+      "id": "assignment-a",
+      "type": "assignment",
+      "item_id": "item-a",
+      "frame_id": "frame",
+      "class_id": {
+        "state": "known",
+        "value": "usual"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Supplied class meaning"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor"
+      }
+    },
+    {
+      "id": "origin-a",
+      "type": "relation",
+      "scope_id": "scope",
+      "from_id": "item-a",
+      "to_id": "source",
+      "kind": "acquired_from",
+      "asserted_by": {
+        "state": "known",
+        "value": "actor"
+      }
+    },
+    {
+      "id": "item-b",
+      "type": "item",
+      "logical_id": "item-b",
+      "version": "v1",
+      "body": {
+        "state": "known",
+        "value": "Toy item b"
+      }
+    },
+    {
+      "id": "assignment-b",
+      "type": "assignment",
+      "item_id": "item-b",
+      "frame_id": "frame",
+      "class_id": {
+        "state": "known",
+        "value": "rare"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Supplied class meaning"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor"
+      }
+    },
+    {
+      "id": "origin-b",
+      "type": "relation",
+      "scope_id": "scope",
+      "from_id": "item-b",
+      "to_id": "source",
+      "kind": "acquired_from",
+      "asserted_by": {
+        "state": "known",
+        "value": "actor"
+      }
+    },
+    {
+      "id": "role-generation",
+      "type": "relation",
+      "scope_id": "scope",
+      "from_id": "process",
+      "to_id": "model",
+      "kind": "uses_generation",
+      "role": {
+        "state": "known",
+        "value": "Declared generation role"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor"
+      }
+    },
+    {
+      "id": "role-reference",
+      "type": "relation",
+      "scope_id": "scope",
+      "from_id": "process",
+      "to_id": "reference",
+      "kind": "uses_reference",
+      "role": {
+        "state": "known",
+        "value": "Declared reference role"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor"
+      }
+    },
+    {
+      "id": "role-judgment",
+      "type": "relation",
+      "scope_id": "scope",
+      "from_id": "process",
+      "to_id": "judge",
+      "kind": "uses_judgment",
+      "role": {
+        "state": "known",
+        "value": "Declared judgment role"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor"
+      }
+    },
+    {
+      "id": "tail-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "execution_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "The rare-class model failure remains visible in the supplied result."
+      },
+      "subject_ids": [
+        "snapshot",
+        "item-b"
+      ]
+    },
+    {
+      "id": "cohort",
+      "type": "external_cohort",
+      "scope_id": "scope",
+      "members": [
+        "z"
+      ],
+      "membership": {
+        "state": "known",
+        "value": "complete"
+      },
+      "boundary": {
+        "state": "known",
+        "value": "Outside the declared process"
+      },
+      "checkpoint": {
+        "state": "known",
+        "value": "captured-october"
+      },
+      "purpose": {
+        "state": "known",
+        "value": "Bounded synthetic evaluation"
+      },
+      "externality_reviews": [
+        {
+          "member_id": "z",
+          "review_id": "external-z"
+        }
+      ],
+      "qualifications": [
+        {
+          "member_id": "z",
+          "review_id": "qualification-z"
+        }
+      ]
+    },
+    {
+      "id": "external-z-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "analysis_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "cohort",
+        "z"
+      ]
+    },
+    {
+      "id": "external-z",
+      "type": "review",
+      "target_id": "cohort",
+      "criterion": "externality",
+      "scope_id": "scope",
+      "assessor_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "reviewed_at": {
+        "state": "known",
+        "value": "2026-10-05T12:00:00Z"
+      },
+      "method": {
+        "state": "known",
+        "value": "Inspect the supplied typed records and exact subject inventory."
+      },
+      "rationale": {
+        "state": "known",
+        "value": "Supports only the declared horizon, objective, boundary and supplied inventory; unexamined history remains unknown."
+      },
+      "verdict": {
+        "state": "known",
+        "value": "supports"
+      },
+      "evidence_ids": [
+        "external-z-receipt"
+      ],
+      "member_id": "z"
+    },
+    {
+      "id": "qualification-z-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "analysis_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "cohort",
+        "z"
+      ]
+    },
+    {
+      "id": "qualification-z",
+      "type": "review",
+      "target_id": "cohort",
+      "criterion": "input_qualification",
+      "scope_id": "scope",
+      "assessor_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "reviewed_at": {
+        "state": "known",
+        "value": "2026-10-05T12:00:00Z"
+      },
+      "method": {
+        "state": "known",
+        "value": "Inspect the supplied typed records and exact subject inventory."
+      },
+      "rationale": {
+        "state": "known",
+        "value": "Supports only the declared horizon, objective, boundary and supplied inventory; unexamined history remains unknown."
+      },
+      "verdict": {
+        "state": "known",
+        "value": "supports"
+      },
+      "evidence_ids": [
+        "qualification-z-receipt"
+      ],
+      "member_id": "z"
+    },
+    {
+      "id": "z-received-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "process_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "z",
+        "z-received"
+      ]
+    },
+    {
+      "id": "z-received",
+      "type": "external_event",
+      "scope_id": "scope",
+      "cohort_id": "cohort",
+      "member_id": "z",
+      "stage": "received",
+      "verdict": {
+        "state": "known",
+        "value": "yes"
+      },
+      "occurred_at": {
+        "state": "known",
+        "value": "2026-10-03T00:00:00Z"
+      },
+      "checkpoint": {
+        "state": "known",
+        "value": "captured-october"
+      },
+      "purpose": {
+        "state": "known",
+        "value": "Bounded synthetic evaluation"
+      },
+      "target_id": {
+        "state": "known",
+        "value": "process"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor"
+      },
+      "evidence_ids": [
+        "z-received-receipt"
+      ]
+    },
+    {
+      "id": "z-used-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "process_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "z",
+        "z-used"
+      ]
+    },
+    {
+      "id": "z-used",
+      "type": "external_event",
+      "scope_id": "scope",
+      "cohort_id": "cohort",
+      "member_id": "z",
+      "stage": "used",
+      "verdict": {
+        "state": "known",
+        "value": "yes"
+      },
+      "occurred_at": {
+        "state": "known",
+        "value": "2026-10-03T00:00:00Z"
+      },
+      "checkpoint": {
+        "state": "known",
+        "value": "captured-october"
+      },
+      "purpose": {
+        "state": "known",
+        "value": "Bounded synthetic evaluation"
+      },
+      "target_id": {
+        "state": "known",
+        "value": "process"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor"
+      },
+      "evidence_ids": [
+        "z-used-receipt"
+      ]
+    },
+    {
+      "id": "case",
+      "type": "correction_case",
+      "scope_id": "scope",
+      "claim_id": "claim",
+      "issue": {
+        "state": "known",
+        "value": "Finite issue"
+      },
+      "context": {
+        "state": "known",
+        "value": "drill"
+      },
+      "objective": {
+        "state": "known",
+        "value": "restrict"
+      },
+      "route": {
+        "state": "known",
+        "value": {
+          "actor_id": "actor",
+          "target_id": "process",
+          "procedure": "Invoke bounded restriction",
+          "evidence_ids": [
+            "route-receipt"
+          ]
+        }
+      },
+      "authority": {
+        "state": "known",
+        "value": {
+          "actor_id": "actor",
+          "target_id": "process",
+          "start": "2026-10-01T00:00:00Z",
+          "end": "2026-11-01T00:00:00Z",
+          "evidence_ids": [
+            "authority-receipt"
+          ]
+        }
+      },
+      "handling": [
+        {
+          "id": "accepted",
+          "state": {
+            "state": "known",
+            "value": "accepted"
+          },
+          "occurred_at": {
+            "state": "known",
+            "value": "2026-10-02T00:00:00Z"
+          },
+          "evidence_ids": [
+            "handling-receipt"
+          ]
+        }
+      ],
+      "attempts": [
+        {
+          "id": "attempt",
+          "actor_id": {
+            "state": "known",
+            "value": "actor"
+          },
+          "target_id": {
+            "state": "known",
+            "value": "process"
+          },
+          "occurred_at": {
+            "state": "known",
+            "value": "2026-10-03T00:00:00Z"
+          },
+          "evidence_ids": [
+            "attempt-receipt"
+          ]
+        }
+      ],
+      "actions": [
+        {
+          "id": "action",
+          "attempt_id": "attempt",
+          "kind": {
+            "state": "known",
+            "value": "restrict"
+          },
+          "target_id": {
+            "state": "known",
+            "value": "process"
+          },
+          "occurred_at": {
+            "state": "known",
+            "value": "2026-10-03T01:00:00Z"
+          },
+          "resulting_state": {
+            "state": "known",
+            "value": "Restricted for the declared use"
+          },
+          "evidence_ids": [
+            "action-receipt"
+          ]
+        }
+      ],
+      "outcomes": [
+        {
+          "id": "outcome",
+          "action_id": "action",
+          "criterion": {
+            "state": "known",
+            "value": "Restriction applies"
+          },
+          "protocol": {
+            "state": "known",
+            "value": "Inspect the resulting objective state"
+          },
+          "horizon": {
+            "state": "known",
+            "value": "Declared drill observation"
+          },
+          "assessed_at": {
+            "state": "known",
+            "value": "2026-10-04T00:00:00Z"
+          },
+          "result": {
+            "state": "known",
+            "value": "effective"
+          },
+          "review_id": {
+            "state": "known",
+            "value": "outcome-review"
+          },
+          "evidence_ids": [
+            "outcome-receipt"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "route-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "process_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "case",
+        "process"
+      ]
+    },
+    {
+      "id": "authority-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "process_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "case",
+        "process"
+      ]
+    },
+    {
+      "id": "handling-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "process_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "case",
+        "process"
+      ]
+    },
+    {
+      "id": "attempt-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "process_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "case",
+        "process"
+      ]
+    },
+    {
+      "id": "action-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "process_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "case",
+        "process"
+      ]
+    },
+    {
+      "id": "outcome-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "process_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "case",
+        "process"
+      ]
+    },
+    {
+      "id": "outcome-review",
+      "type": "review",
+      "target_id": "case",
+      "criterion": "correction_outcome",
+      "scope_id": "scope",
+      "assessor_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "reviewed_at": {
+        "state": "known",
+        "value": "2026-10-05T12:00:00Z"
+      },
+      "method": {
+        "state": "known",
+        "value": "Inspect the supplied typed records and exact subject inventory."
+      },
+      "rationale": {
+        "state": "known",
+        "value": "Supports only the declared horizon, objective, boundary and supplied inventory; unexamined history remains unknown."
+      },
+      "verdict": {
+        "state": "known",
+        "value": "supports"
+      },
+      "evidence_ids": [
+        "outcome-receipt"
+      ],
+      "target_event_id": "outcome"
+    },
+    {
+      "id": "receipt-frame_target_fidelity",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "analysis_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "claim",
+        "scope",
+        "frame",
+        "snapshot",
+        "cohort",
+        "z",
+        "z-used",
+        "process",
+        "case",
+        "origin-a",
+        "origin-b",
+        "role-generation",
+        "role-reference",
+        "role-judgment"
+      ]
+    },
+    {
+      "id": "review-frame_target_fidelity",
+      "type": "review",
+      "target_id": "claim",
+      "criterion": "frame_target_fidelity",
+      "scope_id": "scope",
+      "assessor_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "reviewed_at": {
+        "state": "known",
+        "value": "2026-10-05T12:00:00Z"
+      },
+      "method": {
+        "state": "known",
+        "value": "Inspect the supplied typed records and exact subject inventory."
+      },
+      "rationale": {
+        "state": "known",
+        "value": "Supports only the declared horizon, objective, boundary and supplied inventory; unexamined history remains unknown."
+      },
+      "verdict": {
+        "state": "known",
+        "value": "supports"
+      },
+      "evidence_ids": [
+        "receipt-frame_target_fidelity"
+      ]
+    },
+    {
+      "id": "receipt-anomaly_accountability",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "analysis_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "claim",
+        "scope",
+        "frame",
+        "snapshot",
+        "cohort",
+        "z",
+        "z-used",
+        "process",
+        "case",
+        "origin-a",
+        "origin-b",
+        "role-generation",
+        "role-reference",
+        "role-judgment"
+      ]
+    },
+    {
+      "id": "review-anomaly_accountability",
+      "type": "review",
+      "target_id": "claim",
+      "criterion": "anomaly_accountability",
+      "scope_id": "scope",
+      "assessor_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "reviewed_at": {
+        "state": "known",
+        "value": "2026-10-05T12:00:00Z"
+      },
+      "method": {
+        "state": "known",
+        "value": "Inspect the supplied typed records and exact subject inventory."
+      },
+      "rationale": {
+        "state": "known",
+        "value": "Supports only the declared horizon, objective, boundary and supplied inventory; unexamined history remains unknown."
+      },
+      "verdict": {
+        "state": "known",
+        "value": "supports"
+      },
+      "evidence_ids": [
+        "receipt-anomaly_accountability"
+      ]
+    },
+    {
+      "id": "receipt-outside_process_contact",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "analysis_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "claim",
+        "scope",
+        "frame",
+        "snapshot",
+        "cohort",
+        "z",
+        "z-used",
+        "process",
+        "case",
+        "origin-a",
+        "origin-b",
+        "role-generation",
+        "role-reference",
+        "role-judgment"
+      ]
+    },
+    {
+      "id": "review-outside_process_contact",
+      "type": "review",
+      "target_id": "claim",
+      "criterion": "outside_process_contact",
+      "scope_id": "scope",
+      "assessor_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "reviewed_at": {
+        "state": "known",
+        "value": "2026-10-05T12:00:00Z"
+      },
+      "method": {
+        "state": "known",
+        "value": "Inspect the supplied typed records and exact subject inventory."
+      },
+      "rationale": {
+        "state": "known",
+        "value": "Supports only the declared horizon, objective, boundary and supplied inventory; unexamined history remains unknown."
+      },
+      "verdict": {
+        "state": "known",
+        "value": "supports"
+      },
+      "evidence_ids": [
+        "receipt-outside_process_contact"
+      ]
+    },
+    {
+      "id": "receipt-claim_relevance",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "analysis_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "claim",
+        "scope",
+        "frame",
+        "snapshot",
+        "cohort",
+        "z",
+        "z-used",
+        "process",
+        "case",
+        "origin-a",
+        "origin-b",
+        "role-generation",
+        "role-reference",
+        "role-judgment"
+      ]
+    },
+    {
+      "id": "review-claim_relevance",
+      "type": "review",
+      "target_id": "claim",
+      "criterion": "claim_relevance",
+      "scope_id": "scope",
+      "assessor_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "reviewed_at": {
+        "state": "known",
+        "value": "2026-10-05T12:00:00Z"
+      },
+      "method": {
+        "state": "known",
+        "value": "Inspect the supplied typed records and exact subject inventory."
+      },
+      "rationale": {
+        "state": "known",
+        "value": "Supports only the declared horizon, objective, boundary and supplied inventory; unexamined history remains unknown."
+      },
+      "verdict": {
+        "state": "known",
+        "value": "supports"
+      },
+      "evidence_ids": [
+        "receipt-claim_relevance"
+      ]
+    },
+    {
+      "id": "receipt-recorded_use",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "process_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "claim",
+        "scope",
+        "frame",
+        "snapshot",
+        "cohort",
+        "z",
+        "z-used",
+        "process",
+        "case",
+        "origin-a",
+        "origin-b",
+        "role-generation",
+        "role-reference",
+        "role-judgment"
+      ]
+    },
+    {
+      "id": "review-recorded_use",
+      "type": "review",
+      "target_id": "claim",
+      "criterion": "recorded_use",
+      "scope_id": "scope",
+      "assessor_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "reviewed_at": {
+        "state": "known",
+        "value": "2026-10-05T12:00:00Z"
+      },
+      "method": {
+        "state": "known",
+        "value": "Inspect the supplied typed records and exact subject inventory."
+      },
+      "rationale": {
+        "state": "known",
+        "value": "Supports only the declared horizon, objective, boundary and supplied inventory; unexamined history remains unknown."
+      },
+      "verdict": {
+        "state": "known",
+        "value": "supports"
+      },
+      "evidence_ids": [
+        "receipt-recorded_use"
+      ]
+    },
+    {
+      "id": "receipt-provenance_transformations",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "analysis_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "claim",
+        "scope",
+        "frame",
+        "snapshot",
+        "cohort",
+        "z",
+        "z-used",
+        "process",
+        "case",
+        "origin-a",
+        "origin-b",
+        "role-generation",
+        "role-reference",
+        "role-judgment"
+      ],
+      "origin_ids": [
+        "source"
+      ],
+      "transformation_ids": [],
+      "uncertainty": {
+        "state": "known",
+        "value": "Generator, reference and judge acquisition is examined; other ancestry/dimensions remain unexamined."
+      }
+    },
+    {
+      "id": "review-provenance_transformations",
+      "type": "review",
+      "target_id": "claim",
+      "criterion": "provenance_transformations",
+      "scope_id": "scope",
+      "assessor_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "reviewed_at": {
+        "state": "known",
+        "value": "2026-10-05T12:00:00Z"
+      },
+      "method": {
+        "state": "known",
+        "value": "Inspect the supplied typed records and exact subject inventory."
+      },
+      "rationale": {
+        "state": "known",
+        "value": "Supports only the declared horizon, objective, boundary and supplied inventory; unexamined history remains unknown."
+      },
+      "verdict": {
+        "state": "known",
+        "value": "supports"
+      },
+      "evidence_ids": [
+        "receipt-provenance_transformations"
+      ]
+    },
+    {
+      "id": "receipt-validation_type_fit",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "execution_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "claim",
+        "scope",
+        "frame",
+        "snapshot",
+        "cohort",
+        "z",
+        "z-used",
+        "process",
+        "case",
+        "origin-a",
+        "origin-b",
+        "role-generation",
+        "role-reference",
+        "role-judgment"
+      ]
+    },
+    {
+      "id": "review-validation_type_fit",
+      "type": "review",
+      "target_id": "claim",
+      "criterion": "validation_type_fit",
+      "scope_id": "scope",
+      "assessor_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "reviewed_at": {
+        "state": "known",
+        "value": "2026-10-05T12:00:00Z"
+      },
+      "method": {
+        "state": "known",
+        "value": "Inspect the supplied typed records and exact subject inventory."
+      },
+      "rationale": {
+        "state": "known",
+        "value": "Supports only the declared horizon, objective, boundary and supplied inventory; unexamined history remains unknown."
+      },
+      "verdict": {
+        "state": "known",
+        "value": "supports"
+      },
+      "evidence_ids": [
+        "receipt-validation_type_fit"
+      ]
+    },
+    {
+      "id": "receipt-evaluator_relationships",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "analysis_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "claim",
+        "scope",
+        "frame",
+        "snapshot",
+        "cohort",
+        "z",
+        "z-used",
+        "process",
+        "case",
+        "origin-a",
+        "origin-b",
+        "role-generation",
+        "role-reference",
+        "role-judgment"
+      ],
+      "origin_ids": [
+        "source"
+      ],
+      "transformation_ids": [],
+      "uncertainty": {
+        "state": "known",
+        "value": "Generator, reference and judge acquisition is examined; other ancestry/dimensions remain unexamined."
+      }
+    },
+    {
+      "id": "review-evaluator_relationships",
+      "type": "review",
+      "target_id": "claim",
+      "criterion": "evaluator_relationships",
+      "scope_id": "scope",
+      "assessor_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "reviewed_at": {
+        "state": "known",
+        "value": "2026-10-05T12:00:00Z"
+      },
+      "method": {
+        "state": "known",
+        "value": "Inspect the supplied typed records and exact subject inventory."
+      },
+      "rationale": {
+        "state": "known",
+        "value": "Supports only the declared horizon, objective, boundary and supplied inventory; unexamined history remains unknown."
+      },
+      "verdict": {
+        "state": "known",
+        "value": "supports"
+      },
+      "evidence_ids": [
+        "receipt-evaluator_relationships"
+      ]
+    },
+    {
+      "id": "receipt-tail_designation_adequacy",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "analysis_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "claim",
+        "scope",
+        "frame",
+        "snapshot",
+        "cohort",
+        "z",
+        "z-used",
+        "process",
+        "case",
+        "origin-a",
+        "origin-b",
+        "role-generation",
+        "role-reference",
+        "role-judgment"
+      ]
+    },
+    {
+      "id": "review-tail_designation_adequacy",
+      "type": "review",
+      "target_id": "claim",
+      "criterion": "tail_designation_adequacy",
+      "scope_id": "scope",
+      "assessor_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "reviewed_at": {
+        "state": "known",
+        "value": "2026-10-05T12:00:00Z"
+      },
+      "method": {
+        "state": "known",
+        "value": "Inspect the supplied typed records and exact subject inventory."
+      },
+      "rationale": {
+        "state": "known",
+        "value": "Supports only the declared horizon, objective, boundary and supplied inventory; unexamined history remains unknown."
+      },
+      "verdict": {
+        "state": "known",
+        "value": "supports"
+      },
+      "evidence_ids": [
+        "receipt-tail_designation_adequacy"
+      ]
+    },
+    {
+      "id": "receipt-tail_representation",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "analysis_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "claim",
+        "scope",
+        "frame",
+        "snapshot",
+        "cohort",
+        "z",
+        "z-used",
+        "process",
+        "case",
+        "origin-a",
+        "origin-b",
+        "role-generation",
+        "role-reference",
+        "role-judgment"
+      ]
+    },
+    {
+      "id": "review-tail_representation",
+      "type": "review",
+      "target_id": "claim",
+      "criterion": "tail_representation",
+      "scope_id": "scope",
+      "assessor_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "reviewed_at": {
+        "state": "known",
+        "value": "2026-10-05T12:00:00Z"
+      },
+      "method": {
+        "state": "known",
+        "value": "Inspect the supplied typed records and exact subject inventory."
+      },
+      "rationale": {
+        "state": "known",
+        "value": "Supports only the declared horizon, objective, boundary and supplied inventory; unexamined history remains unknown."
+      },
+      "verdict": {
+        "state": "known",
+        "value": "supports"
+      },
+      "evidence_ids": [
+        "receipt-tail_representation"
+      ]
+    },
+    {
+      "id": "receipt-tail_result_visibility",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "execution_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "claim",
+        "scope",
+        "frame",
+        "snapshot",
+        "cohort",
+        "z",
+        "z-used",
+        "process",
+        "case",
+        "origin-a",
+        "origin-b",
+        "role-generation",
+        "role-reference",
+        "role-judgment"
+      ]
+    },
+    {
+      "id": "review-tail_result_visibility",
+      "type": "review",
+      "target_id": "claim",
+      "criterion": "tail_result_visibility",
+      "scope_id": "scope",
+      "assessor_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "reviewed_at": {
+        "state": "known",
+        "value": "2026-10-05T12:00:00Z"
+      },
+      "method": {
+        "state": "known",
+        "value": "Inspect the supplied typed records and exact subject inventory."
+      },
+      "rationale": {
+        "state": "known",
+        "value": "Supports only the declared horizon, objective, boundary and supplied inventory; unexamined history remains unknown."
+      },
+      "verdict": {
+        "state": "known",
+        "value": "supports"
+      },
+      "evidence_ids": [
+        "receipt-tail_result_visibility"
+      ]
+    },
+    {
+      "id": "receipt-route_and_authority",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "analysis_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "claim",
+        "scope",
+        "frame",
+        "snapshot",
+        "cohort",
+        "z",
+        "z-used",
+        "process",
+        "case",
+        "origin-a",
+        "origin-b",
+        "role-generation",
+        "role-reference",
+        "role-judgment"
+      ]
+    },
+    {
+      "id": "review-route_and_authority",
+      "type": "review",
+      "target_id": "claim",
+      "criterion": "route_and_authority",
+      "scope_id": "scope",
+      "assessor_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "reviewed_at": {
+        "state": "known",
+        "value": "2026-10-05T12:00:00Z"
+      },
+      "method": {
+        "state": "known",
+        "value": "Inspect the supplied typed records and exact subject inventory."
+      },
+      "rationale": {
+        "state": "known",
+        "value": "Supports only the declared horizon, objective, boundary and supplied inventory; unexamined history remains unknown."
+      },
+      "verdict": {
+        "state": "known",
+        "value": "supports"
+      },
+      "evidence_ids": [
+        "receipt-route_and_authority"
+      ]
+    },
+    {
+      "id": "receipt-route_operability",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "process_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "claim",
+        "scope",
+        "frame",
+        "snapshot",
+        "cohort",
+        "z",
+        "z-used",
+        "process",
+        "case",
+        "origin-a",
+        "origin-b",
+        "role-generation",
+        "role-reference",
+        "role-judgment"
+      ]
+    },
+    {
+      "id": "review-route_operability",
+      "type": "review",
+      "target_id": "claim",
+      "criterion": "route_operability",
+      "scope_id": "scope",
+      "assessor_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "reviewed_at": {
+        "state": "known",
+        "value": "2026-10-05T12:00:00Z"
+      },
+      "method": {
+        "state": "known",
+        "value": "Inspect the supplied typed records and exact subject inventory."
+      },
+      "rationale": {
+        "state": "known",
+        "value": "Supports only the declared horizon, objective, boundary and supplied inventory; unexamined history remains unknown."
+      },
+      "verdict": {
+        "state": "known",
+        "value": "supports"
+      },
+      "evidence_ids": [
+        "receipt-route_operability"
+      ]
+    },
+    {
+      "id": "receipt-capacity_extent",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "analysis_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "claim",
+        "scope",
+        "frame",
+        "snapshot",
+        "cohort",
+        "z",
+        "z-used",
+        "process",
+        "case",
+        "origin-a",
+        "origin-b",
+        "role-generation",
+        "role-reference",
+        "role-judgment"
+      ]
+    },
+    {
+      "id": "review-capacity_extent",
+      "type": "review",
+      "target_id": "claim",
+      "criterion": "capacity_extent",
+      "scope_id": "scope",
+      "assessor_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "reviewed_at": {
+        "state": "known",
+        "value": "2026-10-05T12:00:00Z"
+      },
+      "method": {
+        "state": "known",
+        "value": "Inspect the supplied typed records and exact subject inventory."
+      },
+      "rationale": {
+        "state": "known",
+        "value": "Supports only the declared horizon, objective, boundary and supplied inventory; unexamined history remains unknown."
+      },
+      "verdict": {
+        "state": "known",
+        "value": "supports"
+      },
+      "evidence_ids": [
+        "receipt-capacity_extent"
+      ]
+    },
+    {
+      "id": "frame-recut",
+      "type": "frame",
+      "task": {
+        "state": "known",
+        "value": "Bounded synthetic task"
+      },
+      "context": {
+        "state": "known",
+        "value": "Bounded synthetic context"
+      },
+      "horizon": {
+        "state": "known",
+        "value": "Bounded synthetic horizon"
+      },
+      "resolution": {
+        "state": "known",
+        "value": "Bounded synthetic resolution"
+      },
+      "exclusions": {
+        "state": "known",
+        "value": "Bounded synthetic exclusions"
+      },
+      "validity_rubric": {
+        "state": "known",
+        "value": "Bounded synthetic validity_rubric"
+      },
+      "admission_policy": {
+        "state": "known",
+        "value": "Bounded synthetic admission_policy"
+      },
+      "selection_policy": {
+        "state": "known",
+        "value": "Bounded synthetic selection_policy"
+      },
+      "features": {
+        "state": "known",
+        "value": [
+          "single_turn"
+        ]
+      },
+      "classes": {
+        "state": "known",
+        "value": [
+          {
+            "id": "usual",
+            "definition": "Usual finite cases"
+          },
+          {
+            "id": "rare",
+            "definition": "Rare cases with newly represented recovery distinction"
+          }
+        ]
+      },
+      "tail_designations": {
+        "state": "known",
+        "value": [
+          {
+            "class_id": "rare",
+            "rationale": "Rare but relevant failure condition",
+            "severity": "Severe within this finite use",
+            "rarity_basis": "Supplied finite roster"
+          }
+        ]
+      }
+    },
+    {
+      "id": "anomaly-recut",
+      "type": "anomaly",
+      "scope_id": "scope",
+      "frame_id": "frame",
+      "record": {
+        "state": "known",
+        "value": "anomaly-recut-receipt"
+      },
+      "context": {
+        "state": "known",
+        "value": "Supplied finite anomaly context"
+      },
+      "distinction": {
+        "state": "known",
+        "value": "Recovery distinctions were examined"
+      },
+      "disposition": {
+        "state": "known",
+        "value": "recut"
+      },
+      "revision_ids": [
+        "revision-recut"
+      ]
+    },
+    {
+      "id": "revision-recut",
+      "type": "revision",
+      "scope_id": "scope",
+      "from_frame": "frame",
+      "to_frame": "frame-recut",
+      "kind": {
+        "state": "known",
+        "value": "recut"
+      },
+      "changed_distinction": {
+        "state": "known",
+        "value": "Supplied represented distinction or label change"
+      },
+      "anomaly_ids": [
+        "anomaly-recut"
+      ],
+      "class_map": [
+        {
+          "from_class": "usual",
+          "to_class": "usual"
+        },
+        {
+          "from_class": "rare",
+          "to_class": "rare"
+        }
+      ],
+      "evidence_ids": [
+        "revision-recut-receipt"
+      ],
+      "incorporation_evidence_ids": [
+        "incorporation-recut"
+      ],
+      "new_assignment_ids": [
+        "assignment-recut"
+      ]
+    },
+    {
+      "id": "assignment-recut",
+      "type": "assignment",
+      "item_id": "item-b",
+      "frame_id": "frame-recut",
+      "class_id": {
+        "state": "known",
+        "value": "rare"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Supplied class meaning"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor"
+      }
+    },
+    {
+      "id": "anomaly-recut-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "observation_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "anomaly-recut"
+      ]
+    },
+    {
+      "id": "revision-recut-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "process_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "revision-recut"
+      ]
+    },
+    {
+      "id": "incorporation-recut",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "analysis_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "revision-recut"
+      ]
+    },
+    {
+      "id": "fidelity-recut-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "analysis_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "revision-recut",
+        "frame",
+        "frame-recut"
+      ]
+    },
+    {
+      "id": "fidelity-recut",
+      "type": "review",
+      "target_id": "revision-recut",
+      "criterion": "structural_revision",
+      "scope_id": "scope",
+      "assessor_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "reviewed_at": {
+        "state": "known",
+        "value": "2026-10-05T12:00:00Z"
+      },
+      "method": {
+        "state": "known",
+        "value": "Inspect the supplied typed records and exact subject inventory."
+      },
+      "rationale": {
+        "state": "known",
+        "value": "Supports only the declared horizon, objective, boundary and supplied inventory; unexamined history remains unknown."
+      },
+      "verdict": {
+        "state": "known",
+        "value": "supports"
+      },
+      "evidence_ids": [
+        "fidelity-recut-receipt"
+      ]
+    },
+    {
+      "id": "frame-rename",
+      "type": "frame",
+      "task": {
+        "state": "known",
+        "value": "Bounded synthetic task"
+      },
+      "context": {
+        "state": "known",
+        "value": "Bounded synthetic context"
+      },
+      "horizon": {
+        "state": "known",
+        "value": "Bounded synthetic horizon"
+      },
+      "resolution": {
+        "state": "known",
+        "value": "Bounded synthetic resolution"
+      },
+      "exclusions": {
+        "state": "known",
+        "value": "Bounded synthetic exclusions"
+      },
+      "validity_rubric": {
+        "state": "known",
+        "value": "Bounded synthetic validity_rubric"
+      },
+      "admission_policy": {
+        "state": "known",
+        "value": "Bounded synthetic admission_policy"
+      },
+      "selection_policy": {
+        "state": "known",
+        "value": "Bounded synthetic selection_policy"
+      },
+      "features": {
+        "state": "known",
+        "value": [
+          "single_turn"
+        ]
+      },
+      "classes": {
+        "state": "known",
+        "value": [
+          {
+            "id": "usual",
+            "definition": "Usual finite cases"
+          },
+          {
+            "id": "rare",
+            "definition": "Rare finite cases"
+          }
+        ]
+      },
+      "tail_designations": {
+        "state": "known",
+        "value": [
+          {
+            "class_id": "rare",
+            "rationale": "Rare but relevant failure condition",
+            "severity": "Severe within this finite use",
+            "rarity_basis": "Supplied finite roster"
+          }
+        ]
+      }
+    },
+    {
+      "id": "anomaly-rename",
+      "type": "anomaly",
+      "scope_id": "scope",
+      "frame_id": "frame",
+      "record": {
+        "state": "known",
+        "value": "anomaly-rename-receipt"
+      },
+      "context": {
+        "state": "known",
+        "value": "Supplied finite anomaly context"
+      },
+      "distinction": {
+        "state": "known",
+        "value": "Recovery distinctions were examined"
+      },
+      "disposition": {
+        "state": "known",
+        "value": "investigated_no_change"
+      },
+      "revision_ids": [
+        "revision-rename"
+      ]
+    },
+    {
+      "id": "revision-rename",
+      "type": "revision",
+      "scope_id": "scope",
+      "from_frame": "frame",
+      "to_frame": "frame-rename",
+      "kind": {
+        "state": "known",
+        "value": "relabel"
+      },
+      "changed_distinction": {
+        "state": "known",
+        "value": "Supplied represented distinction or label change"
+      },
+      "anomaly_ids": [
+        "anomaly-rename"
+      ],
+      "class_map": [
+        {
+          "from_class": "usual",
+          "to_class": "usual"
+        },
+        {
+          "from_class": "rare",
+          "to_class": "rare"
+        }
+      ],
+      "evidence_ids": [
+        "revision-rename-receipt"
+      ],
+      "incorporation_evidence_ids": [
+        "incorporation-rename"
+      ],
+      "new_assignment_ids": [
+        "assignment-rename"
+      ]
+    },
+    {
+      "id": "assignment-rename",
+      "type": "assignment",
+      "item_id": "item-b",
+      "frame_id": "frame-rename",
+      "class_id": {
+        "state": "known",
+        "value": "rare"
+      },
+      "decision": {
+        "state": "known",
+        "value": "admitted"
+      },
+      "basis": {
+        "state": "known",
+        "value": "Supplied class meaning"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "actor"
+      }
+    },
+    {
+      "id": "anomaly-rename-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "observation_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "anomaly-rename"
+      ]
+    },
+    {
+      "id": "revision-rename-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "process_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "revision-rename"
+      ]
+    },
+    {
+      "id": "incorporation-rename",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "analysis_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "revision-rename"
+      ]
+    },
+    {
+      "id": "fidelity-rename-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "analysis_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic receipt for the explicitly anchored finite inquiry."
+      },
+      "subject_ids": [
+        "revision-rename",
+        "frame",
+        "frame-rename"
+      ]
+    },
+    {
+      "id": "fidelity-rename",
+      "type": "review",
+      "target_id": "revision-rename",
+      "criterion": "structural_revision",
+      "scope_id": "scope",
+      "assessor_id": {
+        "state": "known",
+        "value": "actor"
+      },
+      "reviewed_at": {
+        "state": "known",
+        "value": "2026-10-05T12:00:00Z"
+      },
+      "method": {
+        "state": "known",
+        "value": "Inspect the supplied typed records and exact subject inventory."
+      },
+      "rationale": {
+        "state": "known",
+        "value": "Supports only the declared horizon, objective, boundary and supplied inventory; unexamined history remains unknown."
+      },
+      "verdict": {
+        "state": "known",
+        "value": "supports"
+      },
+      "evidence_ids": [
+        "fidelity-rename-receipt"
+      ]
+    }
+  ],
+  "requests": [
+    {
+      "id": "cases-main",
+      "operation": "cases",
+      "scope_id": "scope",
+      "case_ids": []
+    }
+  ]
+}

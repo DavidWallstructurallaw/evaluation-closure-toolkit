@@ -48,7 +48,8 @@ def _refs_into(target: set, references, budget: RequestBudget) -> None:
 
 
 def _qualification(review: dict, records: dict, scope_id: str,
-                   required_kinds: frozenset, budget: RequestBudget) -> set:
+                   required_kinds: frozenset, budget: RequestBudget,
+                   required_subjects=(), subject_groups=(), forbidden_subjects=()) -> set:
     reasons = set()
     if review["scope_id"] != scope_id:
         reasons.add("scope_mismatch")
@@ -61,12 +62,14 @@ def _qualification(review: dict, records: dict, scope_id: str,
     if not evidence_ids:
         reasons.add("prerequisite_unavailable")
     kinds = set()
+    subjects = set()
     member_seen = "member_id" not in review
     for evidence_id in evidence_ids:
         budget.charge()
         evidence = records[evidence_id]
         for subject_id in evidence.get("subject_ids", []):
             budget.charge()
+            subjects.add(subject_id)
             if subject_id == review.get("member_id"):
                 member_seen = True
         kind = known(evidence, "kind")
@@ -86,6 +89,13 @@ def _qualification(review: dict, records: dict, scope_id: str,
         reasons.add("prerequisite_unavailable")
     if not member_seen:
         reasons.add("prerequisite_unavailable")
+    budget.charge(len(required_subjects) + len(forbidden_subjects) + sum(len(g) for g in subject_groups))
+    if not set(required_subjects) <= subjects:
+        reasons.add("prerequisite_unavailable")
+    if subject_groups and not any(set(group) <= subjects for group in subject_groups):
+        reasons.add("prerequisite_unavailable")
+    if set(forbidden_subjects) & subjects:
+        reasons.add("scope_mismatch")
     return reasons
 
 
@@ -106,6 +116,8 @@ def member_relevant(record: dict, target_id: str, member_id: str | None,
 def _counterexample_in_scope(counterexample_id: str, review: dict,
                             records: dict, budget: RequestBudget) -> bool:
     record = records[counterexample_id]
+    if not event_relevant(record, review["target_id"], review.get("target_event_id"), records, budget):
+        return False
     member = review.get("member_id")
     if member is not None:
         if "member_id" in record and record["member_id"] != member:
@@ -130,13 +142,28 @@ def _counterexample_in_scope(counterexample_id: str, review: dict,
     return False
 
 
+def event_relevant(record, target_id, event_id, records, budget):
+    """Outcome-bound reviews never resolve or defeat a different case/outcome."""
+    if event_id is None:
+        return True
+    if record["type"] == "correction_case":
+        return record["id"] == target_id
+    if record["type"] == "review":
+        return (record.get("target_id") == target_id
+                and record.get("target_event_id") == event_id)
+    subjects = record.get("subject_ids", [])
+    budget.charge(len(subjects))
+    other_cases = [s for s in subjects if records[s]["type"] == "correction_case"]
+    return not other_cases or target_id in other_cases
+
+
 def make_review_index(records: dict) -> dict:
     """Index all supplied declarations once; qualifications remain request-local."""
     index = defaultdict(list)
     for record in records.values():
         if record["type"] == "review":
             index[(record["target_id"], record["criterion"])].append(record)
-            for binding in ("member_id", "request_id"):
+            for binding in ("member_id", "request_id", "target_event_id"):
                 if binding in record:
                     index[(record["target_id"], record["criterion"], binding, record[binding])].append(record)
     return {key: sorted(value, key=lambda r: r["id"]) for key, value in index.items()}
@@ -145,7 +172,9 @@ def make_review_index(records: dict) -> dict:
 def evaluate_reviews(records: dict, target_id: str, criterion: str,
                      scope_id: str, *, required_kinds=(), disclosure_id=None,
                      applicability_row=None, request_id=None, review_index=None,
-                     member_id=None, budget=None) -> dict:
+                     member_id=None, target_event_id=None, extra_contrary=(),
+                     required_subjects=(), subject_groups=(), forbidden_subjects=(),
+                     budget=None) -> dict:
     """Assess every relevant declaration, retaining conflicts and resolutions.
 
     ``records`` is indexed by ID. Disclosures filter claim-review coverage;
@@ -159,24 +188,30 @@ def evaluate_reviews(records: dict, target_id: str, criterion: str,
         raise ValueError("MATCHING_REQUEST_REQUIRED")
     if criterion in {"externality", "input_qualification", "retention"} and member_id is None:
         raise ValueError("MEMBER_BINDING_REQUIRED")
+    if criterion == "correction_outcome" and target_event_id is None:
+        raise ValueError("OUTCOME_BINDING_REQUIRED")
     pool = records.values() if review_index is None else review_index.get((target_id, criterion), ())
     if review_index is not None:
         if member_id is not None:
             pool = review_index.get((target_id, criterion, "member_id", member_id), ())
         elif request_id is not None:
             pool = review_index.get((target_id, criterion, "request_id", request_id), ())
+        elif target_event_id is not None:
+            pool = review_index.get((target_id, criterion, "target_event_id", target_event_id), ())
     budget.charge(len(pool))
     candidates = sorted((r for r in pool
                          if r["type"] == "review" and r["target_id"] == target_id
                          and r["criterion"] == criterion
                          and (request_id is None or r.get("request_id") == request_id)
                          and (member_id is None or r.get("member_id") == member_id)
+                         and (target_event_id is None or r.get("target_event_id") == target_event_id)
                          and (disclosure_id is None or disclosure_id in r.get("disclosure_ids", []))
                          and (applicability_row is None or r.get("disclosure_id") == applicability_row)),
                         key=lambda r: r["id"])
     selected = {r["id"]: r for r in candidates if r["scope_id"] == scope_id}
     required_kinds = frozenset(required_kinds)
-    gaps = {r["id"]: _qualification(r, records, scope_id, required_kinds, budget)
+    gaps = {r["id"]: _qualification(r, records, scope_id, required_kinds, budget,
+                                  required_subjects, subject_groups, forbidden_subjects)
             for r in candidates}
     qualified = {rid for rid in selected if not gaps[rid]}
     # Resolution edges run from adjudicator to the exact challenged record.
@@ -198,7 +233,8 @@ def evaluate_reviews(records: dict, target_id: str, criterion: str,
                     valid = valid and disclosure_id in record.get("disclosure_ids", [])
             else:
                 valid = (valid and record.get("scope_id") == scope_id
-                         and member_relevant(record, target_id, member_id, records, budget))
+                         and member_relevant(record, target_id, member_id, records, budget)
+                         and event_relevant(record, target_id, target_event_id, records, budget))
             if not valid:
                 gaps[rid].add("disputed")
                 continue
@@ -273,9 +309,10 @@ def evaluate_reviews(records: dict, target_id: str, criterion: str,
     active = set(selected) - removed
     contrary = set()
     target_contrary = []
-    for ref in records[target_id].get("contrary_ids", []):
+    for ref in (*records[target_id].get("contrary_ids", []), *extra_contrary):
         budget.charge()
-        if member_relevant(records[ref], target_id, member_id, records, budget):
+        if (member_relevant(records[ref], target_id, member_id, records, budget)
+                and event_relevant(records[ref], target_id, target_event_id, records, budget)):
             target_contrary.append(ref)
     _refs_into(contrary, target_contrary, budget)
     for review in candidates:
@@ -334,6 +371,7 @@ def evaluate_reviews(records: dict, target_id: str, criterion: str,
     for rid in sorted(supports):
         _refs_into(support_ids, selected[rid].get("evidence_ids", []), budget)
     dependencies_ids = {target_id, scope_id}
+    dependencies_ids.update(target_contrary)
     for review in candidates:
         dependencies_ids.add(review["id"])
         for key in ("evidence_ids", "contrary_ids", "resolves", "counterexample_ids"):
