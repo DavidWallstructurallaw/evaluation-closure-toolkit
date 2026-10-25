@@ -1,6 +1,6 @@
 """Verify a built wheel in a fresh offline virtual environment outside the source tree.
 
-Usage: python scripts/check_install.py --wheel dist/evaluation_closure_toolkit-0.1.0.dev5-py3-none-any.whl
+Usage: python scripts/check_install.py --wheel dist/evaluation_closure_toolkit-0.1.0rc1-py3-none-any.whl
 
 This development-only script intentionally launches installation and CLI processes.
 The installed toolkit runtime does not launch subprocesses or make network calls.
@@ -9,6 +9,7 @@ The installed toolkit runtime does not launch subprocesses or make network calls
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -28,16 +29,26 @@ _DEMOS = (
 )
 
 _INSTALLED_API_CHECK = r'''
+import hashlib
 import json
+import struct
 import sys
 from importlib import metadata, resources
 from pathlib import Path
 import evaluation_closure_toolkit as ect
 
 assert Path(ect.__file__).is_relative_to(Path(sys.prefix)), "Import escaped installed environment"
+assert struct.calcsize("P") == 8, "Qualification requires a 64-bit interpreter"
 distribution = metadata.distribution("evaluation-closure-toolkit")
 assert not distribution.requires, "Runtime dependency unexpectedly added"
 assert distribution.version == ect.__version__, "Version identity disagrees"
+expected_build_id, expected_license_sha256 = sys.argv[1:]
+assert distribution.metadata["License-Expression"] == "Apache-2.0", "License expression differs"
+assert distribution.metadata.get_all("License-File") == ["LICENSE"], "License-file metadata differs"
+license_files = [entry for entry in distribution.files or ()
+                 if str(entry).endswith(".dist-info/licenses/LICENSE")]
+assert len(license_files) == 1, "Installed license file missing or ambiguous"
+assert hashlib.sha256(distribution.locate_file(license_files[0]).read_bytes()).hexdigest() == expected_license_sha256, "Installed license content differs"
 data_root = resources.files("evaluation_closure_toolkit").joinpath("data")
 schema = json.loads(data_root.joinpath("dossier.schema.json").read_bytes())
 assert schema["type"] == "object", "Packaged dossier schema missing"
@@ -56,8 +67,11 @@ conclusions = {
 }
 for name in (*conclusions, "growing-catalog", "matched-cohort", "recut-comparison", "shared-lineage", "recursive-reuse", "external-contact", "correction-cases", "revision-accountability", "supported-open-evaluation", "bounded-workflow"):
     data = data_root.joinpath(name + ".json").read_bytes()
-    assert ect.validate_bytes(data)["admission"] == "valid", name
+    admission = ect.validate_bytes(data)
+    assert admission["admission"] == "valid", name
+    assert admission["build_id"] == expected_build_id, "Admission build identity differs: " + name
     report = ect.analyze_bytes(data)
+    assert report["build_id"] == expected_build_id, "Analysis build identity differs: " + name
     assert report["execution"] == "completed", name
     rows = {row["request_id"]: row for row in report["results"]}
     if name in conclusions:
@@ -155,7 +169,8 @@ for name in (*conclusions, "growing-catalog", "matched-cohort", "recut-compariso
     Path(name + ".json").write_bytes(data)
     Path(name + ".report.json").write_text(json.dumps(report), encoding="utf-8")
     Path(name + ".report.md").write_text(markdown, encoding="utf-8")
-print("API, fourteen exact demo results, saved-JSON Markdown parity, version identity, packaged schema and zero runtime dependencies verified")
+assert ect.validate_bytes(b"{")["build_id"] == expected_build_id, "Invalid-input build identity differs"
+print("API, fourteen exact demo results, saved-JSON Markdown parity, expected build identity, package version/license/schema and zero runtime dependencies verified")
 '''
 
 
@@ -210,9 +225,49 @@ def _check_documented_rerun(python: Path, working: Path, environment: dict[str, 
     print("Documented installed example, exact digests, saved-report rendering and normalization guard passed")
 
 
+def _check_user_examples(python: Path, console: Path, root: Path, environment: dict[str, str]) -> None:
+    """Run the bounded first-use examples verbatim, outside the source checkout."""
+    source = Path(__file__).resolve().parents[1]
+    readme = (source / "README.md").read_text(encoding="utf-8")
+    start, end = "<!-- ect-quickstart:start -->", "<!-- ect-quickstart:end -->"
+    assert readme.count(start) == readme.count(end) == 1, "README quickstart markers missing or repeated"
+    assert readme.index(start) < readme.index(end), "README quickstart markers are reversed"
+    quickstart = readme.split(start, 1)[1].split(end, 1)[0]
+    guide = (source / "docs" / "USER_GUIDE.md").read_text(encoding="utf-8")
+    for label, text, expected in (
+        ("README", quickstart, ["sh", "python", "sh"]),
+        ("USER_GUIDE", guide, ["python", "sh", "python"]),
+    ):
+        blocks = re.findall(r"```(python|sh)\n(.*?)\n```", text, re.S)
+        languages = [language for language, _ in blocks]
+        assert languages == expected, f"Unexpected {label} runnable blocks"
+        working = root / label.lower()
+        working.mkdir()
+        for language, code in blocks:
+            if language == "python":
+                _run([str(python), "-c", code], working, environment, f"{label} Python example")
+            else:
+                for line in code.splitlines():
+                    arguments = shlex.split(line, comments=True)
+                    if not arguments:
+                        continue
+                    assert arguments[0] in {"python", "evaluation-closure"}, f"Unexpected {label} command"
+                    # Installation/development commands are deliberately outside
+                    # the marked first-use region. The wheel is already installed.
+                    if arguments[0] == "python":
+                        assert arguments[1:3] == ["-m", "evaluation_closure_toolkit"], f"Unexpected {label} Python command"
+                        entry = python
+                    else:
+                        entry = console
+                    _run([str(entry), *arguments[1:]], working, environment, f"{label} CLI example")
+        print(f"Actual {label} first-use examples passed against the installed wheel")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--wheel", required=True, type=Path, help="Built local wheel; no index access is used.")
+    parser.add_argument("--expected-build-id", default="unknown",
+                        help="Independently expected exact report build identity; default checks an unstamped source build.")
     args = parser.parse_args()
     wheel = args.wheel.resolve(strict=True)
     if not wheel.is_file() or wheel.suffix != ".whl":
@@ -234,7 +289,9 @@ def main() -> int:
             [str(python), "-m", "pip", "--disable-pip-version-check", "install", "--no-index", "--no-deps", str(wheel)],
             working, environment, "Offline wheel installation",
         )
-        print(_run([str(python), "-c", _INSTALLED_API_CHECK], working, environment, "Installed API/schema").strip())
+        license_sha256 = hashlib.sha256((Path(__file__).resolve().parents[1] / "LICENSE").read_bytes()).hexdigest()
+        print(_run([str(python), "-c", _INSTALLED_API_CHECK, args.expected_build_id, license_sha256],
+                   working, environment, "Installed API/identity/license/schema").strip())
         version = _run([str(console), "--version"], working, environment, "Console entry point")
         module_version = _run([str(python), "-m", "evaluation_closure_toolkit", "--version"], working, environment, "Module entry point")
         assert version == module_version, "Console/module identity disagrees"
@@ -247,6 +304,7 @@ def main() -> int:
                 assert markdown == (working / f"{name}.report.md").read_text(encoding="utf-8"), name
         admitted = json.loads(_run([str(console), "validate", "incomplete-regression.json"], working, environment, "Installed validate"))
         assert admitted["admission"] == "valid" and admitted["results"] == []
+        assert admitted["build_id"] == args.expected_build_id, "CLI admission build identity differs"
         analyzed = json.loads(_run([str(console), "analyze", "incomplete-regression.json", "--request", "lint-main"], working, environment, "Installed analyze"))
         assert analyzed["results"][0]["values"]["claim_conclusion"] == "unestablished"
         structural = json.loads(_run([str(console), "analyze", "growing-catalog.json", "--request", "profile-a", "--request", "compare-catalog"], working, environment, "Installed profile/compare selection"))
@@ -276,7 +334,9 @@ def main() -> int:
         assert first == (working / "rerun-b.json").read_bytes(), "Same-input rerun bytes differ"
         assert json.loads(first) == json.loads((working / "bounded-workflow.report.json").read_text(encoding="utf-8"))
         _check_documented_rerun(python, working, environment)
+        _check_user_examples(python, console, root, environment)
         print(f"{version.strip()}: fresh offline install, both entry points, fourteen demos, validate/analyze, all seven request operations, saved-JSON Markdown parity and deterministic rerun passed")
+        print(f"Verified report build identity: {args.expected_build_id}")
         print(f"Local verification runtime: {sys.implementation.name} {sys.version.split()[0]} on {sys.platform}")
     return 0
 

@@ -6,19 +6,19 @@ import hashlib
 import platform
 
 from . import __version__
+from ._build_info import BUILD_ID
 from .admission import admit
 from .budget import RequestBudget, RunBudget, WorkLimit
 from .errors import AdmissionError, InternalError, RequestError
 from .lint import lint_claim
 from .reporting import MAX_REPORT_BYTES, _format_markdown, _MarkdownLimit, canonical_json
 
-BUILD_ID = "unknown"
 MAX_FINDINGS = 10_000
 _LIMITATIONS = [
-    "Development build identity is unknown; exact same-build provenance is not established.",
+    "Build identity is package metadata; retain the original artifact. An unknown build_id does not establish immutable source-build provenance.",
     "Analysis time is supplied by the dossier; it is not a captured execution time or historical evidence cutoff.",
     "Conclusions are conditional on supplied records, declared scope and ect-core/0.1; evidence authenticity and textual truth are not independently verified.",
-    "P1-5 consolidates reporting, synthetic demonstrations and deterministic rerun guidance for all seven specified operations. Evidence authentication and release qualification remain outside this development slice.",
+    "Software qualification covers the tested dossier, reporting and installed workflows. Synthetic examples and passing tests do not establish empirical effectiveness, evidence authenticity or deployment authorization.",
 ]
 
 

@@ -1,6 +1,6 @@
 # Deterministic reruns and saved reports
 
-P1-5 uses the existing `validate`, `analyze` and `demo` commands and the public
+The toolkit uses the existing `validate`, `analyze` and `demo` commands and the public
 byte-oriented API. A rerun means keeping the original dossier and executing the
 same selection again. There is no capture-archive format or `replay` command.
 Simulation, benchmark execution and external evidence collection remain outside
@@ -21,10 +21,13 @@ Keep these together in a private, user-controlled working directory:
   tool and contract identities: `tool_version`, `build_id`, `dossier_schema`,
   `schema`, `method`, `serialization` and `policy`.
 
-Development version `0.1.0.dev5` reports `build_id: "unknown"`. Repeated local
-bytes can demonstrate deterministic execution in a controlled environment, but
-that field cannot establish immutable same-build provenance. Release build
-qualification remains P1-6 work. The dossier's `analysis_time` is supplied input,
+Ordinary source builds report `build_id: "unknown"`. Qualified candidate artifacts
+embed `ect-VERSION+git.SOURCE_REVISION` through the [clean-export build procedure](RELEASE.md).
+Retain the original artifact and independently verify its expected revision and
+hash. This is package metadata, without a signature or an evidence-authentication
+claim. Unknown identity cannot establish immutable same-build provenance.
+Repeated local bytes can demonstrate deterministic execution in a controlled
+environment. The dossier's `analysis_time` is supplied input,
 not a captured execution timestamp or an independently verified evidence cutoff.
 
 The guarantees assume the same original bytes, request selection, tool build,

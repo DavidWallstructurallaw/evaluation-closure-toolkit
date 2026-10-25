@@ -48,7 +48,7 @@ class _Parser(argparse.ArgumentParser):
 def _parser() -> argparse.ArgumentParser:
     parser = _Parser(
         prog="evaluation-closure",
-        description="Inspect supplied evaluation dossiers offline. Development P1-5: seven operations with consolidated reports, synthetic demos and deterministic reruns.",
+        description="Inspect supplied evaluation dossiers offline: claim disclosures, structural coverage, lineage, external contact, correction records and scoped assessment.",
         allow_abbrev=False,
     )
     parser.add_argument("--version", action="version", version=f"evaluation-closure {__version__}")
