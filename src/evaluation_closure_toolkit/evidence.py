@@ -61,9 +61,14 @@ def _qualification(review: dict, records: dict, scope_id: str,
     if not evidence_ids:
         reasons.add("prerequisite_unavailable")
     kinds = set()
+    member_seen = "member_id" not in review
     for evidence_id in evidence_ids:
         budget.charge()
         evidence = records[evidence_id]
+        for subject_id in evidence.get("subject_ids", []):
+            budget.charge()
+            if subject_id == review.get("member_id"):
+                member_seen = True
         kind = known(evidence, "kind")
         if evidence["scope_id"] != scope_id:
             reasons.add("scope_mismatch")
@@ -79,12 +84,36 @@ def _qualification(review: dict, records: dict, scope_id: str,
             reasons.add("body_unavailable")
     if not required_kinds.issubset(kinds):
         reasons.add("prerequisite_unavailable")
+    if not member_seen:
+        reasons.add("prerequisite_unavailable")
     return reasons
+
+
+def member_relevant(record: dict, target_id: str, member_id: str | None,
+                    records: dict, budget: RequestBudget) -> bool:
+    """Keep member-specific counterevidence local; unbound target disputes remain."""
+    if member_id is None:
+        return True
+    if record["type"] == "review":
+        return record.get("target_id") == target_id and record.get("member_id") == member_id
+    subjects = record.get("subject_ids", [])
+    budget.charge(len(subjects))
+    if member_id not in subjects and any(records[s].get("kind") == "contribution" for s in subjects):
+        return False
+    return not subjects or member_id in subjects or target_id in subjects
 
 
 def _counterexample_in_scope(counterexample_id: str, review: dict,
                             records: dict, budget: RequestBudget) -> bool:
     record = records[counterexample_id]
+    member = review.get("member_id")
+    if member is not None:
+        if "member_id" in record and record["member_id"] != member:
+            return False
+        if record["type"] == "entity" and counterexample_id != member:
+            return False
+        if record["type"] in {"evidence", "review"} and not member_relevant(record, review["target_id"], member, records, budget):
+            return False
     if "scope_id" in record:
         return record["scope_id"] == review["scope_id"]
     if record["id"] == review["target_id"]:
@@ -107,13 +136,16 @@ def make_review_index(records: dict) -> dict:
     for record in records.values():
         if record["type"] == "review":
             index[(record["target_id"], record["criterion"])].append(record)
+            for binding in ("member_id", "request_id"):
+                if binding in record:
+                    index[(record["target_id"], record["criterion"], binding, record[binding])].append(record)
     return {key: sorted(value, key=lambda r: r["id"]) for key, value in index.items()}
 
 
 def evaluate_reviews(records: dict, target_id: str, criterion: str,
                      scope_id: str, *, required_kinds=(), disclosure_id=None,
                      applicability_row=None, request_id=None, review_index=None,
-                     budget=None) -> dict:
+                     member_id=None, budget=None) -> dict:
     """Assess every relevant declaration, retaining conflicts and resolutions.
 
     ``records`` is indexed by ID. Disclosures filter claim-review coverage;
@@ -125,11 +157,20 @@ def evaluate_reviews(records: dict, target_id: str, criterion: str,
         budget = RequestBudget()
     if criterion == "matching_basis" and request_id is None:
         raise ValueError("MATCHING_REQUEST_REQUIRED")
+    if criterion in {"externality", "input_qualification", "retention"} and member_id is None:
+        raise ValueError("MEMBER_BINDING_REQUIRED")
     pool = records.values() if review_index is None else review_index.get((target_id, criterion), ())
+    if review_index is not None:
+        if member_id is not None:
+            pool = review_index.get((target_id, criterion, "member_id", member_id), ())
+        elif request_id is not None:
+            pool = review_index.get((target_id, criterion, "request_id", request_id), ())
+    budget.charge(len(pool))
     candidates = sorted((r for r in pool
                          if r["type"] == "review" and r["target_id"] == target_id
                          and r["criterion"] == criterion
                          and (request_id is None or r.get("request_id") == request_id)
+                         and (member_id is None or r.get("member_id") == member_id)
                          and (disclosure_id is None or disclosure_id in r.get("disclosure_ids", []))
                          and (applicability_row is None or r.get("disclosure_id") == applicability_row)),
                         key=lambda r: r["id"])
@@ -156,7 +197,8 @@ def evaluate_reviews(records: dict, target_id: str, criterion: str,
                 if disclosure_id is not None:
                     valid = valid and disclosure_id in record.get("disclosure_ids", [])
             else:
-                valid = valid and record.get("scope_id") == scope_id
+                valid = (valid and record.get("scope_id") == scope_id
+                         and member_relevant(record, target_id, member_id, records, budget))
             if not valid:
                 gaps[rid].add("disputed")
                 continue
@@ -230,7 +272,12 @@ def evaluate_reviews(records: dict, target_id: str, criterion: str,
     active_qualified -= removed
     active = set(selected) - removed
     contrary = set()
-    _refs_into(contrary, records[target_id].get("contrary_ids", []), budget)
+    target_contrary = []
+    for ref in records[target_id].get("contrary_ids", []):
+        budget.charge()
+        if member_relevant(records[ref], target_id, member_id, records, budget):
+            target_contrary.append(ref)
+    _refs_into(contrary, target_contrary, budget)
     for review in candidates:
         _refs_into(contrary, review.get("contrary_ids", []), budget)
         for eid in review.get("evidence_ids", []):
@@ -257,7 +304,7 @@ def evaluate_reviews(records: dict, target_id: str, criterion: str,
                 decisive.add(rid)
     supports = {rid for rid in active_qualified
                 if known(selected[rid], "verdict") == "supports"}
-    disputed = bool(cyclic or (set(records[target_id].get("contrary_ids", [])) - removed))
+    disputed = bool(cyclic or (set(target_contrary) - removed))
     for rid in active:
         review = selected[rid]
         if (known(review, "verdict") != "supports"

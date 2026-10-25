@@ -1,6 +1,6 @@
 """Verify a built wheel in a fresh offline virtual environment outside the source tree.
 
-Usage: python scripts/check_install.py --wheel dist/evaluation_closure_toolkit-0.1.0.dev2-py3-none-any.whl
+Usage: python scripts/check_install.py --wheel dist/evaluation_closure_toolkit-0.1.0.dev3-py3-none-any.whl
 
 This development-only script intentionally launches installation and CLI processes.
 The installed toolkit runtime does not launch subprocesses or make network calls.
@@ -20,6 +20,7 @@ from pathlib import Path
 _DEMOS = (
     "incomplete-regression", "supported-narrow-regression", "scope-mismatch", "open-claim-lint",
     "growing-catalog", "matched-cohort", "recut-comparison",
+    "shared-lineage", "recursive-reuse", "external-contact",
 )
 
 _INSTALLED_API_CHECK = r'''
@@ -49,7 +50,7 @@ conclusions = {
     "scope-mismatch": "defeated_under_scope",
     "open-claim-lint": "unestablished",
 }
-for name in (*conclusions, "growing-catalog", "matched-cohort", "recut-comparison"):
+for name in (*conclusions, "growing-catalog", "matched-cohort", "recut-comparison", "shared-lineage", "recursive-reuse", "external-contact"):
     data = data_root.joinpath(name + ".json").read_bytes()
     assert ect.validate_bytes(data)["admission"] == "valid", name
     report = ect.analyze_bytes(data)
@@ -87,12 +88,36 @@ for name in (*conclusions, "growing-catalog", "matched-cohort", "recut-compariso
         assert recut["after"]["SCI"] == fraction(2, 9)
         assert recut["after"]["D"] == fraction(7, 9)
         assert recut["new_observations"] == integer(0)
+    if name == "shared-lineage":
+        lineage = rows["lineage-acquisition"]["values"]
+        assert lineage["search_complete"]
+        assert lineage["witnesses"] == [{"left_seed_id": "x", "right_seed_id": "y", "node_id": "origin",
+                                          "left_path": ["edge-x-origin"], "right_path": ["edge-y-origin"]}]
+        assert lineage["frontiers"][0]["node_id"] == "unknown-node"
+        assert lineage["independence_assessments"][0]["review"]["assessment"] == "unresolved"
+        assert rows["lineage-rubric"]["values"]["witnesses"] == []
+    if name == "recursive-reuse":
+        lineage = rows["lineage-recursive"]["values"]
+        assert lineage["cycle_state"] == "no_witness_in_captured_view"
+        assert lineage["recursive_witnesses"][0]["state"] == "recorded_recursive_reuse"
+        assert lineage["recursive_witnesses"][0]["path"] == ["reuse-output", "produce-a"]
+    if name == "external-contact":
+        external = rows["external-main"]["values"]
+        assert external["known_member_count"] == integer(3)
+        assert external["event_counts"]["retained"] == integer(3)
+        assert external["stage_counts"]["retained"] == {"yes": integer(1), "no": integer(1), "unresolved": integer(1), "disputed": integer(0)}
+        members = {r["member_id"]: r for r in external["member_states"]}
+        assert members["p"]["contact_state"] == "documented_current_contact"
+        assert members["q"]["stages"]["used"]["state"] == "yes"
+        assert members["q"]["stages"]["received"]["state"] == "unresolved"
+        assert members["q"]["externality"]["assessment"] == "unresolved"
+        assert members["r"]["contact_state"] == "carryover_only"
     markdown = ect.render_markdown(report)
     assert markdown.strip(), name
     Path(name + ".json").write_bytes(data)
     Path(name + ".report.json").write_text(json.dumps(report), encoding="utf-8")
     Path(name + ".report.md").write_text(markdown, encoding="utf-8")
-print("API, seven exact demo results, version identity, packaged schema and zero runtime dependencies verified")
+print("API, ten exact demo results, version identity, packaged schema and zero runtime dependencies verified")
 '''
 
 
@@ -150,7 +175,7 @@ def main() -> int:
             report = json.loads(_run([str(console), "demo", name], working, environment, f"Packaged demo {name}"))
             expected = json.loads((working / f"{name}.report.json").read_text(encoding="utf-8"))
             assert report == expected, f"Console/API result differs for {name}"
-            if name in {"growing-catalog", "matched-cohort", "recut-comparison"}:
+            if name in {"growing-catalog", "matched-cohort", "recut-comparison", "shared-lineage", "recursive-reuse", "external-contact"}:
                 markdown = _run([str(console), "demo", name, "--format", "markdown"], working, environment, f"Packaged Markdown demo {name}")
                 assert markdown == (working / f"{name}.report.md").read_text(encoding="utf-8"), name
         admitted = json.loads(_run([str(console), "validate", "incomplete-regression.json"], working, environment, "Installed validate"))
@@ -162,7 +187,12 @@ def main() -> int:
         assert structural["execution"] == "completed"
         _run([str(console), "analyze", "incomplete-regression.json", "--format", "markdown", "--output", "report.md"], working, environment, "Installed Markdown output")
         assert (working / "report.md").read_text(encoding="utf-8").strip()
-        print(f"{version.strip()}: fresh offline install, both entry points, seven demos, validate/analyze, profile/compare selection and Markdown output passed")
+        provenance = json.loads(_run([str(console), "analyze", "shared-lineage.json", "--request", "lineage-acquisition"], working, environment, "Installed lineage selection"))
+        assert provenance["selected_request_ids"] == ["lineage-acquisition"]
+        assert provenance["execution"] == "completed"
+        contact = json.loads(_run([str(console), "analyze", "external-contact.json", "--request", "external-main"], working, environment, "Installed external selection"))
+        assert contact["execution"] == "completed"
+        print(f"{version.strip()}: fresh offline install, both entry points, ten demos, validate/analyze, profile/compare/lineage/external selection and Markdown output passed")
         print(f"Local verification runtime: {sys.implementation.name} {sys.version.split()[0]} on {sys.platform}")
     return 0
 

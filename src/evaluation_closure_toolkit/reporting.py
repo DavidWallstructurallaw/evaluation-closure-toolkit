@@ -292,6 +292,211 @@ def _profile_list(profiles, *, partial=False) -> None:
         _require(all(profiles[0][key] == profiles[1][key] for key in ("snapshot_id", "frame_id")))
 
 
+_FACT_STATES = {"known", "missing", "unknown", "withheld", "disputed", "absent", "not_applicable"}
+_DIMENSIONS = {"acquisition", "analytical_method", "model_ancestry", "evaluation_rubric", "organizational_control"}
+_VIEWS = {
+    "acquisition": {"derived_from", "acquired_from"},
+    "model_ancestry": {"trained_on", "exposed_to"},
+    "evaluation_rubric": {"rubric_from", "reference_from"},
+    "recursive_reuse": {"produced_by", "uses_generation", "uses_training", "uses_selection", "uses_reference", "uses_judgment"},
+}
+_STAGES = {"received", "retained", "selected", "used"}
+_EVENT_STATES = {"yes", "no", "disputed", "unresolved"}
+_QUAL_STATES = _ASSESSMENT - {"not_assessed"}
+
+
+def _path(value, start, end, relations):
+    _require(type(value) is list and all(_identity(v) for v in value))
+    node = start
+    for identity in value:
+        _require(identity in relations and relations[identity]["from_id"] == node)
+        node = relations[identity]["to_id"]
+    _require(node == end)
+
+
+def _ordered_rows(rows, fields):
+    _require(type(rows) is list)
+    keys = [tuple(row[field] for field in fields) for row in rows]
+    _require(keys == sorted(keys) and len(keys) == len(set(keys)))
+
+
+def _lineage_values(value, *, partial=False):
+    _keys(value, {"view", "seed_ids", "witnesses", "frontiers", "captured_terminals", "search_complete",
+                  "independence_assessments", "recursive_witnesses", "relations", "cycle_state", "cycle_witnesses"})
+    _require(value["view"] in _VIEWS)
+    _ids(value["seed_ids"])
+    _require(len(value["seed_ids"]) >= 2 and type(value["search_complete"]) is bool)
+    _require(value["search_complete"] == (not partial))
+    _sorted_rows(value["relations"], "relation_id")
+    relations = {}
+    for row in value["relations"]:
+        _keys(row, {"relation_id", "from_id", "to_id", "kind", "attribution_state", "role_state", "support_ids", "contrary_ids"})
+        _require(all(_identity(row[key]) for key in ("relation_id", "from_id", "to_id")))
+        _require(row["kind"] in _VIEWS[value["view"]])
+        _require(row["attribution_state"] in _FACT_STATES and row["role_state"] in _FACT_STATES)
+        _ids(row["support_ids"])
+        _ids(row["contrary_ids"])
+        relations[row["relation_id"]] = row
+    _ordered_rows(value["witnesses"], ("left_seed_id", "right_seed_id", "node_id"))
+    for row in value["witnesses"]:
+        _keys(row, {"left_seed_id", "right_seed_id", "node_id", "left_path", "right_path"})
+        _require(_identity(row["node_id"]))
+        _require(row["left_seed_id"] in value["seed_ids"] and row["right_seed_id"] in value["seed_ids"])
+        _require(row["left_seed_id"] < row["right_seed_id"])
+        for side in ("left", "right"):
+            _path(row[side + "_path"], row[side + "_seed_id"], row["node_id"], relations)
+    _ordered_rows(value["frontiers"], ("seed_id", "frontier_id"))
+    for row in value["frontiers"]:
+        _keys(row, {"frontier_id", "seed_id", "node_id", "path", "reason", "reason_state"})
+        _require(all(_identity(row[key]) for key in ("frontier_id", "seed_id", "node_id")))
+        _require(row["seed_id"] in value["seed_ids"])
+        _require(row["reason"] in {"unknown", "withheld", "missing_record", "disputed", "unresolved"})
+        _require(row["reason_state"] in _FACT_STATES)
+        _path(row["path"], row["seed_id"], row["node_id"], relations)
+    outbound_nodes = {r["from_id"] for r in value["relations"]}
+    _ordered_rows(value["captured_terminals"], ("seed_id", "node_id"))
+    for row in value["captured_terminals"]:
+        _keys(row, {"seed_id", "node_id", "path"})
+        _require(row["seed_id"] in value["seed_ids"] and _identity(row["node_id"]))
+        _path(row["path"], row["seed_id"], row["node_id"], relations)
+        _require(row["node_id"] not in outbound_nodes)
+    _require(value["cycle_state"] in {"present", "no_witness_in_captured_view", "unresolved"})
+    _require(type(value["cycle_witnesses"]) is list and len(value["cycle_witnesses"]) <= 1)
+    _require(bool(value["cycle_witnesses"]) == (value["cycle_state"] == "present"))
+    if not partial:
+        _require(value["cycle_state"] != "unresolved")
+    for row in value["cycle_witnesses"]:
+        _keys(row, {"node_id", "path"})
+        _require(_identity(row["node_id"]) and bool(row["path"]))
+        _path(row["path"], row["node_id"], row["node_id"], relations)
+    _require(type(value["recursive_witnesses"]) is list)
+    recursive_keys = []
+    for row in value["recursive_witnesses"]:
+        _keys(row, {"earlier_process_id", "later_process_id", "artifact_id", "use_kind", "path", "state", "reason_codes", "contrary_ids"})
+        _require(value["view"] == "recursive_reuse")
+        _require(all(_identity(row[key]) for key in ("earlier_process_id", "later_process_id", "artifact_id")))
+        _require(row["use_kind"].startswith("uses_") and row["use_kind"] in _VIEWS["recursive_reuse"])
+        _require(len(row["path"]) == 2)
+        _path(row["path"], row["later_process_id"], row["earlier_process_id"], relations)
+        _require(relations[row["path"][0]]["kind"] == row["use_kind"])
+        _require(relations[row["path"][0]]["to_id"] == row["artifact_id"])
+        _require(relations[row["path"][1]]["kind"] == "produced_by")
+        _reasons(row["reason_codes"])
+        _ids(row["contrary_ids"])
+        _require(row["state"] in {"recorded_recursive_reuse", "unresolved"})
+        _require((row["state"] == "recorded_recursive_reuse") == (not row["reason_codes"]))
+        recursive_keys.append((row["later_process_id"], tuple(row["path"])))
+    _require(recursive_keys == sorted(set(recursive_keys)))
+    _sorted_rows(value["independence_assessments"], "independence_id")
+    for row in value["independence_assessments"]:
+        _keys(row, {"independence_id", "members", "form", "dimension", "unexamined_dimensions", "applies_to_view", "method_references", "review"})
+        _require(_identity(row["independence_id"]))
+        _ids(row["members"])
+        _require(row["members"] == value["seed_ids"] and row["form"] in {"pairwise", "setwise"})
+        _require(row["form"] != "pairwise" or len(row["members"]) == 2)
+        _require(row["dimension"] in _DIMENSIONS)
+        _require(row["unexamined_dimensions"] == sorted(set(row["unexamined_dimensions"])) and set(row["unexamined_dimensions"]) <= _DIMENSIONS)
+        _require(type(row["applies_to_view"]) is bool and row["applies_to_view"] == (row["dimension"] == value["view"]))
+        _sorted_rows(row["method_references"], "record_id")
+        for method in row["method_references"]:
+            _keys(method, {"record_id", "field", "state"})
+            _require(_identity(method["record_id"]) and method["field"] == "method" and method["state"] in _FACT_STATES)
+        _criterion(row["review"])
+
+
+def _count_map(value, keys, *, unavailable_only=False):
+    _keys(value, keys)
+    for count in value.values():
+        _number(count, integer=True)
+        if unavailable_only:
+            _require(count == {"state": "unavailable", "reason": "resource_limit"})
+        else:
+            _require(count["state"] == "available")
+
+
+def _external_values(value, *, partial=False):
+    _keys(value, {"cohort_id", "membership", "membership_state", "known_member_count", "member_states", "count_scope", "full_member_count",
+                  "stage_counts", "event_counts", "externality_counts", "qualification_counts", "carryover_ids",
+                  "checkpoint_state", "purpose_state", "boundary_state", "window_state", "accounting_complete"})
+    _require(_identity(value["cohort_id"]))
+    _require(value["membership"] in (_FACT_STATES - {"known"}) | {"complete", "partial"})
+    _require(value["membership_state"] in _FACT_STATES)
+    _require(value["membership"] in {"complete", "partial", "unknown"} if value["membership_state"] == "known" else value["membership"] == value["membership_state"])
+    _number(value["known_member_count"], integer=True)
+    _require(value["known_member_count"]["state"] == "available")
+    _number(value["full_member_count"], integer=True)
+    _require(value["count_scope"] == ("complete_cohort" if value["membership"] == "complete" else "known_subset"))
+    _require(value["full_member_count"] == (value["known_member_count"] if value["membership"] == "complete" else {"state": "unavailable", "reason": "unknown_membership"}))
+    for field in ("checkpoint_state", "purpose_state", "boundary_state", "window_state"):
+        _require(value[field] in _FACT_STATES)
+    _ids(value["carryover_ids"])
+    _require(type(value["accounting_complete"]) is bool and value["accounting_complete"] == (not partial))
+    _keys(value["stage_counts"], _STAGES)
+    for counts in value["stage_counts"].values():
+        _count_map(counts, _EVENT_STATES, unavailable_only=partial)
+    _count_map(value["event_counts"], _STAGES, unavailable_only=partial)
+    for key in ("externality_counts", "qualification_counts"):
+        _count_map(value[key], _QUAL_STATES, unavailable_only=partial)
+    _sorted_rows(value["member_states"], "member_id")
+    event_ids = []
+    for row in value["member_states"]:
+        _keys(row, {"member_id", "stages", "externality", "qualification", "retention_review", "carryover", "contact_state", "completed"})
+        _require(_identity(row["member_id"]) and type(row["carryover"]) is bool and type(row["completed"]) is bool)
+        _require(row["carryover"] == (row["member_id"] in value["carryover_ids"]))
+        _require(row["contact_state"] in {"unresolved", "carryover_only", "documented_current_contact"})
+        _require(type(row["stages"]) is dict and set(row["stages"]) <= _STAGES)
+        if not partial or row["completed"]:
+            _require(row["completed"] and set(row["stages"]) == _STAGES)
+        for stage in row["stages"].values():
+            _keys(stage, {"state", "reason_codes", "events"})
+            _require(stage["state"] in _EVENT_STATES)
+            _reasons(stage["reason_codes"])
+            _sorted_rows(stage["events"], "event_id")
+            for event in stage["events"]:
+                _keys(event, {"event_id", "verdict", "qualified", "relevant", "reason_codes", "support_ids", "contrary_ids", "target_ids", "time_state", "checkpoint_state", "purpose_state", "representation_state"})
+                _require(_identity(event["event_id"]) and event["verdict"] in {"yes", "no", "unknown", "unresolved"})
+                _require(type(event["qualified"]) is bool and type(event["relevant"]) is bool)
+                _reasons(event["reason_codes"])
+                _require(event["qualified"] == (not event["reason_codes"]))
+                if event["qualified"]:
+                    _require(event["relevant"] and event["verdict"] in {"yes", "no"})
+                for key in ("support_ids", "contrary_ids", "target_ids"):
+                    _ids(event[key])
+                _require(len(event["target_ids"]) <= 1)
+                for field in ("time_state", "checkpoint_state", "purpose_state", "representation_state"):
+                    _require(event[field] in _FACT_STATES)
+                event_ids.append(event["event_id"])
+            if stage["state"] in {"yes", "no"}:
+                _require(not stage["reason_codes"])
+                _require(any(e["qualified"] and e["verdict"] == stage["state"] for e in stage["events"]))
+                _require(not any(e["relevant"] and e["verdict"] in {"yes", "no"} and e["verdict"] != stage["state"] for e in stage["events"]))
+            if stage["state"] == "disputed":
+                _require("disputed" in stage["reason_codes"])
+        for key in ("externality", "qualification", "retention_review"):
+            if row[key] or row["completed"]:
+                _criterion(row[key])
+            else:
+                _require(partial and row[key] == {})
+        if row["contact_state"] == "documented_current_contact":
+            _require(row["completed"] and not row["carryover"])
+            _require(all(row["stages"][s]["state"] == "yes" for s in ("received", "used")))
+            _require(all(row[k]["assessment"] == "supported_under_scope" for k in ("externality", "qualification")))
+        if row["contact_state"] == "carryover_only":
+            _require(row["carryover"])
+    _require(len(event_ids) == len(set(event_ids)))
+    _require(len(value["member_states"]) <= value["known_member_count"]["value"])
+    if not partial:
+        _require(len(value["member_states"]) == value["known_member_count"]["value"])
+        _require(set(value["carryover_ids"]) <= {r["member_id"] for r in value["member_states"]})
+        for stage in _STAGES:
+            for state in _EVENT_STATES:
+                _require(value["stage_counts"][stage][state]["value"] == sum(r["stages"][stage]["state"] == state for r in value["member_states"]))
+            _require(value["event_counts"][stage]["value"] == sum(len(r["stages"][stage]["events"]) for r in value["member_states"]))
+        for axis, key in (("externality", "externality_counts"), ("qualification", "qualification_counts")):
+            for state in _QUAL_STATES:
+                _require(value[key][state]["value"] == sum(r[axis]["assessment"] == state for r in value["member_states"]))
+
+
 def _profile_values(value, *, partial=False) -> None:
     _keys(value, {"profiles"} | ({"partial_profiles"} if "partial_profiles" in value else set()))
     _partial_profiles(value, partial=partial)
@@ -486,6 +691,13 @@ def _check_report(report: dict) -> None:
                 _require("resource_limit" in result["reason_codes"])
             checker = _profile_values if result["operation"] == "profile" else _compare_values
             checker(result["values"], partial=partial)
+        elif result["operation"] in {"lineage", "external"} and result["execution"] in {"completed", "partial"} and result["values"]:
+            partial = result["execution"] == "partial"
+            _require(result["assessment"] == "not_assessed")
+            if partial:
+                _require("resource_limit" in result["reason_codes"])
+            checker = _lineage_values if result["operation"] == "lineage" else _external_values
+            checker(result["values"], partial=partial)
         else:
             _require(result["values"] == {} and result["execution"] in {"not_run", "partial"})
     request_ids = [r["request_id"] for r in report["results"]]
@@ -613,6 +825,37 @@ def _structural_markdown(lines: list[str], result: dict) -> None:
                 for row in values["tail_changes"]])
 
 
+def _provenance_markdown(lines, result):
+    value = result["values"]
+    lines += ["## " + _escape(result["operation"] + " " + result["request_id"]), ""]
+    if result["execution"] == "partial":
+        lines += ["Partial execution: completed witnesses remain visible; unfinished inventories and totals cannot establish absence.", ""]
+    if result["operation"] == "lineage":
+        lines += ["View: " + _escape(value["view"]) + ". Search complete: " + str(value["search_complete"]).lower() + ".", "",
+                  "All paths are conditional on supplied relations. Terminals and empty overlap inventories do not establish independence.", ""]
+        if value["witnesses"]:
+            _table(lines, ["Seed pair", "Common node", "Left relation path", "Right relation path"],
+                   [[r["left_seed_id"] + ", " + r["right_seed_id"], r["node_id"], ", ".join(r["left_path"]) or "seed itself", ", ".join(r["right_path"]) or "seed itself"] for r in value["witnesses"]])
+        if value["frontiers"]:
+            _table(lines, ["Seed", "Frontier", "Node", "Reason"],
+                   [[r["seed_id"], r["frontier_id"], r["node_id"], r["reason"]] for r in value["frontiers"]])
+        if value["independence_assessments"]:
+            _table(lines, ["Assessment", "Members", "Form", "Dimension", "Applies to view", "Documentary result"],
+                   [[r["independence_id"], ", ".join(r["members"]), r["form"], r["dimension"], str(r["applies_to_view"]).lower(), r["review"]["assessment"]] for r in value["independence_assessments"]])
+        if value["recursive_witnesses"]:
+            _table(lines, ["Earlier process", "Artifact", "Later process", "Use", "Chronology result"],
+                   [[r["earlier_process_id"], r["artifact_id"], r["later_process_id"], r["use_kind"], r["state"]] for r in value["recursive_witnesses"]])
+        lines += ["Cycle state: " + _escape(value["cycle_state"]) + ". A cycle alone does not establish recursive reuse.", ""]
+    else:
+        lines += ["Cohort: " + _escape(value["cohort_id"]) + ". Count scope: " + _escape(value["count_scope"]) + ".", "",
+                  "Stages are independent; repeated event records do not multiply members. Externality and suitability are separate.", ""]
+        _table(lines, ["Stage", "Yes", "No", "Disputed", "Unresolved", "Raw events"],
+               [[stage, *[_number_text(value["stage_counts"][stage][state]) for state in ("yes", "no", "disputed", "unresolved")], _number_text(value["event_counts"][stage])] for stage in ("received", "retained", "selected", "used")])
+        _table(lines, ["Member", "Received", "Retained", "Selected", "Used", "Externality", "Use qualification", "Current contact"],
+               [[r["member_id"], *[r["stages"].get(stage, {}).get("state", "not_assessed") for stage in ("received", "retained", "selected", "used")], r["externality"].get("assessment", "not_assessed"), r["qualification"].get("assessment", "not_assessed"), r["contact_state"]] for r in value["member_states"]])
+    lines += ["Full paths, premise IDs, contrary records, qualification gaps and limitations are retained in the complete report below.", ""]
+
+
 def render_markdown(report: dict) -> str:
     """Render current reports with complete detail, without a second analysis.
 
@@ -639,6 +882,8 @@ def render_markdown(report: dict) -> str:
             for result in report["results"]:
                 if result["operation"] in {"profile", "compare"} and result["values"]:
                     _structural_markdown(lines, result)
+                elif result["operation"] in {"lineage", "external"} and result["values"]:
+                    _provenance_markdown(lines, result)
         lines += ["## Limitations", ""]
         lines.extend("- " + _escape(value) for value in report["limitations"])
         lines += ["", "## Complete report", "",

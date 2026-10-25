@@ -1,0 +1,111 @@
+{
+  "schema": "ect-dossier/0.1",
+  "id": "synthetic-recursive-reuse",
+  "analysis_time": "2026-10-07T00:00:00Z",
+  "policy": "ect-core/0.1",
+  "records": [
+    {
+      "id": "assessor",
+      "type": "entity",
+      "kind": "actor",
+      "logical_id": "assessor",
+      "version": "v1"
+    },
+    {
+      "id": "evaluation",
+      "type": "entity",
+      "kind": "process",
+      "logical_id": "evaluation",
+      "version": "v1"
+    },
+    {
+      "id": "scope",
+      "type": "scope",
+      "process_id": "evaluation",
+      "window": {
+        "state": "known",
+        "value": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-10-01T00:00:00Z"
+        }
+      }
+    },
+    {
+      "id": "generation-a",
+      "type": "entity",
+      "kind": "process",
+      "logical_id": "generation-a",
+      "version": "v1",
+      "occurred_at": {
+        "state": "known",
+        "value": "2026-09-02T10:00:00Z"
+      }
+    },
+    {
+      "id": "generation-b",
+      "type": "entity",
+      "kind": "process",
+      "logical_id": "generation-b",
+      "version": "v1",
+      "occurred_at": {
+        "state": "known",
+        "value": "2026-09-20T10:00:00Z"
+      }
+    },
+    {
+      "id": "earlier-output",
+      "type": "entity",
+      "kind": "artifact",
+      "logical_id": "earlier-output",
+      "version": "v1",
+      "occurred_at": {
+        "state": "known",
+        "value": "2026-09-02T11:00:00Z"
+      }
+    },
+    {
+      "id": "produce-a",
+      "type": "relation",
+      "scope_id": "scope",
+      "from_id": "earlier-output",
+      "to_id": "generation-a",
+      "kind": "produced_by",
+      "asserted_by": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "occurred_at": {
+        "state": "known",
+        "value": "2026-09-02T11:00:00Z"
+      }
+    },
+    {
+      "id": "reuse-output",
+      "type": "relation",
+      "scope_id": "scope",
+      "from_id": "generation-b",
+      "to_id": "earlier-output",
+      "kind": "uses_generation",
+      "asserted_by": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "occurred_at": {
+        "state": "known",
+        "value": "2026-09-20T11:00:00Z"
+      }
+    }
+  ],
+  "requests": [
+    {
+      "id": "lineage-recursive",
+      "operation": "lineage",
+      "scope_id": "scope",
+      "seed_ids": [
+        "generation-a",
+        "generation-b"
+      ],
+      "view": "recursive_reuse"
+    }
+  ]
+}

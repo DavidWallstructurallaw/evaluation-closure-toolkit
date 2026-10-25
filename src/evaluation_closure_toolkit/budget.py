@@ -15,6 +15,8 @@ class WorkLimit(RuntimeError):
 class RunBudget:
     limit: int = 2_000_000
     used: int = 0
+    path_limit: int = 100_000
+    path_used: int = 0
 
 
 @dataclass
@@ -39,3 +41,12 @@ class RequestBudget:
             raise WorkLimit(run_exhausted=run_exhausted)
         self.used += n
         self.run.used += n
+
+    def retain_paths(self, n: int) -> None:
+        """Reserve finite path references before publishing a witness atomically."""
+        if n < 0:
+            raise ValueError("negative_work")
+        if self.run.path_used + n > self.run.path_limit:
+            raise WorkLimit(run_exhausted=True)
+        self.charge(n)
+        self.run.path_used += n

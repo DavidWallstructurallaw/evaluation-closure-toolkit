@@ -1,0 +1,1087 @@
+{
+  "schema": "ect-dossier/0.1",
+  "id": "synthetic-external-contact",
+  "analysis_time": "2026-10-07T00:00:00Z",
+  "policy": "ect-core/0.1",
+  "records": [
+    {
+      "id": "assessor",
+      "type": "entity",
+      "kind": "actor",
+      "logical_id": "assessor",
+      "version": "v1"
+    },
+    {
+      "id": "evaluation",
+      "type": "entity",
+      "kind": "process",
+      "logical_id": "evaluation",
+      "version": "v1"
+    },
+    {
+      "id": "scope",
+      "type": "scope",
+      "process_id": "evaluation",
+      "window": {
+        "state": "known",
+        "value": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-10-01T00:00:00Z"
+        }
+      }
+    },
+    {
+      "id": "p",
+      "type": "entity",
+      "kind": "contribution",
+      "logical_id": "p",
+      "version": "v1"
+    },
+    {
+      "id": "q",
+      "type": "entity",
+      "kind": "contribution",
+      "logical_id": "q",
+      "version": "v1"
+    },
+    {
+      "id": "r",
+      "type": "entity",
+      "kind": "contribution",
+      "logical_id": "r",
+      "version": "v1"
+    },
+    {
+      "id": "other-evaluation",
+      "type": "entity",
+      "kind": "process",
+      "logical_id": "other-evaluation",
+      "version": "v1"
+    },
+    {
+      "id": "scope-other",
+      "type": "scope",
+      "process_id": "other-evaluation",
+      "window": {
+        "state": "known",
+        "value": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-10-01T00:00:00Z"
+        }
+      }
+    },
+    {
+      "id": "cohort",
+      "type": "external_cohort",
+      "scope_id": "scope",
+      "members": [
+        "p",
+        "q",
+        "r"
+      ],
+      "membership": {
+        "state": "known",
+        "value": "complete"
+      },
+      "boundary": {
+        "state": "known",
+        "value": "Outside the declared synthetic evaluation-production loop."
+      },
+      "checkpoint": {
+        "state": "known",
+        "value": "checkpoint-one"
+      },
+      "purpose": {
+        "state": "known",
+        "value": "evaluation-reference"
+      },
+      "carryover_ids": [
+        "r"
+      ],
+      "externality_reviews": [
+        {
+          "member_id": "p",
+          "review_id": "external-p"
+        },
+        {
+          "member_id": "q",
+          "review_id": "external-q-wrong-scope"
+        }
+      ],
+      "qualifications": [
+        {
+          "member_id": "p",
+          "review_id": "qualification-p"
+        }
+      ]
+    },
+    {
+      "id": "external-p",
+      "type": "review",
+      "target_id": "cohort",
+      "scope_id": "scope",
+      "criterion": "externality",
+      "member_id": "p",
+      "assessor_id": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "reviewed_at": {
+        "state": "known",
+        "value": "2026-09-30T00:00:00Z"
+      },
+      "method": {
+        "state": "known",
+        "value": "Synthetic exact-scope documentary inspection."
+      },
+      "rationale": {
+        "state": "known",
+        "value": "This is a supplied synthetic premise, not field validation."
+      },
+      "verdict": {
+        "state": "known",
+        "value": "supports"
+      },
+      "evidence_ids": [
+        "external-p-receipt"
+      ]
+    },
+    {
+      "id": "external-p-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "process_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic supplied receipt; no real-world validation is asserted."
+      },
+      "subject_ids": [
+        "p",
+        "cohort"
+      ]
+    },
+    {
+      "id": "qualification-p",
+      "type": "review",
+      "target_id": "cohort",
+      "scope_id": "scope",
+      "criterion": "input_qualification",
+      "member_id": "p",
+      "assessor_id": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "reviewed_at": {
+        "state": "known",
+        "value": "2026-09-30T00:00:00Z"
+      },
+      "method": {
+        "state": "known",
+        "value": "Synthetic exact-scope documentary inspection."
+      },
+      "rationale": {
+        "state": "known",
+        "value": "This is a supplied synthetic premise, not field validation."
+      },
+      "verdict": {
+        "state": "known",
+        "value": "supports"
+      },
+      "evidence_ids": [
+        "qualification-p-receipt"
+      ]
+    },
+    {
+      "id": "qualification-p-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "process_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic supplied receipt; no real-world validation is asserted."
+      },
+      "subject_ids": [
+        "p",
+        "cohort"
+      ]
+    },
+    {
+      "id": "retention-p",
+      "type": "review",
+      "target_id": "cohort",
+      "scope_id": "scope",
+      "criterion": "retention",
+      "member_id": "p",
+      "assessor_id": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "reviewed_at": {
+        "state": "known",
+        "value": "2026-09-30T00:00:00Z"
+      },
+      "method": {
+        "state": "known",
+        "value": "Synthetic exact-scope documentary inspection."
+      },
+      "rationale": {
+        "state": "known",
+        "value": "This is a supplied synthetic premise, not field validation."
+      },
+      "verdict": {
+        "state": "known",
+        "value": "supports"
+      },
+      "evidence_ids": [
+        "retention-p-receipt"
+      ]
+    },
+    {
+      "id": "retention-p-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "process_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic supplied receipt; no real-world validation is asserted."
+      },
+      "subject_ids": [
+        "p",
+        "cohort"
+      ]
+    },
+    {
+      "id": "retention-q",
+      "type": "review",
+      "target_id": "cohort",
+      "scope_id": "scope",
+      "criterion": "retention",
+      "member_id": "q",
+      "assessor_id": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "reviewed_at": {
+        "state": "known",
+        "value": "2026-09-30T00:00:00Z"
+      },
+      "method": {
+        "state": "known",
+        "value": "Synthetic exact-scope documentary inspection."
+      },
+      "rationale": {
+        "state": "known",
+        "value": "This is a supplied synthetic premise, not field validation."
+      },
+      "verdict": {
+        "state": "known",
+        "value": "supports"
+      },
+      "evidence_ids": [
+        "retention-q-receipt"
+      ]
+    },
+    {
+      "id": "retention-q-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "process_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic supplied receipt; no real-world validation is asserted."
+      },
+      "subject_ids": [
+        "q",
+        "cohort"
+      ]
+    },
+    {
+      "id": "external-q-wrong-scope",
+      "type": "review",
+      "target_id": "cohort",
+      "scope_id": "scope-other",
+      "criterion": "externality",
+      "member_id": "q",
+      "assessor_id": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "reviewed_at": {
+        "state": "known",
+        "value": "2026-09-30T00:00:00Z"
+      },
+      "method": {
+        "state": "known",
+        "value": "Synthetic exact-scope documentary inspection."
+      },
+      "rationale": {
+        "state": "known",
+        "value": "This is a supplied synthetic premise, not field validation."
+      },
+      "verdict": {
+        "state": "known",
+        "value": "supports"
+      },
+      "evidence_ids": [
+        "external-q-wrong-scope-receipt"
+      ]
+    },
+    {
+      "id": "external-q-wrong-scope-receipt",
+      "type": "evidence",
+      "scope_id": "scope-other",
+      "kind": {
+        "state": "known",
+        "value": "process_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic supplied receipt; no real-world validation is asserted."
+      },
+      "subject_ids": [
+        "q",
+        "cohort"
+      ]
+    },
+    {
+      "id": "p-received",
+      "type": "external_event",
+      "scope_id": "scope",
+      "cohort_id": "cohort",
+      "member_id": "p",
+      "stage": "received",
+      "verdict": {
+        "state": "known",
+        "value": "yes"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "occurred_at": {
+        "state": "known",
+        "value": "2026-09-20T12:00:00Z"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-02T00:00:00Z"
+      },
+      "checkpoint": {
+        "state": "known",
+        "value": "checkpoint-one"
+      },
+      "purpose": {
+        "state": "known",
+        "value": "evaluation-reference"
+      },
+      "target_id": {
+        "state": "known",
+        "value": "evaluation"
+      },
+      "representation": {
+        "state": "known",
+        "value": "Named synthetic recoverability checkpoint."
+      },
+      "evidence_ids": [
+        "p-received-receipt"
+      ]
+    },
+    {
+      "id": "p-received-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "process_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic supplied receipt; no real-world validation is asserted."
+      },
+      "subject_ids": [
+        "p",
+        "p-received"
+      ]
+    },
+    {
+      "id": "p-retained-one",
+      "type": "external_event",
+      "scope_id": "scope",
+      "cohort_id": "cohort",
+      "member_id": "p",
+      "stage": "retained",
+      "verdict": {
+        "state": "known",
+        "value": "yes"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "occurred_at": {
+        "state": "known",
+        "value": "2026-09-20T12:00:00Z"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-02T00:00:00Z"
+      },
+      "checkpoint": {
+        "state": "known",
+        "value": "checkpoint-one"
+      },
+      "purpose": {
+        "state": "known",
+        "value": "evaluation-reference"
+      },
+      "target_id": {
+        "state": "known",
+        "value": "evaluation"
+      },
+      "representation": {
+        "state": "known",
+        "value": "Named synthetic recoverability checkpoint."
+      },
+      "evidence_ids": [
+        "p-retained-one-receipt"
+      ]
+    },
+    {
+      "id": "p-retained-one-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "process_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic supplied receipt; no real-world validation is asserted."
+      },
+      "subject_ids": [
+        "p",
+        "p-retained-one"
+      ]
+    },
+    {
+      "id": "p-retained-two",
+      "type": "external_event",
+      "scope_id": "scope",
+      "cohort_id": "cohort",
+      "member_id": "p",
+      "stage": "retained",
+      "verdict": {
+        "state": "known",
+        "value": "yes"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "occurred_at": {
+        "state": "known",
+        "value": "2026-09-20T12:00:00Z"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-02T00:00:00Z"
+      },
+      "checkpoint": {
+        "state": "known",
+        "value": "checkpoint-one"
+      },
+      "purpose": {
+        "state": "known",
+        "value": "evaluation-reference"
+      },
+      "target_id": {
+        "state": "known",
+        "value": "evaluation"
+      },
+      "representation": {
+        "state": "known",
+        "value": "Named synthetic recoverability checkpoint."
+      },
+      "evidence_ids": [
+        "p-retained-two-receipt"
+      ]
+    },
+    {
+      "id": "p-retained-two-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "process_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic supplied receipt; no real-world validation is asserted."
+      },
+      "subject_ids": [
+        "p",
+        "p-retained-two"
+      ]
+    },
+    {
+      "id": "p-selected",
+      "type": "external_event",
+      "scope_id": "scope",
+      "cohort_id": "cohort",
+      "member_id": "p",
+      "stage": "selected",
+      "verdict": {
+        "state": "known",
+        "value": "yes"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "occurred_at": {
+        "state": "known",
+        "value": "2026-09-20T12:00:00Z"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-02T00:00:00Z"
+      },
+      "checkpoint": {
+        "state": "known",
+        "value": "checkpoint-one"
+      },
+      "purpose": {
+        "state": "known",
+        "value": "evaluation-reference"
+      },
+      "target_id": {
+        "state": "known",
+        "value": "evaluation"
+      },
+      "representation": {
+        "state": "known",
+        "value": "Named synthetic recoverability checkpoint."
+      },
+      "evidence_ids": [
+        "p-selected-receipt"
+      ]
+    },
+    {
+      "id": "p-selected-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "process_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic supplied receipt; no real-world validation is asserted."
+      },
+      "subject_ids": [
+        "p",
+        "p-selected"
+      ]
+    },
+    {
+      "id": "p-used",
+      "type": "external_event",
+      "scope_id": "scope",
+      "cohort_id": "cohort",
+      "member_id": "p",
+      "stage": "used",
+      "verdict": {
+        "state": "known",
+        "value": "yes"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "occurred_at": {
+        "state": "known",
+        "value": "2026-09-20T12:00:00Z"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-02T00:00:00Z"
+      },
+      "checkpoint": {
+        "state": "known",
+        "value": "checkpoint-one"
+      },
+      "purpose": {
+        "state": "known",
+        "value": "evaluation-reference"
+      },
+      "target_id": {
+        "state": "known",
+        "value": "evaluation"
+      },
+      "representation": {
+        "state": "known",
+        "value": "Named synthetic recoverability checkpoint."
+      },
+      "evidence_ids": [
+        "p-used-receipt"
+      ]
+    },
+    {
+      "id": "p-used-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "process_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic supplied receipt; no real-world validation is asserted."
+      },
+      "subject_ids": [
+        "p",
+        "p-used"
+      ]
+    },
+    {
+      "id": "q-retained",
+      "type": "external_event",
+      "scope_id": "scope",
+      "cohort_id": "cohort",
+      "member_id": "q",
+      "stage": "retained",
+      "verdict": {
+        "state": "known",
+        "value": "no"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "occurred_at": {
+        "state": "known",
+        "value": "2026-09-20T12:00:00Z"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-02T00:00:00Z"
+      },
+      "checkpoint": {
+        "state": "known",
+        "value": "checkpoint-one"
+      },
+      "purpose": {
+        "state": "known",
+        "value": "evaluation-reference"
+      },
+      "target_id": {
+        "state": "known",
+        "value": "evaluation"
+      },
+      "representation": {
+        "state": "known",
+        "value": "Named synthetic recoverability checkpoint."
+      },
+      "evidence_ids": [
+        "q-retained-receipt"
+      ]
+    },
+    {
+      "id": "q-retained-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "process_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic supplied receipt; no real-world validation is asserted."
+      },
+      "subject_ids": [
+        "q",
+        "q-retained"
+      ]
+    },
+    {
+      "id": "q-selected",
+      "type": "external_event",
+      "scope_id": "scope",
+      "cohort_id": "cohort",
+      "member_id": "q",
+      "stage": "selected",
+      "verdict": {
+        "state": "known",
+        "value": "no"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "occurred_at": {
+        "state": "known",
+        "value": "2026-09-20T12:00:00Z"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-02T00:00:00Z"
+      },
+      "checkpoint": {
+        "state": "known",
+        "value": "checkpoint-one"
+      },
+      "purpose": {
+        "state": "known",
+        "value": "evaluation-reference"
+      },
+      "target_id": {
+        "state": "known",
+        "value": "evaluation"
+      },
+      "representation": {
+        "state": "known",
+        "value": "Named synthetic recoverability checkpoint."
+      },
+      "evidence_ids": [
+        "q-selected-receipt"
+      ]
+    },
+    {
+      "id": "q-selected-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "process_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic supplied receipt; no real-world validation is asserted."
+      },
+      "subject_ids": [
+        "q",
+        "q-selected"
+      ]
+    },
+    {
+      "id": "q-used",
+      "type": "external_event",
+      "scope_id": "scope",
+      "cohort_id": "cohort",
+      "member_id": "q",
+      "stage": "used",
+      "verdict": {
+        "state": "known",
+        "value": "yes"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "occurred_at": {
+        "state": "known",
+        "value": "2026-09-20T12:00:00Z"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-02T00:00:00Z"
+      },
+      "checkpoint": {
+        "state": "known",
+        "value": "checkpoint-one"
+      },
+      "purpose": {
+        "state": "known",
+        "value": "evaluation-reference"
+      },
+      "target_id": {
+        "state": "known",
+        "value": "evaluation"
+      },
+      "representation": {
+        "state": "known",
+        "value": "Named synthetic recoverability checkpoint."
+      },
+      "evidence_ids": [
+        "q-used-receipt"
+      ]
+    },
+    {
+      "id": "q-used-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "process_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic supplied receipt; no real-world validation is asserted."
+      },
+      "subject_ids": [
+        "q",
+        "q-used"
+      ]
+    },
+    {
+      "id": "r-received-old",
+      "type": "external_event",
+      "scope_id": "scope",
+      "cohort_id": "cohort",
+      "member_id": "r",
+      "stage": "received",
+      "verdict": {
+        "state": "known",
+        "value": "yes"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "occurred_at": {
+        "state": "known",
+        "value": "2026-08-01T10:00:00Z"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-02T00:00:00Z"
+      },
+      "checkpoint": {
+        "state": "known",
+        "value": "checkpoint-one"
+      },
+      "purpose": {
+        "state": "known",
+        "value": "evaluation-reference"
+      },
+      "target_id": {
+        "state": "known",
+        "value": "evaluation"
+      },
+      "representation": {
+        "state": "known",
+        "value": "Named synthetic recoverability checkpoint."
+      },
+      "evidence_ids": [
+        "r-received-old-receipt"
+      ]
+    },
+    {
+      "id": "r-received-old-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "process_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic supplied receipt; no real-world validation is asserted."
+      },
+      "subject_ids": [
+        "r",
+        "r-received-old"
+      ]
+    },
+    {
+      "id": "r-used",
+      "type": "external_event",
+      "scope_id": "scope",
+      "cohort_id": "cohort",
+      "member_id": "r",
+      "stage": "used",
+      "verdict": {
+        "state": "known",
+        "value": "yes"
+      },
+      "asserted_by": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "occurred_at": {
+        "state": "known",
+        "value": "2026-09-20T12:00:00Z"
+      },
+      "recorded_at": {
+        "state": "known",
+        "value": "2026-10-02T00:00:00Z"
+      },
+      "checkpoint": {
+        "state": "known",
+        "value": "checkpoint-one"
+      },
+      "purpose": {
+        "state": "known",
+        "value": "evaluation-reference"
+      },
+      "target_id": {
+        "state": "known",
+        "value": "evaluation"
+      },
+      "representation": {
+        "state": "known",
+        "value": "Named synthetic recoverability checkpoint."
+      },
+      "evidence_ids": [
+        "r-used-receipt"
+      ]
+    },
+    {
+      "id": "r-used-receipt",
+      "type": "evidence",
+      "scope_id": "scope",
+      "kind": {
+        "state": "known",
+        "value": "process_record"
+      },
+      "producer_id": {
+        "state": "known",
+        "value": "assessor"
+      },
+      "access": {
+        "state": "known",
+        "value": "supplied"
+      },
+      "content": {
+        "state": "known",
+        "value": "Synthetic supplied receipt; no real-world validation is asserted."
+      },
+      "subject_ids": [
+        "r",
+        "r-used"
+      ]
+    }
+  ],
+  "requests": [
+    {
+      "id": "external-main",
+      "operation": "external",
+      "scope_id": "scope",
+      "cohort_id": "cohort"
+    }
+  ]
+}
