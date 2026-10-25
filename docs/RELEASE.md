@@ -1,12 +1,12 @@
-# Candidate qualification and release procedure
+# Exact-source qualification and release procedure
 
-The current version is `0.1.0rc1`. P1-6 prepares and tests this candidate; it does not merge the PR stack, create a tag, publish a GitHub Release or upload a package to an index. Those actions require owner approval. Runtime behavior remains bounded by the supplied dossier, scope and `ect-core/0.1` policy.
+The current version is `0.1.0`. The owner authorized acceptance, dependency-ordered PR merges, documentation discoverability changes and the stable GitHub Release. P1-6 remains the historical `0.1.0rc1` qualification record; stable artifacts must qualify their own final source commit. Runtime behavior remains bounded by the supplied dossier, scope and `ect-core/0.1` policy. Package-index publication is outside this authorization and workflow.
 
-## What the candidate includes
+## What the release includes
 
-The first candidate implements admission plus seven operations: `lint`, `profile`, `compare`, `lineage`, `external`, `cases` and `assess`. It includes fourteen synthetic demos, the dossier schema, safe JSON/Markdown reports, the three byte-oriented public functions, and `validate`, `analyze` and `demo` commands. There are no third-party runtime dependencies. The engineering license is Apache-2.0; source papers and private evidence are not bundled.
+The first stable release implements admission plus seven operations: `lint`, `profile`, `compare`, `lineage`, `external`, `cases` and `assess`. It includes fourteen synthetic demos, the dossier schema, safe JSON/Markdown reports, the three byte-oriented public functions, and `validate`, `analyze` and `demo` commands. There are no third-party runtime dependencies. The engineering license is Apache-2.0; source papers and private evidence are not bundled.
 
-Qualification covers 64-bit CPython 3.12 and 3.13 on Ubuntu 22.04 x64 and Windows Server 2022 x64. A target is qualified only when that candidate's checks actually pass there. Other platforms remain unqualified. The suite checks software contracts and synthetic cases. No real-data effectiveness pilot, evidence authentication, scientific certification or deployment authorization is claimed.
+Qualification covers 64-bit CPython 3.12 and 3.13 on Ubuntu 22.04 x64 and Windows Server 2022 x64. A target is qualified only when that exact source revision's checks actually pass there. Other platforms remain unqualified. The suite checks software contracts and synthetic cases. No real-data effectiveness pilot, evidence authentication, scientific certification or deployment authorization is claimed.
 
 ## Build from an exact clean commit
 
@@ -23,7 +23,7 @@ The script refuses a different HEAD, staged/unstaged changes, nonignored untrack
 The exported copy receives one static module constant:
 
 ```text
-BUILD_ID = "ect-0.1.0rc1+git.SOURCE_COMMIT"
+BUILD_ID = "ect-0.1.0+git.SOURCE_COMMIT"
 ```
 
 The script builds an sdist, extracts that sdist into a separate directory without Git metadata, builds its wheel, and verifies the same identity in both artifacts. Source-checkout builds retain `BUILD_ID = "unknown"`. The runtime never invokes Git or reads environment variables to infer identity.
@@ -33,8 +33,8 @@ Output layout:
 | Path under the new output directory | Purpose |
 | --- | --- |
 | `source/` | Exact committed export plus the generated static build identity |
-| `from-sdist/evaluation_closure_toolkit-0.1.0rc1/` | Source extracted from the built sdist |
-| `dist/` | Candidate `.tar.gz` and `.whl` |
+| `from-sdist/evaluation_closure_toolkit-0.1.0/` | Source extracted from the built sdist |
+| `dist/` | Qualified `.tar.gz` and `.whl` |
 | `artifacts.json` | Source revision, version, build ID and actual artifact names, sizes and SHA-256 digests |
 
 `--no-isolation` is available when all required build tooling is already installed. It changes dependency provisioning, not the source-identity rules. A failed build may leave its new output directory for inspection, but no success manifest is issued. Use another new destination after resolving the failure; existing outputs are never replaced.
@@ -46,24 +46,35 @@ From the source directory extracted from the sdist, install its wheel with `pyth
 ```sh
 python -m unittest discover -s tests -v
 python scripts/generate_schema.py --check
-python scripts/check_install.py --wheel PATH_TO_WHEEL --expected-build-id ect-0.1.0rc1+git.SOURCE_COMMIT
+python scripts/check_install.py --wheel PATH_TO_WHEEL --expected-build-id ect-0.1.0+git.SOURCE_COMMIT
 ```
 
 Supply the expected revision from the intended commit, not by trusting whichever identity a wheel happens to report. `check_install.py` creates a fresh virtual environment outside the checkout and verifies that exact expected identity in admission and analysis. It also checks metadata/version, Apache license bytes, schema, zero runtime dependencies, all fourteen demos, both entry points, deterministic reruns, saved-report Markdown parity and the actual README, user-guide and reproducibility examples. Its default identity expectation is `unknown`, for an ordinary source build.
 
-CI runs this process on the exact PR head commit, rather than a synthetic merge commit, in the four named x64 cells. Tests are loaded from the extracted source distribution against the installed candidate. Windows skips the two existing POSIX-only filesystem checks. Successful jobs retain their two distribution files and `artifacts.json` as workflow artifacts for 30 days. These are candidate build artifacts, not a formal release. Download and retain them when needed; workflow retention is finite.
+CI runs this process on the exact PR head for pull requests and on the actual merged commit for a push to `main`, in the four named x64 cells. Tests are loaded from the extracted source distribution against the installed package. Windows skips the two existing POSIX-only filesystem checks. Successful jobs retain their two distribution files and `artifacts.json` as workflow artifacts for 30 days. A qualified workflow artifact alone is not a published release. Download and retain it when needed; workflow retention is finite.
 
 Artifact hashes identify the bytes of each particular build. They do not promise identical wheel/sdist bytes across build tools, timestamps or operating systems. Report determinism and cross-runtime normalized report equality have their separate contract in [REPRODUCIBILITY.md](REPRODUCIBILITY.md). A source label and an artifact manifest are not signed attestations and cannot authenticate the supplied evaluation evidence.
 
+## Download verification
+
+Obtain the attached wheel, sdist, `artifacts.json` and `SHA256SUMS` from the [0.1.0 release page](https://github.com/DavidWallstructurallaw/evaluation-closure-toolkit/releases/tag/v0.1.0). Retain the full source SHA from the release's qualification record and verify that tag `v0.1.0` resolves to that same SHA. For each distribution, compare its byte size and SHA-256 with its `artifacts.json` entry. The manifest's version must be `0.1.0`, `source_revision` must equal that independently expected SHA, and `build_id` must be `ect-0.1.0+git.` followed by that SHA. `SHA256SUMS` also includes the manifest's digest; on systems providing `sha256sum`, run `sha256sum -c SHA256SUMS` with all three files in the same directory.
+
+GitHub's automatic source ZIP/tar archives contain the un-stamped committed checkout. They differ from the attached qualified sdist; do not substitute them when verifying the release build identity. A matching unsigned manifest establishes consistency of the downloaded bytes with that manifest, without supplying an independent trust root.
+
 ## Owner acceptance and stable publication
 
-Before approving publication, review the exact candidate PR and its four-cell results, the limits in the [user guide](USER_GUIDE.md), and any unresolved failures. A missing platform result remains a blocker for claiming that platform. Tests passing alone do not authorize publication.
+Review the exact release PR and its four-cell results, the limits in the [user guide](USER_GUIDE.md), and any unresolved failures. A missing platform result remains a blocker for claiming that platform. Tests passing alone do not authorize publication.
 
-After separate authorization:
+For this authorized `0.1.0` release:
 
-1. Merge the reviewed PR stack in dependency order. Preserve the accepted contract and source history.
-2. Set the stable version to `0.1.0`, update version-specific documentation/CI paths, and commit that final source. A changed or merged revision does not inherit the candidate's exact-source qualification automatically.
-3. Rebuild and qualify the final clean commit with this same procedure and all four target cells. Retain the resulting artifacts and their manifest.
-4. With owner approval, create the final tag at that qualified commit and publish those exact artifacts with their scope and limitations. Package-index publication requires its own configured workflow and authorization; it is not performed by these scripts.
+1. Merge the reviewed PR stack in dependency order, preserving the accepted contract and source history. PRs #1 through #6 have been merged in that order.
+2. Review the separate stable preparation PR containing version `0.1.0`, current documentation, package metadata and guarded publication. Qualify that PR head in all four target cells.
+3. Merge the accepted stable PR with the explicit `[publish-v0.1.0]` marker in its merge commit message. This is the deliberate publication gate. A changed or merged revision does not inherit the candidate's exact-source qualification automatically.
+4. The resulting push to `main` rebuilds and qualifies the final clean commit in all four cells. The release job runs only after they all succeed. It consumes the Ubuntu 22.04 / CPython 3.12 artifacts from that same run, without rebuilding them.
+5. The publisher checks the exact source revision, stable version, build ID, filenames, sizes and hashes, and requires the expected commit still to be `main` HEAD. It creates a draft GitHub Release targeting that qualified SHA, uploads the two distributions, `artifacts.json` and `SHA256SUMS`, verifies the uploaded hashes and sizes, then publishes. Tag `v0.1.0` must resolve to the exact qualified SHA. The release notes include the source identity and qualification run.
+
+Only the publication job requests repository contents write permission through the standard Actions token. PR verification remains read-only. A conflicting existing tag/release, moved `main`, failed qualification or permission error must stop publication; it does not authorize overwrites, forced tags, branch-protection changes or alternate credentials. Inspect any incomplete draft before retrying. Historical candidate build records remain unchanged. Future releases need their own version, review and publication authorization.
+
+The GitHub Release is the distribution channel for `0.1.0`. PyPI publication requires its own configured workflow and authorization and is not performed here. For the release contents and limits, see [0.1.0 release notes](releases/0.1.0.md).
 
 Do not add capture archives, a replay command, simulation, live collection or adapters as implied release work. Those features remain outside v0.1. A future licensed real-data pilot may support additional empirical claims only to the extent its evidence warrants.

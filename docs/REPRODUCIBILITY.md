@@ -21,7 +21,7 @@ Keep these together in a private, user-controlled working directory:
   tool and contract identities: `tool_version`, `build_id`, `dossier_schema`,
   `schema`, `method`, `serialization` and `policy`.
 
-Ordinary source builds report `build_id: "unknown"`. Qualified candidate artifacts
+Ordinary source builds report `build_id: "unknown"`. Qualified release artifacts
 embed `ect-VERSION+git.SOURCE_REVISION` through the [clean-export build procedure](RELEASE.md).
 Retain the original artifact and independently verify its expected revision and
 hash. This is package metadata, without a signature or an evidence-authentication
@@ -38,7 +38,7 @@ of selected requests is a different run.
 
 ## Run the complete installed example
 
-Use the interpreter in which this development package is installed, outside the
+Use the interpreter in which this package is installed, outside the
 source checkout. The commands below use `python`; substitute that interpreter's
 explicit path if necessary. Start in an existing ordinary directory with none
 of the example output filenames already present.

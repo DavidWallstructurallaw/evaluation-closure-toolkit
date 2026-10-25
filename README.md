@@ -1,20 +1,38 @@
-# Evaluation Closure Toolkit
+# Evaluation Closure Toolkit: offline AI evaluation auditing
 
-Inspect a supplied AI evaluation dossier offline, with conclusions tied to its declared scope and evidence.
+Evaluation Closure Toolkit is a Python CLI and library for auditing supplied AI evaluation dossiers: benchmark disclosures, structural coverage, evidence provenance, external contributions and correction records. It produces inspectable JSON and Markdown reports with conclusions tied to the dossier's declared scope and evidence.
 
 Use it when an evaluation claim needs an inspectable record of what was tested, what its population covers, where its evidence came from, and whether external input and correction routes were actually documented. Supply one local JSON dossier; receive scoped findings and exact counts in JSON or Markdown. No model service or credentials are required.
 
-**P1-6 release candidate: `0.1.0rc1`.** All seven specified operations are implemented. This branch prepares release qualification and user documentation; it does not publish stable `0.1.0`. See the [user guide](docs/USER_GUIDE.md) for preparing real dossiers and the [release procedure](docs/RELEASE.md) for candidate provenance and acceptance.
+**Version `0.1.0`** implements all seven specified operations with zero third-party runtime dependencies. [Release downloads](https://github.com/DavidWallstructurallaw/evaluation-closure-toolkit/releases/tag/v0.1.0) include the wheel, source distribution and artifact manifest. Software qualification covers the documented contracts and synthetic examples; it does not establish real-world effectiveness or authenticate supplied evidence.
+
+[Install and try](#install-and-try) · [User guide](docs/USER_GUIDE.md) · [Dossier schema](src/evaluation_closure_toolkit/data/dossier.schema.json) · [Deterministic reruns](docs/REPRODUCIBILITY.md) · [Release verification](docs/RELEASE.md)
+
+## Who it is for
+
+- Evaluation and benchmark maintainers documenting a finite claim, its disclosures and evidence gaps.
+- Researchers comparing declared structural coverage or tracing recorded shared sources and recursive reuse.
+- Reviewers inspecting whether external input was used, anomalies were retained and correction attempts had documented outcomes.
+
+The seven operations are `lint`, `profile`, `compare`, `lineage`, `external`, `cases` and `assess`. The [operation guide](docs/USER_GUIDE.md#choose-the-question-and-collect-its-records) maps each question to the records it needs. The toolkit analyzes records you provide; it does not run benchmarks, collect live evidence or certify a model.
 
 ## Install and try
 
-Use 64-bit CPython 3.12 or 3.13. The qualification matrix is Ubuntu 22.04 x64 and Windows Server 2022 x64; other systems remain unqualified. From this candidate checkout:
+Use 64-bit CPython 3.12 or 3.13. The qualification matrix is Ubuntu 22.04 x64 and Windows Server 2022 x64; other systems remain unqualified.
+
+Download the [0.1.0 wheel](https://github.com/DavidWallstructurallaw/evaluation-closure-toolkit/releases/download/v0.1.0/evaluation_closure_toolkit-0.1.0-py3-none-any.whl) and `artifacts.json` from the [release page](https://github.com/DavidWallstructurallaw/evaluation-closure-toolkit/releases/tag/v0.1.0). Follow the [release verification procedure](docs/RELEASE.md) to check its hash and expected source revision. In the directory containing the downloaded wheel:
+
+```sh
+python -m pip install --no-index --no-deps evaluation_closure_toolkit-0.1.0-py3-none-any.whl
+```
+
+Alternatively, from a source checkout:
 
 ```sh
 python -m pip install .
 ```
 
-A source-checkout install reports `build_id=unknown`. For an already qualified local wheel, use `python -m pip install --no-index --no-deps PATH_TO_WHEEL`; the [release procedure](docs/RELEASE.md) explains how its source revision is embedded and verified. No package-index publication is assumed.
+A source-checkout install reports `build_id=unknown`. Qualified release artifacts embed their exact source revision as described in the [release procedure](docs/RELEASE.md). This project distributes `0.1.0` through GitHub Releases; no PyPI publication is claimed.
 
 The runtime uses only the Python standard library. Source installation needs setuptools as a build dependency and may access a package index for build tooling. The fourteen demos are synthetic, packaged with the wheel, and require no network, credentials, external model or predecessor toolkit. `demo` analyzes a packaged dossier; it does not export the dossier.
 
@@ -119,7 +137,7 @@ Review receipts use explicit `subject_ids` to bind the supplied judgment to the 
 
 The tool does not authenticate receipts, prove textual assertions or authorize deployment. JSON and Markdown omit raw evidence bodies and locators. Reports contain supplied identifiers and should be treated as private. Markdown includes a scoped reading view with request states, disclosures, criteria, prerequisite status, findings, evidence references, needed information and limitations, followed by the complete inert report object. Finding families identify the kind of issue or observation; they are not severity rankings. Inventory/arithmetic rows remain `not_assessed`.
 
-Input identity hashes the original bytes. Result identity hashes canonical JSON excluding its own digest, with a final newline. Candidate builds embed `ect-VERSION+git.SOURCE_REVISION` from a clean committed export; ordinary source builds remain `unknown`. Retain the actual artifact and check its hash and expected revision. These identities do not supply a signature, authenticate evidence or promise byte-reproducible packaging. Results include interpreter identity, so cross-runtime comparisons use normalized substantive fields.
+Input identity hashes the original bytes. Result identity hashes canonical JSON excluding its own digest, with a final newline. Qualified release builds embed `ect-VERSION+git.SOURCE_REVISION` from a clean committed export; ordinary source builds remain `unknown`. Retain the actual artifact and check its hash and expected revision. These identities do not supply a signature, authenticate evidence or promise byte-reproducible packaging. Results include interpreter identity, so cross-runtime comparisons use normalized substantive fields.
 
 The [deterministic rerun guide](docs/REPRODUCIBILITY.md) shows how to retain an exact dossier, rerun the existing commands, verify report bytes and digests, and render saved JSON through the public API. Keep original bytes and matching selection/contracts before comparing normalized outputs. Capture archives, a `replay` command and simulation remain outside this release.
 
@@ -136,7 +154,7 @@ The bounded local-file checks assume a user-controlled directory. They do not cl
 - [P1-5 reporting, workflow and rerun integration](docs/P1-5.md)
 - [P1-6 release qualification](docs/P1-6.md)
 - [User guide](docs/USER_GUIDE.md)
-- [Candidate build and release procedure](docs/RELEASE.md)
+- [Exact-source build and release procedure](docs/RELEASE.md)
 - [Deterministic rerun guide](docs/REPRODUCIBILITY.md)
 - [Machine-readable dossier schema](src/evaluation_closure_toolkit/data/dossier.schema.json)
 
@@ -148,9 +166,9 @@ python -m unittest discover -s tests -v
 python scripts/generate_schema.py --check
 python -m pip install build
 python -m build
-python scripts/check_install.py --wheel dist/evaluation_closure_toolkit-0.1.0rc1-py3-none-any.whl
+python scripts/check_install.py --wheel dist/evaluation_closure_toolkit-0.1.0-py3-none-any.whl
 ```
 
-The commands above check an ordinary source build with unknown identity. The [candidate build procedure](docs/RELEASE.md) additionally requires an exact clean source revision and verifies the stamped artifact. CI qualifies that exact revision in all four selected cells, including tests from the extracted source distribution and fresh offline installation outside the checkout. See the pull request checks for actual results. All examples remain synthetic; no real-data effectiveness pilot is claimed.
+The commands above check an ordinary source build with unknown identity. The [exact-source build procedure](docs/RELEASE.md) additionally requires a clean source revision and verifies the stamped artifact. CI qualifies that exact revision in all four selected cells, including tests from the extracted source distribution and fresh offline installation outside the checkout. See the release notes and linked workflow checks for actual results. All examples remain synthetic; no real-data effectiveness pilot is claimed.
 
 License: Apache-2.0.

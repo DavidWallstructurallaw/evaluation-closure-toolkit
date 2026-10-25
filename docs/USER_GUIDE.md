@@ -2,7 +2,7 @@
 
 Evaluation Closure Toolkit inspects a supplied evaluation dossier and shows what its records support within a declared scope. Use it to check claim disclosures, inspect structural coverage, trace recorded shared origins, distinguish external contact from actual use, or examine correction records and a five-condition assessment.
 
-This guide accompanies the `0.1.0rc1` release candidate. See the [README](../README.md) for installation and current qualification status. Candidate preparation does not announce a published stable release. All packaged examples are synthetic. The toolkit runs offline using the Python standard library; it does not execute a model, collect evidence, authenticate receipts or authorize deployment.
+This guide accompanies version `0.1.0`. See the [README](../README.md) for installation and qualification targets, and the [release page](https://github.com/DavidWallstructurallaw/evaluation-closure-toolkit/releases/tag/v0.1.0) for published artifacts and verification evidence. All packaged examples are synthetic. The toolkit runs offline using the Python standard library; it does not execute a model, collect evidence, authenticate receipts or authorize deployment.
 
 ## Start with one small dossier
 

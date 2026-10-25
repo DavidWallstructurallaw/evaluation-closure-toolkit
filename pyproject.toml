@@ -4,22 +4,32 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "evaluation-closure-toolkit"
-version = "0.1.0rc1"
-description = "An offline auditor for supplied AI evaluation dossiers."
+version = "0.1.0"
+description = "Offline AI evaluation auditing: benchmark disclosures, structural coverage, evidence lineage and correction records."
 readme = "README.md"
 requires-python = ">=3.12,<3.14"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 dependencies = []
+keywords = [
+  "ai-evaluation", "benchmark-auditing", "evaluation-closure",
+  "evidence-provenance", "structural-coverage", "offline-analysis",
+]
 classifiers = [
-  "Development Status :: 4 - Beta",
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Science/Research",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Topic :: Software Development :: Testing",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 
 [project.urls]
+Homepage = "https://github.com/DavidWallstructurallaw/evaluation-closure-toolkit"
 Repository = "https://github.com/DavidWallstructurallaw/evaluation-closure-toolkit"
+Documentation = "https://github.com/DavidWallstructurallaw/evaluation-closure-toolkit/blob/v0.1.0/docs/USER_GUIDE.md"
+Issues = "https://github.com/DavidWallstructurallaw/evaluation-closure-toolkit/issues"
+Changelog = "https://github.com/DavidWallstructurallaw/evaluation-closure-toolkit/blob/v0.1.0/docs/releases/0.1.0.md"
 
 [project.scripts]
 evaluation-closure = "evaluation_closure_toolkit.cli:main"
